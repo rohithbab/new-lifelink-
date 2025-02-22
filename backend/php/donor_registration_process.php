@@ -220,19 +220,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Set success message and redirect
             $_SESSION['registration_success'] = true;
-            $_SESSION['donor_email'] = $email;
-            header("Location: ../../pages/donor/donor_registration_success.php");
+            $_SESSION['donor_name'] = $name;
+            header("Location: ../../pages/donor_registration_success.php");
             exit();
+
         } else {
             throw new Exception("Failed to register donor");
         }
 
     } catch (Exception $e) {
-        // Rollback transaction on error
+        // Rollback transaction if active
         if ($conn->inTransaction()) {
-            $conn->rollback();
+            $conn->rollBack();
         }
-
+        
         // Delete uploaded files if they exist
         if (isset($id_proof_path)) {
             @unlink($base_upload_dir . 'id_proof_path/' . $id_proof_path);

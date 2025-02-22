@@ -47,6 +47,7 @@ $urgentRecipients = getUrgentRecipients($conn);
             box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
         }
 
+        /* Button Styles */
         .update-btn {
             padding: 6px 12px;
             background: #1a73e8;
@@ -62,8 +63,23 @@ $urgentRecipients = getUrgentRecipients($conn);
             background: #1557b0;
         }
 
+        .reject-btn {
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
         .view-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: #4CAF50;
             color: white;
             border: none;
@@ -242,7 +258,7 @@ $urgentRecipients = getUrgentRecipients($conn);
             padding: 6px 12px;
             font-size: 14px;
         }
-        
+
         .btn-sm .fas {
             font-size: 1rem;
         }
@@ -584,6 +600,233 @@ $urgentRecipients = getUrgentRecipients($conn);
         .notification-footer a:hover {
             text-decoration: underline;
         }
+        
+        /* ODML Update Modal Styles */
+        .odml-input-group {
+            margin: 20px 0;
+        }
+
+        .odml-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .notification-info, .status-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .notification-info {
+            background: rgba(37, 211, 102, 0.1);
+        }
+
+        .status-info {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .notification-info i {
+            color: #25d366;
+        }
+
+        .status-info i {
+            color: #3498db;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e3e8f0;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-1px);
+        }
+        
+        /* Button Styles */
+        .update-btn {
+            padding: 6px 12px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .update-btn:hover {
+            background: #1557b0;
+        }
+
+        .reject-btn {
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
+        .view-btn {
+            padding: 6px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .view-btn:hover {
+            background: #388E3C;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .modal-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .modal-info i {
+            color: #1a73e8;
+        }
+
+        .odml-input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: #f1f3f4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+
+        .btn-approve {
+            padding: 8px 16px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-approve:hover {
+            background: #1557b0;
+        }
     </style>
 
     <!-- JavaScript Dependencies -->
@@ -736,49 +979,35 @@ $urgentRecipients = getUrgentRecipients($conn);
 
             <!-- Pending Hospitals Section -->
             <div class="table-container">
-                <h2>Pending Hospital Approvals (<span id="pending-hospitals-count"><?php echo count($pendingHospitals); ?></span>)</h2>
+                <h2>Pending Hospital Approvals (<?php echo count($pendingHospitals); ?>)</h2>
                 <div class="table-responsive">
                     <table class="table" id="pending-hospitals-table">
                         <thead>
                             <tr>
                                 <th>Hospital Name</th>
                                 <th>Email</th>
-                                <th>ODML ID</th>
+                                <th>Update ODML ID</th>
                                 <th>Actions</th>
                                 <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($pendingHospitals as $hospital): ?>
-                            <tr id="hospital_row_<?php echo $hospital['hospital_id']; ?>">
+                            <tr>
                                 <td><?php echo htmlspecialchars($hospital['hospital_name']); ?></td>
                                 <td><?php echo htmlspecialchars($hospital['email']); ?></td>
                                 <td>
-                                    <div class="action-cell">
-                                        <input type="text" 
-                                               class="odml-input"
-                                               id="odml_id_<?php echo $hospital['hospital_id']; ?>"
-                                               value="<?php echo htmlspecialchars($hospital['odml_id'] ?? ''); ?>"
-                                               placeholder="Enter ODML ID">
-                                        <button class="update-btn" 
-                                                data-hospital-id="<?php echo $hospital['hospital_id']; ?>">
-                                            <i class="fas fa-save"></i> Update
-                                        </button>
-                                    </div>
+                                    <button class="update-btn" onclick="openOdmlModal('hospital', '<?php echo $hospital['hospital_id']; ?>', '<?php echo htmlspecialchars($hospital['hospital_name']); ?>', '<?php echo htmlspecialchars($hospital['email']); ?>')">
+                                        <i class="fas fa-edit"></i> Update ODML ID
+                                    </button>
+                                </td>
+                                <td class="action-cell">
+                                    <button class="reject-btn">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
                                 </td>
                                 <td>
-                                    <div class="action-cell">
-                                        <button class="approve-btn" onclick="updateHospitalStatus(<?php echo $hospital['hospital_id']; ?>, 'Approved')">
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                        <button class="reject-btn" onclick="updateHospitalStatus(<?php echo $hospital['hospital_id']; ?>, 'Rejected')">
-                                            <i class="fas fa-times"></i> Reject
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="view_hospital_details_in_pending.php?id=<?php echo $hospital['hospital_id']; ?>" 
-                                       class="view-btn">
+                                    <a href="view_hospital_details.php?id=<?php echo $hospital['hospital_id']; ?>" class="view-btn">
                                         <i class="fas fa-eye"></i> View Details
                                     </a>
                                 </td>
@@ -788,10 +1017,10 @@ $urgentRecipients = getUrgentRecipients($conn);
                     </table>
                 </div>
             </div>
-            
+
             <!-- Pending Donors Table -->
             <div class="table-container">
-                <h2>Pending Donor Approvals (<span id="pending-donors-count"><?php echo count($pendingDonors); ?></span>)</h2>
+                <h2>Pending Donor Approvals (<?php echo count($pendingDonors); ?>)</h2>
                 <div class="table-responsive">
                     <table class="table" id="pending-donors-table">
                         <thead>
@@ -799,7 +1028,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Blood Type</th>
-                                <th>ODML ID</th>
+                                <th>Update ODML ID</th>
                                 <th>Actions</th>
                                 <th>Details</th>
                             </tr>
@@ -811,26 +1040,17 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td><?php echo htmlspecialchars($donor['email']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['blood_type']); ?></td>
                                 <td>
-                                    <div class="odml-container">
-                                        <input type="text" class="odml-input" 
-                                               value="<?php echo htmlspecialchars($donor['odml_id'] ?? ''); ?>" 
-                                               placeholder="Enter ODML ID">
-                                        <button class="update-btn" onclick="updateDonorODMLID('<?php echo htmlspecialchars($donor['donor_id']); ?>', this)">
-                                            <i class="fas fa-save"></i> Update
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button class="approve-btn" onclick="updateDonorStatus('<?php echo htmlspecialchars($donor['donor_id']); ?>', 'Approved')">
-                                        <i class="fas fa-check"></i> Approve
+                                    <button class="update-btn" onclick="openOdmlModal('donor', '<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>', '<?php echo htmlspecialchars($donor['email']); ?>')">
+                                        <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
-                                    <button class="reject-btn" onclick="updateDonorStatus('<?php echo htmlspecialchars($donor['donor_id']); ?>', 'Rejected')">
+                                </td>
+                                <td class="action-cell">
+                                    <button class="reject-btn">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </td>
                                 <td>
-                                    <a href="view_donor_details_in_pending.php?id=<?php echo htmlspecialchars($donor['donor_id']); ?>" 
-                                       class="view-btn">
+                                    <a href="view_donor_details.php?id=<?php echo $donor['donor_id']; ?>" class="view-btn">
                                         <i class="fas fa-eye"></i> View Details
                                     </a>
                                 </td>
@@ -843,7 +1063,7 @@ $urgentRecipients = getUrgentRecipients($conn);
 
             <!-- Pending Recipients Table -->
             <div class="table-container">
-                <h2>Pending Recipient Approvals (<span id="pending-recipients-count"><?php echo count($pendingRecipients); ?></span>)</h2>
+                <h2>Pending Recipient Approvals (<?php echo count($pendingRecipients); ?>)</h2>
                 <div class="table-responsive">
                     <table class="table" id="pending-recipients-table">
                         <thead>
@@ -851,8 +1071,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Blood Type</th>
-                                <th>ODML ID</th>
-                                <th>Urgency Level</th>
+                                <th>Update ODML ID</th>
                                 <th>Actions</th>
                                 <th>Details</th>
                             </tr>
@@ -864,29 +1083,18 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td><?php echo htmlspecialchars($recipient['email']); ?></td>
                                 <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
                                 <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <input type="text" class="odml-input" 
-                                               value="<?php echo htmlspecialchars($recipient['odml_id'] ?? ''); ?>" 
-                                               placeholder="Enter ODML ID"
-                                               id="odml-<?php echo $recipient['id']; ?>">
-                                        <button class="update-odml-btn" onclick="updateRecipientODML(<?php echo $recipient['id']; ?>)">
-                                            <i class="fas fa-sync-alt"></i> Update
-                                        </button>
-                                    </div>
-                                </td>
-                                <td><?php echo htmlspecialchars($recipient['urgency'] ?? 'Not Set'); ?></td>
-                                <td class="action-cell">
-                                    <button class="btn btn-sm btn-approve" onclick="updateRecipientStatus(<?php echo $recipient['id']; ?>, 'accepted')" style="margin-right: 5px;">
-                                        <i class="fas fa-check"></i> Approve
+                                    <button class="update-btn" onclick="openOdmlModal('recipient', '<?php echo $recipient['id']; ?>', '<?php echo htmlspecialchars($recipient['name']); ?>', '<?php echo htmlspecialchars($recipient['email']); ?>')">
+                                        <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
-                                    <button class="btn btn-sm btn-reject" onclick="updateRecipientStatus(<?php echo $recipient['id']; ?>, 'rejected')">
+                                </td>
+                                <td class="action-cell">
+                                    <button class="reject-btn">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </td>
                                 <td>
-                                    <a href="view_recipient_details_in_pending.php?id=<?php echo htmlspecialchars($recipient['id']); ?>" 
-                                       class="view-btn">
-                                        <i class="fas fa-eye"></i> View
+                                    <a href="view_recipient_details_in_pending.php?id=<?php echo $recipient['id']; ?>" class="view-btn">
+                                        <i class="fas fa-eye"></i> View Details
                                     </a>
                                 </td>
                             </tr>
@@ -951,6 +1159,32 @@ $urgentRecipients = getUrgentRecipients($conn);
                     </div>
                     <div class="modal-body" id="matchDetailsContent"></div>
                     <span class="close">&times;</span>
+                </div>
+            </div>
+
+            <!-- ODML Update Modal -->
+            <div id="odmlModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3>Update ODML ID</h3>
+                    <div class="modal-body">
+                        <p>You are about to update the ODML ID for: <strong id="entityName"></strong></p>
+                        <input type="text" id="modalOdmlId" class="odml-input" placeholder="Enter ODML ID">
+                        <div class="modal-info">
+                            <i class="fas fa-envelope"></i>
+                            <span>An email notification will be sent to <strong id="entityEmail"></strong></span>
+                        </div>
+                        <div class="modal-info">
+                            <i class="fas fa-check-circle"></i>
+                            <span>This action will approve the hospital's registration.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" onclick="closeOdmlModal()">Cancel</button>
+                        <button class="btn-approve" onclick="approveAndUpdate()">
+                            <i class="fas fa-check"></i> Approve & Update
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1055,6 +1289,11 @@ $urgentRecipients = getUrgentRecipients($conn);
 
             function updateHospitalODMLID(hospitalId) {
                 const odmlId = $(`#odml_id_${hospitalId}`).val();
+                
+                if (!odmlId) {
+                    alert('Please enter an ODML ID');
+                    return;
+                }
                 
                 if (confirm('Are you sure you want to update the ODML ID?')) {
                     $.ajax({
@@ -1258,6 +1497,72 @@ $urgentRecipients = getUrgentRecipients($conn);
                         }
                     });
                 }
+            }
+        </script>
+        <script>
+            // Global variables for modal
+            let currentEntityId = null;
+            let currentEntityType = null;
+
+            // Open ODML modal
+            function openOdmlModal(type, id, name, email) {
+                currentEntityId = id;
+                currentEntityType = type;
+                
+                document.getElementById('entityName').textContent = name;
+                document.getElementById('entityEmail').textContent = email;
+                document.getElementById('modalOdmlId').value = '';
+                
+                document.getElementById('odmlModal').style.display = 'block';
+            }
+
+            // Close ODML modal
+            function closeOdmlModal() {
+                document.getElementById('odmlModal').style.display = 'none';
+                currentEntityId = null;
+                currentEntityType = null;
+            }
+
+            // Approve and update ODML ID
+            function approveAndUpdate() {
+                const odmlId = document.getElementById('modalOdmlId').value.trim();
+                
+                if (!odmlId) {
+                    return;
+                }
+
+                // Update ODML ID and approve
+                $.ajax({
+                    url: '../backend/php/update_odml.php',
+                    type: 'POST',
+                    data: {
+                        id: currentEntityId,
+                        type: currentEntityType,
+                        odmlId: odmlId,
+                        action: 'approve'
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        location.reload();
+                    }
+                });
+
+                closeOdmlModal();
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('odmlModal');
+                if (event.target == modal) {
+                    closeOdmlModal();
+                }
+            }
+
+            // Close modal when clicking X
+            document.querySelector('.close').onclick = function() {
+                closeOdmlModal();
             }
         </script>
         <script src="../../assets/js/notifications.js"></script>

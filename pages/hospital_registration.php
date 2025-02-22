@@ -345,11 +345,17 @@ session_start();
                 return;
             }
 
-            // Password strength validation
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!passwordRegex.test(password)) {
+            // Password strength validation - at least 8 characters with at least 3 of: uppercase, lowercase, numbers, special chars
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const conditions = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar];
+            const passedConditions = conditions.filter(condition => condition).length;
+
+            if (password.length < 8 || passedConditions < 3) {
                 e.preventDefault();
-                alert('Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters.');
+                alert('Password must be at least 8 characters long and contain at least 3 of the following:\n- Uppercase letters (A-Z)\n- Lowercase letters (a-z)\n- Numbers (0-9)\n- Special characters (!@#$%^&*(),.?":{}|<>)');
                 return;
             }
         });

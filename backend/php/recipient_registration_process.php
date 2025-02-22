@@ -144,8 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $conn->commit();
             $_SESSION['registration_success'] = true;
-            $_SESSION['recipient_email'] = $email;
-            header("Location: ../../pages/recipient/recipient_registration_success.php");
+            $_SESSION['recipient_name'] = $full_name;
+            header("Location: ../../pages/recipient_registration_success.php");
             exit();
         }
 

@@ -122,7 +122,7 @@ try {
                     <div class="document-info">
                         <h3>ID Proof</h3>
                         <?php if (!empty($donor['id_proof_path'])): ?>
-                            <?php $id_path = "/LIFELINKFORPDD-main/LIFELINKFORPDD/uploads/donors/id_proof_path/" . $donor['id_proof_path']; ?>
+                            <?php $id_path = "/plLIFELINKFORPDD-main/new-lifelink-/uploads/donors/id_proof_path/" . $donor['id_proof_path']; ?>
                             <a href="javascript:void(0);" onclick="openInNewWindow('<?php echo $id_path; ?>')" class="view-btn">
                                 <i class="fas fa-eye"></i> View Document
                             </a>
@@ -140,7 +140,7 @@ try {
                     <div class="document-info">
                         <h3>Medical Reports</h3>
                         <?php if (!empty($donor['medical_reports_path'])): ?>
-                            <?php $medical_path = "/LIFELINKFORPDD-main/LIFELINKFORPDD/uploads/donors/medical_reports_path/" . $donor['medical_reports_path']; ?>
+                            <?php $medical_path = "/plLIFELINKFORPDD-main/new-lifelink-/uploads/donors/medical_reports_path/" . $donor['medical_reports_path']; ?>
                             <a href="javascript:void(0);" onclick="openInNewWindow('<?php echo $medical_path; ?>')" class="view-btn">
                                 <i class="fas fa-eye"></i> View Document
                             </a>
@@ -158,7 +158,7 @@ try {
                     <div class="document-info">
                         <h3>Guardian ID Proof</h3>
                         <?php if (!empty($donor['guardian_id_proof_path'])): ?>
-                            <?php $guardian_path = "/LIFELINKFORPDD-main/LIFELINKFORPDD/uploads/donors/guardian_id_proof_path/" . $donor['guardian_id_proof_path']; ?>
+                            <?php $guardian_path = "/plLIFELINKFORPDD-main/new-lifelink-/uploads/donors/guardian_id_proof_path/" . $donor['guardian_id_proof_path']; ?>
                             <a href="javascript:void(0);" onclick="openInNewWindow('<?php echo $guardian_path; ?>')" class="view-btn">
                                 <i class="fas fa-eye"></i> View Document
                             </a>

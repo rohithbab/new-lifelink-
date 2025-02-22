@@ -14176,3 +14176,58 @@ Data: []
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
 2025-01-09 06:37:10: SQL executed successfully
 2025-01-09 06:37:10: Transaction committed
+2025-02-22 06:02:54: Registration process started
+2025-02-22 06:02:54: POST data: Array
+(
+    [hospital_name] => Sandhiya Hospitals
+    [hospital_email] => sandhiyassenthil1408@gmail.com
+    [hospital_phone] => 9345728466
+    [street] => no 28,Thiruvaru,Trichy 60081
+    [city] => chennai
+    [state] => Tamil nadu
+    [postal_code] => 603202
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => Sandhiya
+    [designation] => dean
+    [contact_phone] => 9345728466
+    [contact_email] => sandhiyassenthil1408@gmail.com
+    [license_number] => LICS001
+    [username] => Sandhiya
+    [password] => #Sandhiya123
+    [confirm_password] => #Sandhiya123
+    [terms] => on
+)
+
+2025-02-22 06:02:54: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php6C5B.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-02-22 06:02:54: Database connection successful
+2025-02-22 06:02:54: Sanitized inputs: name=Sandhiya Hospitals, email=sandhiyassenthil1408@gmail.com, phone=9345728466
+2025-02-22 06:02:54: Address: no 28,Thiruvaru,Trichy 60081, chennai, Tamil nadu, 603202, India
+2025-02-22 06:02:54: Region: Tamil nadu
+2025-02-22 06:02:54: Transaction started
+2025-02-22 06:02:54: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-02-22 06:02:54: SQL executed successfully
+2025-02-22 06:02:54: Hospital data inserted successfully. ID: 19
+2025-02-22 06:02:54: Notification created successfully
+2025-02-22 06:02:54: Transaction committed

@@ -235,7 +235,7 @@ session_start();
         }
         ?>
 
-        <form action="/LIFELINKFORPDD-main/LIFELINKFORPDD/backend/php/donor_registration_process.php" method="POST" enctype="multipart/form-data" id="donorRegistrationForm">
+        <form action="../backend/php/donor_registration_process.php" method="POST" enctype="multipart/form-data" id="donorRegistrationForm">
             <!-- Personal Information -->
             <div class="form-section">
                 <h3 class="section-title">Personal Information</h3>

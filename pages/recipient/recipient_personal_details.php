@@ -126,7 +126,7 @@ try {
                             <div class="document-info">
                                 <h3>ID Document (<?php echo htmlspecialchars($recipient['id_proof_type'] ?? 'Not specified'); ?>)</h3>
                                 <?php if (!empty($recipient['id_document'])): ?>
-                                    <?php $id_path = "/LIFELINKFORPDD-main/LIFELINKFORPDD/uploads/recipient_registration/id_document/" . $recipient['id_document']; ?>
+                                    <?php $id_path = "/plLIFELINKFORPDD-main/new-lifelink-/uploads/recipient_registration/id_document/" . $recipient['id_document']; ?>
                                     <a href="javascript:void(0);" onclick="openInNewWindow('<?php echo $id_path; ?>')" class="view-btn">
                                         <i class="fas fa-eye"></i> View Document
                                     </a>
@@ -145,7 +145,7 @@ try {
                             <div class="document-info">
                                 <h3>Medical Reports</h3>
                                 <?php if (!empty($recipient['recipient_medical_reports'])): ?>
-                                    <?php $medical_path = "/LIFELINKFORPDD-main/LIFELINKFORPDD/uploads/recipient_registration/recipient_medical_reports/" . $recipient['recipient_medical_reports']; ?>
+                                    <?php $medical_path = "/plLIFELINKFORPDD-main/new-lifelink-/uploads/recipient_registration/recipient_medical_reports/" . $recipient['recipient_medical_reports']; ?>
                                     <a href="javascript:void(0);" onclick="openInNewWindow('<?php echo $medical_path; ?>')" class="view-btn">
                                         <i class="fas fa-eye"></i> View Document
                                     </a>

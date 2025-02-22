@@ -1,170 +1,282 @@
 <?php
 session_start();
+
+// If no success flag in session, redirect to registration page
 if (!isset($_SESSION['registration_success'])) {
     header("Location: donor_registration.php");
     exit();
 }
 
-// Clear the success flag after displaying the page
-$email = isset($_SESSION['donor_email']) ? $_SESSION['donor_email'] : '';
+// Get the donor name from session
+$donor_name = $_SESSION['donor_name'] ?? 'donor';
+
+// Clear the session variables
 unset($_SESSION['registration_success']);
-unset($_SESSION['donor_email']);
+unset($_SESSION['donor_name']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Success - LifeLink</title>
+    <title>Registration Successful - LifeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         .success-container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 600px;
+            margin: 4rem auto;
             padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             text-align: center;
-        }
-        .success-icon {
-            font-size: 5rem;
-            color: #28a745;
-            margin-bottom: 1rem;
-        }
-        .success-title {
-            color: #28a745;
-            margin-bottom: 1.5rem;
-        }
-        .timeline {
-            margin: 2rem 0;
-            padding: 0;
-            list-style: none;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
+            overflow: hidden;
         }
-        .timeline:before {
+        
+        .success-container::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: #ddd;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--primary-blue) 100%);
         }
-        .timeline-item {
+        
+        .success-icon {
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .success-title {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .success-message {
+            color: var(--dark-gray);
             margin-bottom: 2rem;
-            position: relative;
-            padding-left: 50%;
+            line-height: 1.6;
+            font-size: 1.1rem;
         }
-        .timeline-item:before {
-            content: '';
-            position: absolute;
-            left: calc(50% - 6px);
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            border: 2px solid #007bff;
-            border-radius: 50%;
+        
+        .steps-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .timeline-item.active:before {
-            background: #28a745;
-            border-color: #28a745;
+        
+        .steps-title {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .timeline-content {
-            background: #f8f9fa;
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
             padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-left: 2rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
-        .timeline-title {
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 0.5rem;
+        
+        .step-item:hover {
+            background: #f8f9fa;
         }
-        .timeline-item.active .timeline-title {
-            color: #28a745;
-        }
-        .back-button {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: #007bff;
+        
+        .step-number {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 1rem;
-            transition: background 0.3s;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
         }
-        .back-button:hover {
-            background: #0056b3;
+        
+        .step-content {
+            flex-grow: 1;
         }
-        .password-info {
-            margin-top: 2rem;
+        
+        .step-title {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
         }
-        .password-display {
-            background: #f8f9fa;
+        
+        .whatsapp-box {
+            background: #dcf8c6;
+            border-radius: 10px;
             padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0.5rem 0;
+            border-left: 4px solid #25d366;
         }
-        .password-display code {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #28a745;
+        
+        .whatsapp-number {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: #075e54;
+            background: rgba(255,255,255,0.5);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            margin: 0.3rem 0;
+            display: inline-block;
         }
-        .warning {
-            color: #dc3545;
-            font-weight: bold;
-            margin-top: 0.5rem;
+        
+        .copy-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #128c7e;
+        }
+        
+        .note-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        
+        .note-title {
+            color: #856404;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .success-container {
+                margin: 2rem;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.php" class="logo">
+                <span class="logo-text">Life<span class="logo-gradient">Link</span></span>
+            </a>
+        </div>
+    </nav>
+
     <div class="success-container">
         <i class="fas fa-check-circle success-icon"></i>
         <h1 class="success-title">Registration Successful!</h1>
-        <p>Thank you for registering as a donor with LifeLink. Your application is now being processed.</p>
+        <p class="success-message">
+            Thank you <span class="hospital-name"><?php echo htmlspecialchars($donor_name); ?></span> for registering with LifeLink. 
+            Follow these steps to receive your ODML ID through WhatsApp.
+        </p>
         
-        <?php if ($email): ?>
-            <p>A confirmation email will be sent to: <strong><?php echo htmlspecialchars($email); ?></strong></p>
-        <?php endif; ?>
-
-        <div class="timeline">
-            <div class="timeline-item active">
-                <div class="timeline-content">
-                    <div class="timeline-title">Registration Submitted</div>
-                    <p>Your donor registration has been successfully submitted.</p>
+        <div class="steps-container">
+            <h3 class="steps-title">
+                <i class="fas fa-list-ol"></i>
+                Complete These Steps
+            </h3>
+            
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Save Our WhatsApp Number</div>
+                    <div class="whatsapp-box">
+                        <span class="whatsapp-number">+14155238886</span>
+                        <button class="copy-btn" onclick="copyNumber()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <div class="timeline-title">Under Review</div>
-                    <p>Our team will review your application and verify the provided information.</p>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Send the Following Message</div>
+                    <div class="whatsapp-box">
+                        <span class="whatsapp-number">join paint-taught</span>
+                        <button class="copy-btn" onclick="copyMessage()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <div class="timeline-title">Application Decision</div>
-                    <p>The admin will review and make a decision on your application.</p>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Wait for Confirmation</div>
+                    <p>You'll receive a confirmation message on WhatsApp.</p>
                 </div>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <div class="timeline-title">Email Notification</div>
-                    <p>You will receive an email with your ODML ID and next steps.</p>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Receive Updates</div>
+                    <p>You'll receive:</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green);"></i> Your ODML ID if approved</li>
+                        <li><i class="fas fa-times-circle" style="color: #dc3545;"></i> Reason for rejection if not approved</li>
+                    </ul>
                 </div>
+            </div>
+            
+            <div class="note-box">
+                <div class="note-title">
+                    <i class="fas fa-info-circle"></i>
+                    Important Note
+                </div>
+                <p>This is a one-time setup. Keep your WhatsApp notifications enabled to receive important updates about your registration.</p>
             </div>
         </div>
-
-        <p><strong>What's Next?</strong></p>
-        <p>Please check your email regularly. We will send you updates about your application status and your ODML ID once approved.</p>
         
-        <a href="index.php" class="back-button">Back to Home</a>
+        <a href="../index.php" class="btn btn-primary">
+            <i class="fas fa-home"></i> Return to Homepage
+        </a>
     </div>
+
+    <script>
+    function copyNumber() {
+        navigator.clipboard.writeText('+14155238886');
+        alert('WhatsApp number copied to clipboard!');
+    }
+    
+    function copyMessage() {
+        navigator.clipboard.writeText('join paint-taught');
+        alert('Message copied to clipboard!');
+    }
+    </script>
 </body>
 </html>
