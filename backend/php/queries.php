@@ -68,7 +68,7 @@ function getDashboardStats($conn, $tables = ['hospitals', 'donor', 'recipient_re
 // Get pending hospitals
 function getPendingHospitals($conn) {
     try {
-        $stmt = $conn->prepare("SELECT hospital_id, name as hospital_name, email, odml_id FROM hospitals WHERE status = 'Pending'");
+        $stmt = $conn->prepare("SELECT hospital_id, name as hospital_name, email, phone, odml_id FROM hospitals WHERE status = 'Pending'");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -85,6 +85,7 @@ function getPendingDonors($conn) {
                 donor_id,
                 name,
                 email,
+                phone,
                 blood_group as blood_type,
                 organs_to_donate as organ_type,
                 DATE_FORMAT(created_at, '%Y-%m-%d') as registration_date,
@@ -114,6 +115,7 @@ function getPendingRecipients($conn) {
                 id,
                 full_name as name,
                 email,
+                phone,
                 blood_type as blood_type,
                 organ_required as needed_organ,
                 urgency_level as urgency,

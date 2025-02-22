@@ -49,33 +49,63 @@ $urgentRecipients = getUrgentRecipients($conn);
 
         /* Button Styles */
         .update-btn {
-            padding: 6px 12px;
-            background: #1a73e8;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #0396FF, #4CAF50);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 0 10px rgba(3, 150, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .update-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0), 
+                rgba(255,255,255,0.2), 
+                rgba(255,255,255,0));
+            transform: rotate(45deg);
+            animation: glowing 2s linear infinite;
+        }
+
+        @keyframes glowing {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
         }
 
         .update-btn:hover {
-            background: #1557b0;
+            background: linear-gradient(135deg, #0377cc, #388E3C);
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(3, 150, 255, 0.4);
         }
 
         .reject-btn {
-            padding: 6px 12px;
+            padding: 8px 16px;
             background: #dc3545;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.3s ease;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
         }
 
         .reject-btn:hover {
             background: #c82333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
 
         .view-btn {
@@ -342,145 +372,85 @@ $urgentRecipients = getUrgentRecipients($conn);
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8f0fe 100%);
-            margin: 20px auto;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            border-radius: 8px;
             padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 85vh;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            position: sticky;
-            top: 0;
-            background: inherit;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e3e8f0;
-            z-index: 1;
-        }
-
-        .modal-body {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .modal-body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .modal-body::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        .modal-body::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-
-        .modal-body::-webkit-scrollbar-thumb:hover {
-            background: #666;
-        }
-
-        .close {
-            position: absolute;
-            right: 25px;
-            top: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #666;
-            cursor: pointer;
-            transition: 0.3s;
-            z-index: 2;
-        }
-
-        .close:hover {
-            color: #333;
+            border-top: 4px solid #4CAF50;
         }
 
         .modal h2 {
             color: #2c3e50;
-            font-size: 24px;
-            margin: 0;
-            padding-right: 40px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
         }
 
-        .match-details {
-            display: grid;
-            gap: 20px;
-            padding: 10px 0;
+        .modal input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
-        .detail-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: 1px solid #e3e8f0;
+        .modal input[type="text"]:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.2);
         }
 
-        .detail-section h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 18px;
+        .modal-notification {
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin: 15px 0;
         }
 
-        .detail-section h3 i {
-            color: #3498db;
+        .modal-notification i {
+            color: #25D366;
             font-size: 20px;
         }
 
-        .detail-section.match-info {
-            border-left: 4px solid #3498db;
-        }
-
-        .detail-section.donor-info {
-            border-left: 4px solid #2ecc71;
-        }
-
-        .detail-section.recipient-info {
-            border-left: 4px solid #9b59b6;
-        }
-
-        .detail-section p {
+        .modal-actions {
             display: flex;
-            justify-content: space-between;
-            margin: 12px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f2f5;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        .detail-section p:last-child {
-            border-bottom: none;
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .detail-section p strong {
-            color: #34495e;
-            min-width: 140px;
+        .modal-btn.approve {
+            background: linear-gradient(135deg, #1a73e8, #4CAF50);
+            color: white;
+            border: none;
         }
 
-        .detail-section p span {
-            color: #666;
-            flex: 1;
-            text-align: right;
+        .modal-btn.approve:hover {
+            background: linear-gradient(135deg, #1557b0, #388E3C);
+            transform: translateY(-1px);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .modal-btn.cancel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #6c757d;
         }
-        
-        /* ... other styles ... */
+
+        .modal-btn.cancel:hover {
+            background: #e9ecef;
+        }
         
         /* Notification Bell Styles */
         .notification-bell-container {
@@ -676,37 +646,68 @@ $urgentRecipients = getUrgentRecipients($conn);
         .btn-primary:hover {
             background: linear-gradient(135deg, #45a049, #3d8b40);
             transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         /* Button Styles */
         .update-btn {
-            padding: 6px 12px;
-            background: #1a73e8;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #0396FF, #4CAF50);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 0 10px rgba(3, 150, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .update-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0), 
+                rgba(255,255,255,0.2), 
+                rgba(255,255,255,0));
+            transform: rotate(45deg);
+            animation: glowing 2s linear infinite;
+        }
+
+        @keyframes glowing {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
         }
 
         .update-btn:hover {
-            background: #1557b0;
+            background: linear-gradient(135deg, #0377cc, #388E3C);
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(3, 150, 255, 0.4);
         }
 
         .reject-btn {
-            padding: 6px 12px;
+            padding: 8px 16px;
             background: #dc3545;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.3s ease;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
         }
 
         .reject-btn:hover {
             background: #c82333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
 
         .view-btn {
@@ -826,6 +827,176 @@ $urgentRecipients = getUrgentRecipients($conn);
 
         .btn-approve:hover {
             background: #1557b0;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            position: relative;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid #4CAF50;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(76, 175, 80, 0.1);
+            position: relative;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h2 i {
+            color: #4CAF50;
+        }
+
+        .modal-header .hospital-name {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .input-group input, 
+        .input-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            outline: none;
+        }
+
+        .notification-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem;
+            background: rgba(37, 211, 102, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .notification-box i {
+            color: #25D366;
+            font-size: 1.5rem;
+        }
+
+        .notification-box p {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-btn.cancel {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #dee2e6;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #e9ecef;
+        }
+
+        .modal-btn.approve {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn.approve:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .modal-btn.reject {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn.reject:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
         }
     </style>
 
@@ -986,6 +1157,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             <tr>
                                 <th>Hospital Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Update ODML ID</th>
                                 <th>Actions</th>
                                 <th>Details</th>
@@ -996,19 +1168,20 @@ $urgentRecipients = getUrgentRecipients($conn);
                             <tr>
                                 <td><?php echo htmlspecialchars($hospital['hospital_name']); ?></td>
                                 <td><?php echo htmlspecialchars($hospital['email']); ?></td>
+                                <td><?php echo htmlspecialchars($hospital['phone']); ?></td>
                                 <td>
-                                    <button class="update-btn" onclick="openOdmlModal('hospital', '<?php echo $hospital['hospital_id']; ?>', '<?php echo htmlspecialchars($hospital['hospital_name']); ?>', '<?php echo htmlspecialchars($hospital['email']); ?>')">
+                                    <button class="update-btn" onclick="showUpdateModal('<?php echo $hospital['hospital_id']; ?>', '<?php echo htmlspecialchars($hospital['hospital_name']); ?>', '<?php echo htmlspecialchars($hospital['email']); ?>')">
                                         <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
                                 </td>
                                 <td class="action-cell">
-                                    <button class="reject-btn">
+                                    <button class="reject-btn" onclick="rejectHospital('<?php echo $hospital['hospital_id']; ?>')">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </td>
                                 <td>
-                                    <a href="view_hospital_details.php?id=<?php echo $hospital['hospital_id']; ?>" class="view-btn">
-                                        <i class="fas fa-eye"></i> View Details
+                                    <a href="hospital_details.php?id=<?php echo $hospital['hospital_id']; ?>" class="view-btn">
+                                        <i class="fas fa-eye"></i> View
                                     </a>
                                 </td>
                             </tr>
@@ -1162,27 +1335,70 @@ $urgentRecipients = getUrgentRecipients($conn);
                 </div>
             </div>
 
-            <!-- ODML Update Modal -->
-            <div id="odmlModal" class="modal">
+            <!-- Update ODML Modal -->
+            <div id="updateODMLModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h3>Update ODML ID</h3>
+                    <div class="modal-header">
+                        <h2><i class="fas fa-hospital-user"></i> Update ODML ID</h2>
+                        <div class="hospital-name">Hospital: <span id="hospitalName"></span></div>
+                    </div>
+                    
                     <div class="modal-body">
-                        <p>You are about to update the ODML ID for: <strong id="entityName"></strong></p>
-                        <input type="text" id="modalOdmlId" class="odml-input" placeholder="Enter ODML ID">
-                        <div class="modal-info">
-                            <i class="fas fa-envelope"></i>
-                            <span>An email notification will be sent to <strong id="entityEmail"></strong></span>
+                        <div class="input-group">
+                            <label for="odmlIdInput">ODML ID</label>
+                            <input type="text" id="odmlIdInput" placeholder="Enter ODML ID">
                         </div>
-                        <div class="modal-info">
-                            <i class="fas fa-check-circle"></i>
-                            <span>This action will approve the hospital's registration.</span>
+
+                        <div class="notification-box">
+                            <i class="fab fa-whatsapp"></i>
+                            <p>A WhatsApp notification will be sent to verify the update</p>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>
+                                <input type="checkbox" id="approveCheck" checked>
+                                This action will approve the hospital's registration
+                            </label>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn-cancel" onclick="closeOdmlModal()">Cancel</button>
-                        <button class="btn-approve" onclick="approveAndUpdate()">
+                    
+                    <div class="modal-actions">
+                        <button class="modal-btn cancel" onclick="closeModal('updateODMLModal')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button class="modal-btn approve" onclick="approveAndUpdate()">
                             <i class="fas fa-check"></i> Approve & Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reject Hospital Modal -->
+            <div id="rejectModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-times-circle"></i> Reject Hospital</h2>
+                        <div class="hospital-name">Hospital: <span id="rejectHospitalName"></span></div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label for="rejectReason">Reason for Rejection</label>
+                            <textarea id="rejectReason" rows="4" placeholder="Please provide a reason for rejection"></textarea>
+                        </div>
+
+                        <div class="notification-box">
+                            <i class="fab fa-whatsapp"></i>
+                            <p>A WhatsApp message with the rejection reason will be sent to the hospital</p>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="modal-btn cancel" onclick="closeModal('rejectModal')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button class="modal-btn reject" onclick="confirmReject()">
+                            <i class="fas fa-times-circle"></i> Confirm Rejection
                         </button>
                     </div>
                 </div>
@@ -1414,8 +1630,6 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 const data = typeof response === 'string' ? JSON.parse(response) : response;
                                 if (data.success) {
                                     alert('ODML ID updated successfully');
-                                    $(button).prev('input').prop('disabled', true);
-                                    $(button).prop('disabled', true);
                                 } else {
                                     alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
                                 }
@@ -1504,29 +1718,35 @@ $urgentRecipients = getUrgentRecipients($conn);
             let currentEntityId = null;
             let currentEntityType = null;
 
-            // Open ODML modal
-            function openOdmlModal(type, id, name, email) {
-                currentEntityId = id;
-                currentEntityType = type;
-                
-                document.getElementById('entityName').textContent = name;
-                document.getElementById('entityEmail').textContent = email;
-                document.getElementById('modalOdmlId').value = '';
-                
-                document.getElementById('odmlModal').style.display = 'block';
+            // Update modal functions
+            function showUpdateModal(hospitalId, hospitalName) {
+                const modal = document.getElementById('updateODMLModal');
+                $('#hospitalName').text(hospitalName);
+                modal.style.display = 'block';
+                currentHospitalId = hospitalId;
             }
 
-            // Close ODML modal
-            function closeOdmlModal() {
-                document.getElementById('odmlModal').style.display = 'none';
-                currentEntityId = null;
-                currentEntityType = null;
+            // Reject modal functions
+            function rejectHospital(hospitalId) {
+                const hospitalName = $(`tr[data-hospital-id="${hospitalId}"] td:first-child`).text();
+                const modal = document.getElementById('rejectModal');
+                $('#rejectHospitalName').text(hospitalName);
+                modal.style.display = 'block';
+                currentHospitalId = hospitalId;
             }
 
-            // Approve and update ODML ID
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.style.display = 'none';
+                if (modalId === 'rejectModal') {
+                    $('#rejectReason').val(''); // Clear the textarea
+                } else if (modalId === 'updateODMLModal') {
+                    $('#odmlIdInput').val(''); // Clear the input
+                }
+            }
+
             function approveAndUpdate() {
-                const odmlId = document.getElementById('modalOdmlId').value.trim();
-                
+                const odmlId = $('#odmlIdInput').val();
                 if (!odmlId) {
                     return;
                 }
@@ -1536,7 +1756,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                     url: '../backend/php/update_odml.php',
                     type: 'POST',
                     data: {
-                        id: currentEntityId,
+                        id: currentHospitalId,
                         type: currentEntityType,
                         odmlId: odmlId,
                         action: 'approve'
@@ -1563,6 +1783,150 @@ $urgentRecipients = getUrgentRecipients($conn);
             // Close modal when clicking X
             document.querySelector('.close').onclick = function() {
                 closeOdmlModal();
+            }
+        </script>
+        <script>
+            // Remove the default dialog
+            function updateHospitalODMLID(hospitalId) {
+                const odmlId = $(`#odml_id_${hospitalId}`).val();
+                showUpdateModal(hospitalId);
+            }
+
+            function showUpdateModal(hospitalId) {
+                const modal = document.getElementById('updateODMLModal');
+                const hospitalName = $(`#hospital_name_${hospitalId}`).text();
+                $('#hospitalName').text(hospitalName);
+                modal.style.display = 'block';
+                currentHospitalId = hospitalId;
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('updateODMLModal');
+                modal.style.display = 'none';
+            }
+
+            function approveAndUpdate() {
+                const odmlId = $('#odmlIdInput').val();
+                if (!odmlId) {
+                    alert('Please enter an ODML ID');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../backend/php/update_hospital_odml.php',
+                    method: 'POST',
+                    data: {
+                        hospital_id: currentHospitalId,
+                        odml_id: odmlId
+                    },
+                    success: function(response) {
+                        const data = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (data.success) {
+                            closeModal();
+                            location.reload();
+                        } else {
+                            alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
+                        }
+                    },
+                    error: function() {
+                        alert('Failed to update ODML ID. Please try again.');
+                    }
+                });
+            }
+        </script>
+        <script>
+            // Global variable to store current hospital ID
+            let currentHospitalId = null;
+
+            // Update modal functions
+            function showUpdateModal(hospitalId, hospitalName) {
+                const modal = document.getElementById('updateODMLModal');
+                $('#hospitalName').text(hospitalName);
+                modal.style.display = 'block';
+                currentHospitalId = hospitalId;
+            }
+
+            // Reject modal functions
+            function rejectHospital(hospitalId) {
+                const hospitalName = $(`tr[data-hospital-id="${hospitalId}"] td:first-child`).text();
+                const modal = document.getElementById('rejectModal');
+                $('#rejectHospitalName').text(hospitalName);
+                modal.style.display = 'block';
+                currentHospitalId = hospitalId;
+            }
+
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.style.display = 'none';
+                if (modalId === 'rejectModal') {
+                    $('#rejectReason').val(''); // Clear the textarea
+                } else if (modalId === 'updateODMLModal') {
+                    $('#odmlIdInput').val(''); // Clear the input
+                }
+            }
+
+            function approveAndUpdate() {
+                const odmlId = $('#odmlIdInput').val();
+                if (!odmlId) {
+                    return;
+                }
+
+                // Update ODML ID and approve
+                $.ajax({
+                    url: '../backend/php/update_odml.php',
+                    type: 'POST',
+                    data: {
+                        id: currentHospitalId,
+                        type: currentEntityType,
+                        odmlId: odmlId,
+                        action: 'approve'
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        location.reload();
+                    }
+                });
+
+                closeOdmlModal();
+            }
+
+            function confirmReject() {
+                const reason = $('#rejectReason').val();
+                if (!reason) {
+                    alert('Please provide a reason for rejection');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../backend/php/update_hospital_status.php',
+                    method: 'POST',
+                    data: {
+                        hospital_id: currentHospitalId,
+                        status: 'rejected',
+                        reason: reason
+                    },
+                    success: function(response) {
+                        const data = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (data.success) {
+                            closeModal('rejectModal');
+                            location.reload();
+                        } else {
+                            alert('Failed to reject hospital: ' + (data.message || 'Unknown error'));
+                        }
+                    },
+                    error: function() {
+                        alert('Failed to reject hospital. Please try again.');
+                    }
+                });
+            }
+
+            // Close modals when clicking outside
+            window.onclick = function(event) {
+                if (event.target.className === 'modal') {
+                    event.target.style.display = 'none';
+                }
             }
         </script>
         <script src="../../assets/js/notifications.js"></script>
