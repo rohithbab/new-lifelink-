@@ -1,0 +1,20 @@
+CREATE TABLE made_matches_by_hospitals (
+    match_id INT PRIMARY KEY AUTO_INCREMENT,
+    match_made_by INT NOT NULL,
+    donor_id INT NOT NULL,
+    donor_name VARCHAR(255) NOT NULL,
+    donor_hospital_id INT NOT NULL,
+    donor_hospital_name VARCHAR(255) NOT NULL,
+    recipient_id INT NOT NULL,
+    recipient_name VARCHAR(255) NOT NULL,
+    recipient_hospital_id INT NOT NULL,
+    recipient_hospital_name VARCHAR(255) NOT NULL,
+    organ_type VARCHAR(50) NOT NULL,
+    blood_group VARCHAR(10) NOT NULL,
+    match_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (match_made_by) REFERENCES hospitals(hospital_id),
+    FOREIGN KEY (donor_hospital_id) REFERENCES hospitals(hospital_id),
+    FOREIGN KEY (recipient_hospital_id) REFERENCES hospitals(hospital_id),
+    FOREIGN KEY (donor_id) REFERENCES donor(donor_id),
+    FOREIGN KEY (recipient_id) REFERENCES recipient_registration(id)
+);

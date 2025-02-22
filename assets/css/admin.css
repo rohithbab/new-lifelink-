@@ -1,0 +1,340 @@
+/* Admin Dashboard Styles */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(1rem, 3vw, 1.5rem);
+    margin: clamp(1rem, 3vw, 2rem) 0;
+}
+
+/* Statistics Cards */
+.stats-container {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+.stat-card {
+    text-align: center;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h3 {
+    color: var(--gray);
+    font-size: var(--body-size);
+    margin-bottom: 0.5rem;
+}
+
+.stat-number {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    background: var(--gradient-mix);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Recent Activities */
+.recent-activities {
+    grid-column: span 2;
+    min-height: clamp(300px, 50vh, 400px);
+}
+
+.activity-list {
+    max-height: clamp(250px, 40vh, 350px);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.activity-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.activity-list::-webkit-scrollbar-track {
+    background: var(--light-gray);
+    border-radius: 3px;
+}
+
+.activity-list::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 3px;
+}
+
+.activity-item {
+    padding: clamp(0.75rem, 2vw, 1rem);
+    border-bottom: 1px solid var(--light-blue);
+    transition: background-color 0.3s ease;
+}
+
+.activity-item:hover {
+    background-color: var(--light-blue);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-type {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    font-size: var(--small-size);
+    margin-bottom: 0.5rem;
+}
+
+/* Urgent Cases */
+.urgent-cases {
+    grid-column: span 2;
+    min-height: clamp(300px, 50vh, 400px);
+}
+
+.urgent-list {
+    max-height: clamp(250px, 40vh, 350px);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.urgent-item {
+    padding: clamp(0.75rem, 2vw, 1rem);
+    background: var(--light-green);
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.urgent-item:hover {
+    transform: translateX(5px);
+}
+
+.urgent-item h4 {
+    color: var(--primary-green);
+    margin-bottom: 0.5rem;
+    font-size: var(--body-size);
+}
+
+.urgent-item p {
+    font-size: var(--small-size);
+    margin-bottom: 0.25rem;
+}
+
+/* Pending Approvals */
+.pending-approvals {
+    grid-column: 1 / -1;
+}
+
+.pending-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+.pending-item {
+    padding: clamp(0.75rem, 2vw, 1rem);
+    border: 1px solid var(--light-blue);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pending-item:hover {
+    border-color: var(--primary-blue);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
+
+.pending-item h4 {
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+    font-size: var(--body-size);
+}
+
+.pending-item p {
+    font-size: var(--small-size);
+    margin-bottom: 1rem;
+    color: var(--gray);
+}
+
+.approval-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.approval-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: var(--small-size);
+}
+
+/* Pending Hospitals Section */
+.pending-hospitals {
+    margin-top: 1rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.table th {
+    background-color: var(--primary-blue);
+    color: white;
+    font-weight: 600;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.new-registration {
+    background-color: #fff8e1;
+}
+
+.new-badge {
+    background: var(--primary-green);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.875rem;
+}
+
+.btn-success {
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    margin-right: 4px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+/* Hospital Management Styles */
+.filter-section {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background-color: #ffd700;
+    color: #856404;
+}
+
+.status-badge.approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge.rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+.hospital-row.pending {
+    background-color: #fff8e1;
+}
+
+.hospital-row.approved {
+    background-color: #f0fff0;
+}
+
+.hospital-row.rejected {
+    background-color: #fff5f5;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1024px) {
+    .recent-activities,
+    .urgent-cases {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-grid {
+        gap: 1rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .approval-actions {
+        flex-direction: column;
+    }
+
+    .approval-actions button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+}

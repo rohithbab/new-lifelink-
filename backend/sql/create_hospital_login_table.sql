@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS hospital_login (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    hospital_id INT NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    odml_id VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    last_login TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE CASCADE
+);

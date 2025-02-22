@@ -1,0 +1,643 @@
+[2024-12-19 06:56:10] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:10] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:10] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:10] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:10] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:22] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:22] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:22] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:22] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:56:22] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:56] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:56] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:56] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:56] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:56] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:59] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:59] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:59] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:59] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 06:57:59] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:14] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:14] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:14] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:14] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:14] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:17] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:17] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:17] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:17] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 08:22:17] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:20] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:24] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:24] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:24] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:24] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:09:24] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:06] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:10] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:10] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:10] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:10] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 09:22:10] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:20] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:20] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:20] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:20] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:20] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:24] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:24] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:24] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:24] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:13:24] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/6760ffca68953.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:22:44] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 8
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:22:44] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-19 10:22:44] Database query result
+Data: Array
+(
+    [proof_path] => 6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:22:44] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+    [file_exists] => 
+)
+
+--------------------------------------------------------------------------------
+[2024-12-19 10:22:44] File not found at path
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6760ffca67b89.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 1
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] Database query result
+Data: Array
+(
+    [proof_path] => 6765010ed8d22.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6765010ed8d22.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 05:10:20] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6765010ed8d22.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 3
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] Database query result
+Data: Array
+(
+    [proof_path] => 67663304dd4df.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/67663304dd4df.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:15] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/67663304dd4df.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 3
+    [type] => guardian
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] Querying guardian ID proof
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] Database query result
+Data: Array
+(
+    [proof_path] => 67663304e0d5f.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/67663304e0d5f.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-21 15:48:24] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/guardian_id_proof_path/67663304e0d5f.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 3
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] Database query result
+Data: Array
+(
+    [proof_path] => 67663304dd4df.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/67663304dd4df.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-26 09:17:29] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/67663304dd4df.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] Attempting to fetch ID proof
+Data: Array
+(
+    [donor_id] => 1
+    [type] => donor
+)
+
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] Querying donor ID proof
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] Database query result
+Data: Array
+(
+    [proof_path] => 6765010ed8d22.png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] Constructed file path
+Data: Array
+(
+    [base_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/
+    [full_path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6765010ed8d22.png
+    [file_exists] => 1
+)
+
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] File extension
+Data: Array
+(
+    [extension] => png
+)
+
+--------------------------------------------------------------------------------
+[2024-12-31 09:23:49] Attempting to output file
+Data: Array
+(
+    [path] => C:\xampp\htdocs\LIFELINKFORPDD-main\LIFELINKFORPDD\pages\admin/../../uploads/donors/id_proof_path/6765010ed8d22.png
+)
+
+--------------------------------------------------------------------------------
