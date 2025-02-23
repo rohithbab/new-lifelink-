@@ -112,25 +112,17 @@ function getPendingRecipients($conn) {
     try {
         $stmt = $conn->prepare("
             SELECT 
-                id,
+                id as recipient_id,
                 full_name as name,
                 email,
-                phone,
-                blood_type as blood_type,
-                organ_required as needed_organ,
-                urgency_level as urgency,
-                DATE_FORMAT(CURRENT_TIMESTAMP, '%Y-%m-%d') as registration_date,
+                phone_number as phone,
+                blood_type,
                 request_status as status
             FROM 
                 recipient_registration 
             WHERE 
                 request_status = 'pending'
             ORDER BY 
-                CASE 
-                    WHEN urgency_level = 'High' THEN 1
-                    WHEN urgency_level = 'Medium' THEN 2
-                    ELSE 3
-                END,
                 id DESC
         ");
         $stmt->execute();
