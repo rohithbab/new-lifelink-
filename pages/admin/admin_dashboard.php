@@ -1455,6 +1455,44 @@ $urgentRecipients = getUrgentRecipients($conn);
                 let currentEntityName = null;
                 let currentEntityEmail = null;
 
+                function updateOdmlId() {
+                    const odmlId = document.getElementById('odml_id').value;
+                    
+                    if (!odmlId) {
+                        alert('Please enter an ODML ID');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '../../backend/php/update_odml_id.php',
+                        method: 'POST',
+                        data: {
+                            type: currentEntityType,
+                            id: currentEntityId,
+                            odml_id: odmlId
+                        },
+                        success: function(response) {
+                            try {
+                                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                                if (data.success) {
+                                    alert('ODML ID updated successfully');
+                                    closeOdmlModal();
+                                    location.reload();
+                                } else {
+                                    alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
+                                }
+                            } catch (e) {
+                                console.error('Error parsing response:', e);
+                                alert('Error updating ODML ID');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            alert('Error updating ODML ID');
+                        }
+                    });
+                }
+
                 function openOdmlModal(type, id, name, email) {
                     currentEntityId = id;
                     currentEntityType = type;
@@ -1485,6 +1523,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                     `;
                     document.getElementById('approveCheckboxLabel').textContent = checkboxLabel;
                     document.querySelector('#odmlModal h2').textContent = 'Update ODML ID';
+                    document.getElementById('odml_id').value = ''; // Clear previous value
 
                     // Show modal
                     document.getElementById('odmlModal').style.display = 'block';
@@ -1496,161 +1535,12 @@ $urgentRecipients = getUrgentRecipients($conn);
                     document.getElementById('approveCheckbox').checked = false;
                 }
 
-                function updateOdmlId() {
-                    const odmlId = document.getElementById('odml_id').value;
-                    const isApproved = document.getElementById('approveCheckbox').checked;
-
-                    if (!odmlId) {
-                        alert('Please enter an ODML ID');
-                        return;
-                    }
-
-                    if (!isApproved) {
-                        alert('Please check the approval checkbox');
-                        return;
-                    }
-
-                    // Make AJAX call based on entity type
-                    let updateFunction = '';
-                    if (currentEntityType === 'hospital') {
-                        updateFunction = 'updateHospitalODMLID';
-                    } else if (currentEntityType === 'donor') {
-                        updateFunction = 'updateDonorODMLID';
-                    } else if (currentEntityType === 'recipient') {
-                        updateFunction = 'updateRecipientODMLID';
-                    }
-
-                    $.ajax({
-                        url: `../../backend/php/${updateFunction}.php`,
-                        method: 'POST',
-                        data: {
-                            id: currentEntityId,
-                            odml_id: odmlId
-                        },
-                        success: function(response) {
-                            try {
-                                const result = typeof response === 'string' ? JSON.parse(response) : response;
-                                if (result.success) {
-                                    closeOdmlModal();
-                                    location.reload();
-                                } else {
-                                    alert(result.message || 'Error updating ODML ID');
-                                }
-                            } catch (e) {
-                                alert('Error updating ODML ID');
-                            }
-                        },
-                        error: function() {
-                            alert('Error updating ODML ID');
-                        }
-                    });
-                }
-
-                function openRejectModal(type, id, name, email) {
-                    currentEntityId = id;
-                    currentEntityType = type;
-                    currentEntityName = name;
-                    currentEntityEmail = email;
-
-                    // Update modal content based on entity type
-                    let entityTitle = '';
-                    if (type === 'hospital') {
-                        entityTitle = `Hospital: ${name}`;
-                    } else if (type === 'donor') {
-                        entityTitle = `Donor: ${name}`;
-                    } else if (type === 'recipient') {
-                        entityTitle = `Recipient: ${name}`;
-                    }
-
-                    // Update modal content
-                    document.getElementById('rejectEntityDetails').innerHTML = `
-                        <div class="modal-info">
-                            <p><strong>Name:</strong> ${name}</p>
-                            <p><strong>Email:</strong> ${email}</p>
-                        </div>
-                    `;
-                    document.querySelector('#rejectModal h2').textContent = `Reject ${type.charAt(0).toUpperCase() + type.slice(1)} Registration`;
-
-                    // Show modal
-                    document.getElementById('rejectModal').style.display = 'block';
-                }
-
-                function closeRejectModal() {
-                    document.getElementById('rejectModal').style.display = 'none';
-                    document.getElementById('reject_reason').value = '';
-                }
-
-                function confirmReject() {
-                    const reason = document.getElementById('reject_reason').value;
-
-                    if (!reason) {
-                        alert('Please provide a reason for rejection');
-                        return;
-                    }
-
-                    // Make AJAX call based on entity type
-                    let updateFunction = '';
-                    if (currentEntityType === 'hospital') {
-                        updateFunction = 'updateHospitalStatus';
-                    } else if (currentEntityType === 'donor') {
-                        updateFunction = 'updateDonorStatus';
-                    } else if (currentEntityType === 'recipient') {
-                        updateFunction = 'updateRecipientStatus';
-                    }
-
-                    $.ajax({
-                        url: `../../backend/php/${updateFunction}.php`,
-                        method: 'POST',
-                        data: {
-                            id: currentEntityId,
-                            status: 'rejected',
-                            reason: reason
-                        },
-                        success: function(response) {
-                            alert('Registration rejected successfully');
-                            closeRejectModal();
-                            location.reload();
-                        },
-                        error: function() {
-                            alert('Error rejecting registration');
-                        }
-                    });
-                }
-
-                function updateButtonHandlers() {
-                    // For hospitals
-                    document.querySelectorAll('.reject-hospital-btn').forEach(btn => {
-                        btn.onclick = function() {
-                            const id = this.getAttribute('data-id');
-                            const name = this.getAttribute('data-name');
-                            const email = this.getAttribute('data-email');
-                            openRejectModal('hospital', id, name, email);
-                        };
-                    });
-
-                    // For donors
-                    document.querySelectorAll('.reject-donor-btn').forEach(btn => {
-                        btn.onclick = function() {
-                            const id = this.getAttribute('data-id');
-                            const name = this.getAttribute('data-name');
-                            const email = this.getAttribute('data-email');
-                            openRejectModal('donor', id, name, email);
-                        };
-                    });
-
-                    // For recipients
-                    document.querySelectorAll('.reject-recipient-btn').forEach(btn => {
-                        btn.onclick = function() {
-                            const id = this.getAttribute('data-id');
-                            const name = this.getAttribute('data-name');
-                            const email = this.getAttribute('data-email');
-                            openRejectModal('recipient', id, name, email);
-                        };
-                    });
-                }
-
-                // Call updateButtonHandlers when document is ready
+                // Initialize when document is ready
                 $(document).ready(function() {
+                    // Initialize notification system
+                    updateNotifications();
+                    
+                    // Update button handlers
                     updateButtonHandlers();
                 });
             </script>
@@ -1672,6 +1562,16 @@ $urgentRecipients = getUrgentRecipients($conn);
                 
                 // Update notifications every 30 seconds
                 setInterval(updateNotifications, 30000);
+                
+                // Add event listeners for all dynamic elements
+                $('.update-btn').on('click', function(e) {
+                    e.preventDefault();
+                    const type = $(this).data('type');
+                    const id = $(this).data('id');
+                    const name = $(this).data('name');
+                    const email = $(this).data('email');
+                    openOdmlModal(type, id, name, email);
+                });
             });
             
             function updateNotifications() {
@@ -1756,39 +1656,32 @@ $urgentRecipients = getUrgentRecipients($conn);
             function updateHospitalODMLID(hospitalId) {
                 const odmlId = $(`#odml_id_${hospitalId}`).val();
                 
-                if (!odmlId) {
-                    alert('Please enter an ODML ID');
-                    return;
-                }
-                
-                if (confirm('Are you sure you want to update the ODML ID?')) {
-                    $.ajax({
-                        url: '../../backend/php/update_odml_id.php',
-                        method: 'POST',
-                        data: {
-                            type: 'hospital',
-                            id: hospitalId,
-                            odml_id: odmlId
-                        },
-                        success: function(response) {
-                            try {
-                                const data = typeof response === 'string' ? JSON.parse(response) : response;
-                                if (data.success) {
-                                    alert('ODML ID updated successfully');
-                                } else {
-                                    alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
-                                }
-                            } catch (e) {
-                                console.error('Error parsing response:', e);
-                                alert('Error updating ODML ID');
+                $.ajax({
+                    url: '../../backend/php/update_odml_id.php',
+                    method: 'POST',
+                    data: {
+                        type: 'hospital',
+                        id: hospitalId,
+                        odml_id: odmlId
+                    },
+                    success: function(response) {
+                        try {
+                            const data = typeof response === 'string' ? JSON.parse(response) : response;
+                            if (data.success) {
+                                alert('ODML ID updated successfully');
+                            } else {
+                                alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
                             alert('Error updating ODML ID');
                         }
-                    });
-                }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Error updating ODML ID');
+                    }
+                });
             }
 
             function updateHospitalStatus(hospitalId, status) {
