@@ -14231,3 +14231,59 @@ Data: []
 2025-02-22 06:02:54: Hospital data inserted successfully. ID: 19
 2025-02-22 06:02:54: Notification created successfully
 2025-02-22 06:02:54: Transaction committed
+2025-02-24 05:46:57: Registration process started
+2025-02-24 05:46:57: POST data: Array
+(
+    [hospital_name] => Rohith
+    [hospital_email] => dummyemailhos1@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9345728466
+    [street] => Apm mahal
+    [city] => vellore
+    [state] => tamilnadu
+    [postal_code] => 742451
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => general
+        )
+
+    [contact_name] => sandhiyas1086 ss
+    [designation] => dean
+    [contact_phone] => 934728466
+    [contact_email] => dummyemailhos1@gmail.com
+    [license_number] => lics01
+    [username] => rohith
+    [password] => #Rohith1234
+    [confirm_password] => #Rohith1234
+    [terms] => on
+)
+
+2025-02-24 05:46:57: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php525D.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-02-24 05:46:57: Database connection successful
+2025-02-24 05:46:57: Sanitized inputs: name=Rohith, email=dummyemailhos1@gmail.com, phone=9345728466
+2025-02-24 05:46:57: Address: Apm mahal, vellore, tamilnadu, 742451, India
+2025-02-24 05:46:57: Region: tamilnadu
+2025-02-24 05:46:57: Transaction started
+2025-02-24 05:46:57: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-02-24 05:46:57: SQL executed successfully
+2025-02-24 05:46:57: Hospital data inserted successfully. ID: 20
+2025-02-24 05:46:57: Notification created successfully
+2025-02-24 05:46:57: Transaction committed

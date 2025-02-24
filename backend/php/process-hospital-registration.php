@@ -9,7 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = trim($_POST['hospitalName']);
         $email = trim($_POST['email']);
         $password = $_POST['password'];
+        $countryCode = $_POST['countryCode'] ?? '91'; // Default to India if not set
         $phone = trim($_POST['phone']);
+        $fullPhone = $countryCode . preg_replace('/[^0-9]/', '', $phone); // Combine country code and clean phone number
         $address = trim($_POST['address']);
         $license_number = trim($_POST['licenseNumber']);
 
@@ -60,11 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $name,
             $email,
             $hashed_password,
-            $phone,
+            $fullPhone, // Use the full phone number with country code
             $address,
             $license_number,
             $license_filename,
-            'pending'
         ]);
 
         if ($stmt->rowCount() > 0) {
@@ -85,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'name' => $name,
                 'email' => $email,
                 'license_number' => $license_number,
-                'phone' => $phone,
+                'phone' => $fullPhone, // Use the full phone number with country code
                 'address' => $address,
                 'submitted_at' => date('Y-m-d H:i:s')
             ];

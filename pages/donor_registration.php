@@ -286,7 +286,17 @@ session_start();
                 <div class="form-row">
                     <div class="form-group">
                         <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" required>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="countryCode" name="countryCode" style="width: 100px;" required>
+                                <option value="91">+91 (India)</option>
+                                <option value="1">+1 (USA/Canada)</option>
+                                <option value="44">+44 (UK)</option>
+                                <option value="971">+971 (UAE)</option>
+                                <option value="65">+65 (Singapore)</option>
+                                <option value="60">+60 (Malaysia)</option>
+                            </select>
+                            <input type="tel" id="phone" name="phone" style="flex: 1;" required placeholder="Enter phone number without country code">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address *</label>

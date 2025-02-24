@@ -53,14 +53,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $full_name = sanitize_input($_POST['fullName']);
         $date_of_birth = sanitize_input($_POST['dob']);
         $gender = sanitize_input($_POST['gender']);
-        $phone_number = sanitize_input($_POST['phone']);
+        $country_code = sanitize_input($_POST['countryCode'] ?? '91'); // Default to India if not set
+        $phone_number = preg_replace('/[^0-9]/', '', sanitize_input($_POST['phone']));
+        $full_phone_number = $country_code . $phone_number; // Combine country code and clean phone number
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $address = sanitize_input($_POST['address']);
         $medical_condition = sanitize_input($_POST['medicalCondition']);
         $blood_type = sanitize_input($_POST['bloodType']);
         $organ_required = sanitize_input($_POST['organRequired']);
         $organ_reason = sanitize_input($_POST['organReason']);
-        $urgency_level = sanitize_input($_POST['urgencyLevel']); // Added urgency level
+        $urgency_level = sanitize_input($_POST['urgencyLevel']); 
         $id_proof_type = sanitize_input($_POST['idType']);
         $id_proof_number = sanitize_input($_POST['idNumber']);
         
@@ -123,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            $username, $password, $full_name, $date_of_birth, $gender, $phone_number,
+            $username, $password, $full_name, $date_of_birth, $gender, $full_phone_number,
             $email, $address, $medical_condition, $blood_type, $organ_required,
             $organ_reason, $urgency_level, $id_proof_type, $id_proof_number,
             $id_document, $recipient_medical_reports

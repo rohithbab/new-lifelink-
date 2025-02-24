@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Validate required fields
-        $required_fields = ['fullName', 'gender', 'dob', 'bloodGroup', 'email', 'phone', 'address', 'organs', 'password'];
+        $required_fields = ['fullName', 'gender', 'dob', 'bloodGroup', 'email', 'phone', 'address', 'organs', 'password', 'countryCode'];
         foreach ($required_fields as $field) {
             if (empty($_POST[$field])) {
                 throw new Exception("Required field missing: " . $field);
@@ -120,7 +120,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dob = sanitize_input($_POST['dob']);
         $blood_group = sanitize_input($_POST['bloodGroup']);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $country_code = sanitize_input($_POST['countryCode']);
         $phone = sanitize_input($_POST['phone']);
+        $full_phone = $country_code . preg_replace('/[^0-9]/', '', $phone);
         $address = sanitize_input($_POST['address']);
         $medical_conditions = isset($_POST['medicalConditions']) ? sanitize_input($_POST['medicalConditions']) : null;
         $organs_to_donate = implode(',', $_POST['organs']);
@@ -196,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            $name, $gender, $dob, $blood_group, $email, $phone, $address,
+            $name, $gender, $dob, $blood_group, $email, $full_phone, $address,
             $medical_conditions, $organs_to_donate, $medical_reports_path,
             $id_proof_path, $reason_for_donation, $guardian_name,
             $guardian_email, $guardian_phone, $guardian_id_proof_path,
