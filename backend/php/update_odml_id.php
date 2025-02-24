@@ -4,6 +4,10 @@ require_once 'connection.php';
 require_once 'queries.php';
 require_once __DIR__ . '/../../whatsapp/WhatsAppService.php';
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Check if admin is logged in
 if (!isset($_SESSION['admin_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
@@ -21,6 +25,9 @@ $id = $_POST['id'];
 $odml_id = $_POST['odml_id'];
 $whatsappResult = null;
 
+// Log incoming request
+error_log("Processing ODML update - Type: $type, ID: $id, ODML ID: $odml_id");
+
 try {
     $success = false;
     $phone = null;
@@ -32,42 +39,58 @@ try {
         case 'donor':
             $success = updateDonorODMLID($conn, $id, $odml_id);
             if ($success) {
-                // Get donor's phone number
                 $stmt = $conn->prepare("SELECT phone FROM donor WHERE donor_id = ?");
                 $stmt->execute([$id]);
                 $phone = $stmt->fetchColumn();
+                error_log("Donor phone: $phone");
             }
             break;
             
         case 'hospital':
             $success = updateHospitalODMLID($conn, $id, $odml_id);
             if ($success) {
-                // Get hospital's phone number
                 $stmt = $conn->prepare("SELECT phone FROM hospitals WHERE hospital_id = ?");
                 $stmt->execute([$id]);
                 $phone = $stmt->fetchColumn();
+                error_log("Hospital phone: $phone");
             }
             break;
             
         case 'recipient':
-            $success = updateRecipientODMLID($conn, $id, $odml_id);
+            // First verify recipient exists
+            $checkStmt = $conn->prepare("SELECT id, phone_number FROM recipient_registration WHERE id = ?");
+            $checkStmt->execute([$id]);
+            $recipient = $checkStmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$recipient) {
+                throw new Exception("Recipient not found with ID: $id");
+            }
+            
+            error_log("Found recipient: " . print_r($recipient, true));
+            
+            // Update ODML ID directly here instead of using the function
+            $updateStmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'approved' WHERE id = ?");
+            $success = $updateStmt->execute([$odml_id, $id]);
+            
             if ($success) {
-                // Get recipient's phone number - using correct column name
-                $stmt = $conn->prepare("SELECT phone FROM recipient_registration WHERE id = ?");
-                $stmt->execute([$id]);
-                $phone = $stmt->fetchColumn();
+                error_log("Successfully updated recipient ODML ID");
+                $phone = $recipient['phone_number'];
+                error_log("Recipient phone: $phone");
+            } else {
+                error_log("Failed to update recipient. SQL Error: " . implode(", ", $updateStmt->errorInfo()));
             }
             break;
             
         default:
-            echo json_encode(['success' => false, 'message' => 'Invalid type specified']);
-            exit();
+            throw new Exception('Invalid type specified: ' . $type);
     }
 
     if ($success && $phone) {
         // Send WhatsApp notification
         $whatsappResult = $whatsappService->sendApprovalMessage($phone, $odml_id);
-        error_log("WhatsApp Result: " . print_r($whatsappResult, true)); // Debug log
+        error_log("WhatsApp Result for $type: " . print_r($whatsappResult, true));
+    } else {
+        error_log("Failed to proceed with WhatsApp notification. Success: " . ($success ? 'true' : 'false') . ", Phone: " . ($phone ?: 'not found'));
     }
 
     echo json_encode([
@@ -78,6 +101,7 @@ try {
     
 } catch (Exception $e) {
     error_log("Error in update_odml_id.php: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     echo json_encode([
         'success' => false,
         'message' => 'An error occurred: ' . $e->getMessage(),

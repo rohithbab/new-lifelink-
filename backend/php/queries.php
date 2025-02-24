@@ -447,12 +447,30 @@ function updateDonorODMLID($conn, $donor_id, $odml_id) {
 // Function to update recipient ODML ID
 function updateRecipientODMLID($conn, $recipient_id, $odml_id) {
     try {
-        // Update the ODML ID
+        error_log("Attempting to update recipient ODML ID. ID: " . $recipient_id . ", ODML ID: " . $odml_id);
+        
+        // First check if recipient exists
+        $checkStmt = $conn->prepare("SELECT id FROM recipient_registration WHERE id = ?");
+        $checkStmt->execute([$recipient_id]);
+        if (!$checkStmt->fetch()) {
+            error_log("Recipient not found with ID: " . $recipient_id);
+            return false;
+        }
+        
+        // Update the ODML ID and set status to approved
         $stmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'approved' WHERE id = ?");
         $result = $stmt->execute([$odml_id, $recipient_id]);
-        return $result;
+        
+        if ($result) {
+            error_log("Successfully updated recipient ODML ID");
+            return true;
+        } else {
+            error_log("Failed to update recipient ODML ID. SQL Error: " . implode(", ", $stmt->errorInfo()));
+            return false;
+        }
     } catch (PDOException $e) {
         error_log("Error updating recipient ODML ID: " . $e->getMessage());
+        error_log("SQL State: " . $e->getCode());
         return false;
     }
 }
