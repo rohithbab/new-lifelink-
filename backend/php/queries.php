@@ -520,4 +520,79 @@ function createNotification($conn, $type, $action, $entity_id, $message = '') {
     }
 }
 
+// Function to reject hospital registration
+function rejectHospital($conn, $hospital_id, $reason) {
+    try {
+        $stmt = $conn->prepare("UPDATE hospitals SET status = 'rejected', rejection_reason = ?, rejected_at = NOW() WHERE hospital_id = ?");
+        $result = $stmt->execute([$reason, $hospital_id]);
+        
+        if ($result) {
+            // Get hospital details for notification
+            $stmt = $conn->prepare("SELECT name, email FROM hospitals WHERE hospital_id = ?");
+            $stmt->execute([$hospital_id]);
+            $hospital = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Create notification
+            $message = "Hospital registration for {$hospital['name']} has been rejected. Reason: {$reason}";
+            createNotification($conn, 'hospital', 'rejection', $hospital_id, $message);
+            
+            return ['success' => true, 'message' => 'Hospital rejected successfully'];
+        }
+        return ['success' => false, 'message' => 'Failed to reject hospital'];
+    } catch (PDOException $e) {
+        error_log("Error rejecting hospital: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred'];
+    }
+}
+
+// Function to reject donor registration
+function rejectDonor($conn, $donor_id, $reason) {
+    try {
+        $stmt = $conn->prepare("UPDATE donor SET status = 'rejected', rejection_reason = ?, rejected_at = NOW() WHERE donor_id = ?");
+        $result = $stmt->execute([$reason, $donor_id]);
+        
+        if ($result) {
+            // Get donor details for notification
+            $stmt = $conn->prepare("SELECT name, email FROM donor WHERE donor_id = ?");
+            $stmt->execute([$donor_id]);
+            $donor = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Create notification
+            $message = "Donor registration for {$donor['name']} has been rejected. Reason: {$reason}";
+            createNotification($conn, 'donor', 'rejection', $donor_id, $message);
+            
+            return ['success' => true, 'message' => 'Donor rejected successfully'];
+        }
+        return ['success' => false, 'message' => 'Failed to reject donor'];
+    } catch (PDOException $e) {
+        error_log("Error rejecting donor: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred'];
+    }
+}
+
+// Function to reject recipient registration
+function rejectRecipient($conn, $recipient_id, $reason) {
+    try {
+        $stmt = $conn->prepare("UPDATE recipient_registration SET request_status = 'rejected', rejection_reason = ?, rejected_at = NOW() WHERE recipient_id = ?");
+        $result = $stmt->execute([$reason, $recipient_id]);
+        
+        if ($result) {
+            // Get recipient details for notification
+            $stmt = $conn->prepare("SELECT name, email FROM recipient_registration WHERE recipient_id = ?");
+            $stmt->execute([$recipient_id]);
+            $recipient = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Create notification
+            $message = "Recipient registration for {$recipient['name']} has been rejected. Reason: {$reason}";
+            createNotification($conn, 'recipient', 'rejection', $recipient_id, $message);
+            
+            return ['success' => true, 'message' => 'Recipient rejected successfully'];
+        }
+        return ['success' => false, 'message' => 'Failed to reject recipient'];
+    } catch (PDOException $e) {
+        error_log("Error rejecting recipient: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred'];
+    }
+}
+
 ?>
