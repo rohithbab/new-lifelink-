@@ -1069,98 +1069,6 @@ $urgentRecipients = getUrgentRecipients($conn);
         .cancel-btn:hover {
             background: #5a6268;
         }
-        
-        /* Rejection Modal Specific Styles */
-        #rejectModal .modal-content {
-            max-width: 450px;
-            border-top: 5px solid #dc3545;
-        }
-
-        #rejectModal .modal-header h2 {
-            color: #dc3545;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.4rem;
-        }
-
-        .entity-details {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .entity-details p {
-            margin: 8px 0;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .entity-details i {
-            color: #6c757d;
-            width: 20px;
-        }
-
-        .checkbox-container {
-            margin: 20px 0;
-        }
-
-        .custom-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .custom-checkbox input {
-            display: none;
-        }
-
-        .checkmark {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #dc3545;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .custom-checkbox input:checked + .checkmark {
-            background: #dc3545;
-        }
-
-        .custom-checkbox input:checked + .checkmark:after {
-            content: '\f00c';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: white;
-            font-size: 12px;
-        }
-
-        .checkbox-text {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        #rejectModal .modal-btn.reject {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-        }
-
-        #rejectModal .modal-btn.reject:disabled {
-            background: #e9ecef;
-            cursor: not-allowed;
-            color: #6c757d;
-        }
-
-        #rejectModal .modal-btn.reject:not(:disabled):hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-        }
     </style>
 
     <!-- JavaScript Dependencies -->
@@ -1338,8 +1246,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                     </button>
                                 </td>
                                 <td class="action-cell">
-                                    <button class="reject-btn" 
-                                            data-reject-type="hospital"
+                                    <button class="reject-btn reject-hospital-btn" 
                                             data-id="<?php echo $hospital['hospital_id']; ?>"
                                             data-name="<?php echo htmlspecialchars($hospital['hospital_name']); ?>"
                                             data-email="<?php echo htmlspecialchars($hospital['email']); ?>">
@@ -1385,8 +1292,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                     </button>
                                 </td>
                                 <td class="action-cell">
-                                    <button class="reject-btn"
-                                            data-reject-type="donor"
+                                    <button class="reject-btn reject-donor-btn"
                                             data-id="<?php echo $donor['donor_id']; ?>"
                                             data-name="<?php echo htmlspecialchars($donor['name']); ?>"
                                             data-email="<?php echo htmlspecialchars($donor['email']); ?>">
@@ -1434,8 +1340,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                     </button>
                                 </td>
                                 <td class="action-cell">
-                                    <button class="reject-btn"
-                                            data-reject-type="recipient"
+                                    <button class="reject-btn reject-recipient-btn"
                                             data-id="<?php echo $recipient['recipient_id']; ?>"
                                             data-name="<?php echo htmlspecialchars($recipient['name']); ?>"
                                             data-email="<?php echo htmlspecialchars($recipient['email']); ?>">
@@ -1532,163 +1437,59 @@ $urgentRecipients = getUrgentRecipients($conn);
             </div>
 
             <!-- Reject Modal -->
-            <div id="rejectionModal" class="modal">
-                <div class="modal-content rejection-modal">
-                    <div class="modal-header">
-                        <div class="header-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <h2>Confirm Rejection</h2>
-                        <p class="modal-subtitle">Please review the details carefully before proceeding</p>
-                    </div>
+            <div id="rejectModal" class="modal">
+                <div class="modal-content">
+                    <h2>Reject Registration</h2>
+                    <div id="rejectEntityDetails"></div>
                     
-                    <div class="modal-body">
-                        <div class="entity-details">
-                            <div class="detail-row">
-                                <span class="detail-label">Name:</span>
-                                <span id="rejectionEntityName" class="detail-value"></span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Email:</span>
-                                <span id="rejectionEntityEmail" class="detail-value"></span>
-                            </div>
-                        </div>
-                        
-                        <input type="hidden" id="rejectionEntityType">
-                        <input type="hidden" id="rejectionEntityId">
-                        
-                        <div class="form-group">
-                            <label for="rejectionReason">Reason for Rejection:</label>
-                            <textarea id="rejectionReason" rows="4" class="form-control" 
-                                placeholder="Please provide a detailed reason for rejection..."></textarea>
-                        </div>
-                        
-                        <div class="confirmation-box">
-                            <label class="checkbox-container">
-                                <input type="checkbox" id="rejectionConfirm">
-                                <span class="checkmark"></span>
-                                <span class="checkbox-text">
-                                    I confirm that I want to reject this registration. This action cannot be undone.
-                                </span>
-                            </label>
-                        </div>
+                    <div class="reject-input-group">
+                        <label for="reject_reason">Reason for Rejection</label>
+                        <textarea id="reject_reason" class="reject-input" placeholder="Please provide a reason for rejection" rows="4"></textarea>
                     </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" onclick="closeRejectionModal()">Cancel</button>
-                        <button type="button" class="btn btn-danger" id="rejectBtn" onclick="handleRejection()">
-                            <i class="fas fa-times"></i> Reject Registration
-                        </button>
+
+                    <div class="whatsapp-notice">
+                        <i class="fab fa-whatsapp"></i>
+                        A WhatsApp notification will be sent with the rejection reason
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="modal-btn cancel" onclick="closeRejectModal()">Cancel</button>
+                        <button class="modal-btn reject" onclick="confirmReject()">Confirm Rejection</button>
                     </div>
                 </div>
             </div>
 
+            <style>
+                .reject-input {
+                    width: 100%;
+                    padding: 10px;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    resize: vertical;
+                    min-height: 100px;
+                }
+
+                .reject-input:focus {
+                    border-color: #dc3545;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+                }
+
+                .reject-input-group {
+                    margin: 20px 0;
+                }
+
+                .reject-input-group label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                }
+            </style>
+
             <script>
-                // Wait for document to be ready
                 $(document).ready(function() {
-                    // Initialize rejection functionality
-                    initializeRejectionHandlers();
-                    
-                    // Initialize ODML update functionality
-                    initializeODMLHandlers();
-                    
-                    // Initialize other dashboard features
-                    initializeNotifications();
-                });
-
-                // Rejection Modal Functions
-                function initializeRejectionHandlers() {
-                    // Debug log
-                    console.log('Initializing rejection handlers');
-                    
-                    // Attach click handlers to all reject buttons
-                    $('.reject-btn').on('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const type = $(this).data('reject-type');
-                        const id = $(this).data('id');
-                        const name = $(this).data('name');
-                        const email = $(this).data('email');
-                        
-                        console.log('Reject button clicked:', { type, id, name, email });
-                        openRejectionModal(type, id, name, email);
-                    });
-
-                    // Close modal when clicking outside
-                    $(window).on('click', function(e) {
-                        if ($(e.target).is('#rejectionModal')) {
-                            closeRejectionModal();
-                        }
-                    });
-                }
-
-                function openRejectionModal(type, id, name, email) {
-                    console.log('Opening rejection modal:', { type, id, name, email });
-                    
-                    $('#rejectionEntityType').val(type);
-                    $('#rejectionEntityId').val(id);
-                    $('#rejectionEntityName').text(name);
-                    $('#rejectionEntityEmail').text(email);
-                    $('#rejectionReason').val('');
-                    $('#rejectionConfirm').prop('checked', false);
-                    $('#rejectionModal').css('display', 'block');
-                }
-
-                function closeRejectionModal() {
-                    $('#rejectionModal').css('display', 'none');
-                }
-
-                function handleRejection() {
-                    const type = $('#rejectionEntityType').val();
-                    const id = $('#rejectionEntityId').val();
-                    const reason = $('#rejectionReason').val();
-                    const confirmed = $('#rejectionConfirm').prop('checked');
-
-                    if (!confirmed) {
-                        alert('Please confirm the rejection by checking the checkbox');
-                        return;
-                    }
-
-                    if (!reason.trim()) {
-                        alert('Please provide a reason for rejection');
-                        return;
-                    }
-
-                    // Show loading state
-                    const $rejectBtn = $('#rejectBtn');
-                    const originalText = $rejectBtn.text();
-                    $rejectBtn.prop('disabled', true).text('Processing...');
-
-                    // Send AJAX request
-                    $.ajax({
-                        url: '../../backend/php/handle_rejection.php',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            type: type,
-                            id: id,
-                            reason: reason
-                        }),
-                        success: function(response) {
-                            if (response.success) {
-                                alert('Rejection processed successfully');
-                                location.reload();
-                            } else {
-                                alert('Error: ' + response.message);
-                                $rejectBtn.prop('disabled', false).text(originalText);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                            alert('An error occurred while processing the rejection');
-                            $rejectBtn.prop('disabled', false).text(originalText);
-                        }
-                    });
-                }
-
-                // ODML Update Functions
-                function initializeODMLHandlers() {
+                    // Update ODML ID functionality
                     $('.update-btn').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -1696,22 +1497,98 @@ $urgentRecipients = getUrgentRecipients($conn);
                         const entityId = $(this).data('entity-id');
                         const entityType = $(this).data('entity-type');
                         
+                        // Update checkbox label based on entity type
+                        let checkboxLabel = "By updating ODML ID, you are approving this ";
+                        switch(entityType) {
+                            case 'hospital':
+                                checkboxLabel += "hospital's registration";
+                                break;
+                            case 'donor':
+                                checkboxLabel += "donor's registration";
+                                break;
+                            case 'recipient':
+                                checkboxLabel += "recipient's registration";
+                                break;
+                        }
+                        $('#approveCheckboxLabel').text(checkboxLabel);
+                        
+                        // Reset form
+                        $('#odmlIdInput').val('');
+                        $('#approveCheckbox').prop('checked', false);
+                        
+                        // Show modal
                         $('#odmlModal').css('display', 'block');
-                        $('#entityId').val(entityId);
-                        $('#entityType').val(entityType);
+                        
+                        // Handle ODML ID submission
+                        $('#submitOdmlId').off('click').on('click', function() {
+                            const odmlId = $('#odmlIdInput').val().trim();
+                            
+                            if (!odmlId) {
+                                alert('Please enter an ODML ID');
+                                return;
+                            }
+                            
+                            if (!$('#approveCheckbox').is(':checked')) {
+                                alert('Please confirm the approval by checking the checkbox');
+                                return;
+                            }
+                            
+                            // Make AJAX call to update ODML ID
+                            $.ajax({
+                                url: '../../backend/php/update_odml_id.php',
+                                method: 'POST',
+                                data: {
+                                    type: entityType,
+                                    id: entityId,
+                                    odml_id: odmlId
+                                },
+                                success: function(response) {
+                                    try {
+                                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                                        if (result.success) {
+                                            if (result.whatsapp && result.whatsapp.success) {
+                                                alert('ODML ID updated successfully and WhatsApp notification sent!');
+                                            } else {
+                                                alert('ODML ID updated successfully but WhatsApp notification failed: ' + 
+                                                    (result.whatsapp ? result.whatsapp.message : 'Unknown error'));
+                                            }
+                                            location.reload();
+                                        } else {
+                                            alert('Error: ' + (result.message || 'Unknown error'));
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing response:', e);
+                                        alert('Error updating ODML ID');
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('AJAX Error:', error);
+                                    alert('An error occurred while updating the ODML ID');
+                                }
+                            });
+                            
+                            // Close modal
+                            $('#odmlModal').css('display', 'none');
+                        });
                     });
-
+                    
+                    // Handle modal close button
+                    $('.close-modal, #cancelOdmlUpdate').on('click', function() {
+                        $('#odmlModal').css('display', 'none');
+                        $('#odmlIdInput').val('');
+                        $('#approveCheckbox').prop('checked', false);
+                    });
+                    
                     // Close modal when clicking outside
                     $(window).on('click', function(e) {
                         if ($(e.target).is('#odmlModal')) {
                             $('#odmlModal').css('display', 'none');
                             $('#odmlIdInput').val('');
+                            $('#approveCheckbox').prop('checked', false);
                         }
                     });
-                }
-
-                // Notification Functions
-                function initializeNotifications() {
+                    
+                    // Initialize notification system
                     updateNotifications();
                     
                     // Toggle notification dropdown
@@ -1727,8 +1604,18 @@ $urgentRecipients = getUrgentRecipients($conn);
                     
                     // Update notifications every 30 seconds
                     setInterval(updateNotifications, 30000);
-                }
-
+                    
+                    // Add event listeners for all dynamic elements
+                    $('.update-btn').on('click', function(e) {
+                        e.preventDefault();
+                        const type = $(this).data('type');
+                        const id = $(this).data('id');
+                        const name = $(this).data('name');
+                        const email = $(this).data('email');
+                        openOdmlModal(type, id, name, email);
+                    });
+                });
+                
                 function updateNotifications() {
                     $.ajax({
                         url: '../../backend/php/get_recent_notifications.php',
@@ -1736,22 +1623,47 @@ $urgentRecipients = getUrgentRecipients($conn);
                         success: function(response) {
                             try {
                                 const data = JSON.parse(response);
+                                // Update notification count
                                 $('#notificationCount').text(data.unread_count);
                                 
+                                // Clear existing notifications
                                 const notificationList = $('#notificationList');
                                 notificationList.empty();
                                 
+                                // Add new notifications
+                                data.notifications.forEach(function(notification) {
+                                    const notificationItem = $('<div>').addClass('notification-item');
+                                    
+                                    // Add type badge
+                                    const badge = $('<span>')
+                                        .addClass('notification-badge')
+                                        .addClass('type-' + notification.type)
+                                        .text(notification.type.replace('_', ' '));
+                                    
+                                    // Add message and time
+                                    const content = $('<div>').addClass('notification-content');
+                                    content.append($('<p>').addClass('notification-message').text(notification.message));
+                                    content.append($('<span>').addClass('notification-time').text(notification.time_ago));
+                                    
+                                    // Add link if available
+                                    if (notification.link_url) {
+                                        notificationItem.css('cursor', 'pointer');
+                                        notificationItem.click(function() {
+                                            window.location.href = notification.link_url;
+                                        });
+                                    }
+                                    
+                                    notificationItem.append(badge).append(content);
+                                    notificationList.append(notificationItem);
+                                });
+                                
+                                // Show "No notifications" message if empty
                                 if (data.notifications.length === 0) {
                                     notificationList.append(
                                         $('<div>')
                                             .addClass('no-notifications')
                                             .text('No unread notifications')
                                     );
-                                } else {
-                                    data.notifications.forEach(function(notification) {
-                                        const notificationItem = createNotificationItem(notification);
-                                        notificationList.append(notificationItem);
-                                    });
                                 }
                             } catch (e) {
                                 console.error('Error parsing notifications:', e);
@@ -1763,27 +1675,120 @@ $urgentRecipients = getUrgentRecipients($conn);
                     });
                 }
 
-                function createNotificationItem(notification) {
-                    const notificationItem = $('<div>').addClass('notification-item');
-                    
-                    const badge = $('<span>')
-                        .addClass('notification-badge')
-                        .addClass('type-' + notification.type)
-                        .text(notification.type.replace('_', ' '));
-                    
-                    const content = $('<div>').addClass('notification-content');
-                    content.append($('<p>').addClass('notification-message').text(notification.message));
-                    content.append($('<span>').addClass('notification-time').text(notification.time_ago));
-                    
-                    if (notification.link_url) {
-                        notificationItem.css('cursor', 'pointer');
-                        notificationItem.click(function() {
-                            window.location.href = notification.link_url;
-                        });
+                // Close modal when clicking the close button or outside
+                $('.close').click(function() {
+                    $('#matchDetailsModal').fadeOut(300);
+                });
+
+                $(window).click(function(event) {
+                    if ($(event.target).is('#matchDetailsModal')) {
+                        $('#matchDetailsModal').fadeOut(300);
                     }
+                });
+
+                $(document).ready(function() {
+                    // Add event listeners for all dynamic elements
+                    $('.update-btn').on('click', function(e) {
+                        e.preventDefault();
+                        const hospitalId = $(this).data('hospital-id');
+                        updateHospitalODMLID(hospitalId);
+                    });
+                });
+
+                function updateHospitalODMLID(hospitalId) {
+                    const odmlId = $(`#odml_id_${hospitalId}`).val();
                     
-                    return notificationItem.append(badge).append(content);
+                    $.ajax({
+                        url: '../../backend/php/update_odml_id.php',
+                        method: 'POST',
+                        data: {
+                            type: 'hospital',
+                            id: hospitalId,
+                            odml_id: odmlId
+                        },
+                        success: function(response) {
+                            try {
+                                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                                if (data.success) {
+                                    alert('ODML ID updated successfully');
+                                } else {
+                                    alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
+                                }
+                            } catch (e) {
+                                console.error('Error parsing response:', e);
+                                alert('Error updating ODML ID');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            alert('Error updating ODML ID');
+                        }
+                    });
                 }
+
+                function updateHospitalStatus(hospitalId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${hospitalId}"].reject-hospital-btn`);
+                        openRejectModal('hospital', hospitalId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
+                    }
+                    // Rest of the function for approval remains unchanged
+                }
+
+                function updateDonorStatus(donorId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${donorId}"].reject-donor-btn`);
+                        openRejectModal('donor', donorId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
+                    }
+                    // Rest of the function for approval remains unchanged
+                }
+
+                function updateRecipientStatus(recipientId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${recipientId}"].reject-recipient-btn`);
+                        openRejectModal('recipient', recipientId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
+                    }
+                    // Rest of the function for approval remains unchanged
+                }
+                
+                function updateButtonHandlers() {
+                    // For hospitals
+                    document.querySelectorAll('.reject-hospital-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('hospital', id, name, email);
+                        };
+                    });
+
+                    // For donors
+                    document.querySelectorAll('.reject-donor-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('donor', id, name, email);
+                        };
+                    });
+
+                    // For recipients
+                    document.querySelectorAll('.reject-recipient-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('recipient', id, name, email);
+                        };
+                    });
+                }
+
+                // Call updateButtonHandlers when document is ready
+                $(document).ready(function() {
+                    updateButtonHandlers();
+                });
             </script>
             <script src="../../assets/js/notifications.js"></script>
         </body>
