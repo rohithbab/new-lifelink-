@@ -422,23 +422,8 @@ function getRegionalStats($conn) {
 function updateHospitalODMLID($conn, $hospital_id, $odml_id) {
     try {
         // Update the ODML ID
-        $stmt = $conn->prepare("UPDATE hospitals SET odml_id = ? WHERE hospital_id = ?");
+        $stmt = $conn->prepare("UPDATE hospitals SET odml_id = ?, status = 'approved' WHERE hospital_id = ?");
         $result = $stmt->execute([$odml_id, $hospital_id]);
-
-        if ($result) {
-            // Get the hospital's phone number
-            $stmt = $conn->prepare("SELECT phone FROM hospitals WHERE hospital_id = ?");
-            $stmt->execute([$hospital_id]);
-            $phone = $stmt->fetchColumn();
-
-            if ($phone) {
-                // Send WhatsApp notification
-                require_once __DIR__ . '/../whatsapp/WhatsAppService.php';
-                $whatsapp = new WhatsAppService();
-                $whatsapp->sendApprovalMessage($phone, $odml_id);
-            }
-        }
-        
         return $result;
     } catch (PDOException $e) {
         error_log("Error updating hospital ODML ID: " . $e->getMessage());
@@ -450,23 +435,8 @@ function updateHospitalODMLID($conn, $hospital_id, $odml_id) {
 function updateDonorODMLID($conn, $donor_id, $odml_id) {
     try {
         // Update the ODML ID
-        $stmt = $conn->prepare("UPDATE donor SET odml_id = ? WHERE donor_id = ?");
+        $stmt = $conn->prepare("UPDATE donor SET odml_id = ?, status = 'approved' WHERE donor_id = ?");
         $result = $stmt->execute([$odml_id, $donor_id]);
-
-        if ($result) {
-            // Get the donor's phone number
-            $stmt = $conn->prepare("SELECT phone FROM donor WHERE donor_id = ?");
-            $stmt->execute([$donor_id]);
-            $phone = $stmt->fetchColumn();
-
-            if ($phone) {
-                // Send WhatsApp notification
-                require_once __DIR__ . '/../whatsapp/WhatsAppService.php';
-                $whatsapp = new WhatsAppService();
-                $whatsapp->sendApprovalMessage($phone, $odml_id);
-            }
-        }
-
         return $result;
     } catch (PDOException $e) {
         error_log("Error updating donor ODML ID: " . $e->getMessage());
@@ -478,23 +448,8 @@ function updateDonorODMLID($conn, $donor_id, $odml_id) {
 function updateRecipientODMLID($conn, $recipient_id, $odml_id) {
     try {
         // Update the ODML ID
-        $stmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'approved' WHERE id = ?");
         $result = $stmt->execute([$odml_id, $recipient_id]);
-
-        if ($result) {
-            // Get the recipient's phone number
-            $stmt = $conn->prepare("SELECT phone FROM recipient_registration WHERE id = ?");
-            $stmt->execute([$recipient_id]);
-            $phone = $stmt->fetchColumn();
-
-            if ($phone) {
-                // Send WhatsApp notification
-                require_once __DIR__ . '/../whatsapp/WhatsAppService.php';
-                $whatsapp = new WhatsAppService();
-                $whatsapp->sendApprovalMessage($phone, $odml_id);
-            }
-        }
-
         return $result;
     } catch (PDOException $e) {
         error_log("Error updating recipient ODML ID: " . $e->getMessage());

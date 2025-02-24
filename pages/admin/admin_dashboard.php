@@ -1535,22 +1535,34 @@ $urgentRecipients = getUrgentRecipients($conn);
                             
                             // Make AJAX call to update ODML ID
                             $.ajax({
-                                url: '../../backend/php/update_odml.php',
+                                url: '../../backend/php/update_odml_id.php',
                                 method: 'POST',
                                 data: {
-                                    entity_id: entityId,
-                                    entity_type: entityType,
+                                    type: entityType,
+                                    id: entityId,
                                     odml_id: odmlId
                                 },
                                 success: function(response) {
-                                    if (response.success) {
-                                        alert('ODML ID updated successfully!');
-                                        location.reload();
-                                    } else {
-                                        alert('Error: ' + response.message);
+                                    try {
+                                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                                        if (result.success) {
+                                            if (result.whatsapp && result.whatsapp.success) {
+                                                alert('ODML ID updated successfully and WhatsApp notification sent!');
+                                            } else {
+                                                alert('ODML ID updated successfully but WhatsApp notification failed: ' + 
+                                                    (result.whatsapp ? result.whatsapp.message : 'Unknown error'));
+                                            }
+                                            location.reload();
+                                        } else {
+                                            alert('Error: ' + (result.message || 'Unknown error'));
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing response:', e);
+                                        alert('Error updating ODML ID');
                                     }
                                 },
-                                error: function() {
+                                error: function(xhr, status, error) {
+                                    console.error('AJAX Error:', error);
                                     alert('An error occurred while updating the ODML ID');
                                 }
                             });
