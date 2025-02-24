@@ -1022,6 +1022,53 @@ $urgentRecipients = getUrgentRecipients($conn);
             background-color: #28a745;
             color: white;
         }
+        
+        /* Modal Styles */
+        .modal-body {
+            margin: 15px 0;
+        }
+        
+        .checkbox-container {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container label {
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .cancel-btn {
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
     </style>
 
     <!-- JavaScript Dependencies -->
@@ -1194,7 +1241,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td><?php echo htmlspecialchars($hospital['email']); ?></td>
                                 <td><?php echo htmlspecialchars($hospital['phone']); ?></td>
                                 <td>
-                                    <button class="update-btn" onclick="openOdmlModal('hospital', '<?php echo $hospital['hospital_id']; ?>', '<?php echo htmlspecialchars($hospital['hospital_name']); ?>', '<?php echo htmlspecialchars($hospital['email']); ?>')">
+                                    <button class="update-btn" data-entity-id="<?php echo $hospital['hospital_id']; ?>" data-entity-type="hospital">
                                         <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
                                 </td>
@@ -1240,7 +1287,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td><?php echo htmlspecialchars($donor['email']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['blood_type']); ?></td>
                                 <td>
-                                    <button class="update-btn" onclick="openOdmlModal('donor', '<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>', '<?php echo htmlspecialchars($donor['email']); ?>')">
+                                    <button class="update-btn" data-entity-id="<?php echo $donor['donor_id']; ?>" data-entity-type="donor">
                                         <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
                                 </td>
@@ -1288,7 +1335,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td><?php echo htmlspecialchars($recipient['phone']); ?></td>
                                 <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
                                 <td>
-                                    <button class="update-btn" onclick="openOdmlModal('recipient', '<?php echo $recipient['recipient_id']; ?>', '<?php echo htmlspecialchars($recipient['name']); ?>', '<?php echo htmlspecialchars($recipient['email']); ?>')">
+                                    <button class="update-btn" data-entity-id="<?php echo $recipient['recipient_id']; ?>" data-entity-type="recipient">
                                         <i class="fas fa-edit"></i> Update ODML ID
                                     </button>
                                 </td>
@@ -1373,27 +1420,18 @@ $urgentRecipients = getUrgentRecipients($conn);
             <!-- ODML Update Modal -->
             <div id="odmlModal" class="modal">
                 <div class="modal-content">
+                    <span class="close-modal">&times;</span>
                     <h2>Update ODML ID</h2>
-                    <div id="entityDetails"></div>
-                    
-                    <div class="odml-input-group">
-                        <label for="odml_id">ODML ID</label>
-                        <input type="text" id="odml_id" class="odml-input" placeholder="Enter ODML ID">
+                    <div class="modal-body">
+                        <input type="text" id="odmlIdInput" class="odml-input" placeholder="Enter ODML ID">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="approveCheckbox" required>
+                            <label for="approveCheckbox" id="approveCheckboxLabel">By updating ODML ID, you are approving this registration</label>
+                        </div>
                     </div>
-
-                    <div class="whatsapp-notice">
-                        <i class="fab fa-whatsapp"></i>
-                        A WhatsApp notification will be sent to verify the update
-                    </div>
-
-                    <div class="modal-checkbox">
-                        <input type="checkbox" id="approveCheckbox">
-                        <label for="approveCheckbox" id="approveCheckboxLabel"></label>
-                    </div>
-
-                    <div class="modal-actions">
-                        <button class="modal-btn cancel" onclick="closeOdmlModal()">Cancel</button>
-                        <button class="modal-btn approve" onclick="updateOdmlId()">Approve & Update</button>
+                    <div class="modal-footer">
+                        <button id="cancelOdmlUpdate" class="cancel-btn">Cancel</button>
+                        <button id="submitOdmlId" class="update-btn">Update</button>
                     </div>
                 </div>
             </div>
@@ -1450,25 +1488,210 @@ $urgentRecipients = getUrgentRecipients($conn);
             </style>
 
             <script>
-                let currentEntityId = null;
-                let currentEntityType = null;
-                let currentEntityName = null;
-                let currentEntityEmail = null;
-
-                function updateOdmlId() {
-                    const odmlId = document.getElementById('odml_id').value;
+                $(document).ready(function() {
+                    // Update ODML ID functionality
+                    $('.update-btn').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const entityId = $(this).data('entity-id');
+                        const entityType = $(this).data('entity-type');
+                        
+                        // Update checkbox label based on entity type
+                        let checkboxLabel = "By updating ODML ID, you are approving this ";
+                        switch(entityType) {
+                            case 'hospital':
+                                checkboxLabel += "hospital's registration";
+                                break;
+                            case 'donor':
+                                checkboxLabel += "donor's registration";
+                                break;
+                            case 'recipient':
+                                checkboxLabel += "recipient's registration";
+                                break;
+                        }
+                        $('#approveCheckboxLabel').text(checkboxLabel);
+                        
+                        // Reset form
+                        $('#odmlIdInput').val('');
+                        $('#approveCheckbox').prop('checked', false);
+                        
+                        // Show modal
+                        $('#odmlModal').css('display', 'block');
+                        
+                        // Handle ODML ID submission
+                        $('#submitOdmlId').off('click').on('click', function() {
+                            const odmlId = $('#odmlIdInput').val().trim();
+                            
+                            if (!odmlId) {
+                                alert('Please enter an ODML ID');
+                                return;
+                            }
+                            
+                            if (!$('#approveCheckbox').is(':checked')) {
+                                alert('Please confirm the approval by checking the checkbox');
+                                return;
+                            }
+                            
+                            // Make AJAX call to update ODML ID
+                            $.ajax({
+                                url: '../../backend/php/update_odml.php',
+                                method: 'POST',
+                                data: {
+                                    entity_id: entityId,
+                                    entity_type: entityType,
+                                    odml_id: odmlId
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        alert('ODML ID updated successfully!');
+                                        location.reload();
+                                    } else {
+                                        alert('Error: ' + response.message);
+                                    }
+                                },
+                                error: function() {
+                                    alert('An error occurred while updating the ODML ID');
+                                }
+                            });
+                            
+                            // Close modal
+                            $('#odmlModal').css('display', 'none');
+                        });
+                    });
                     
-                    if (!odmlId) {
-                        alert('Please enter an ODML ID');
-                        return;
-                    }
+                    // Handle modal close button
+                    $('.close-modal, #cancelOdmlUpdate').on('click', function() {
+                        $('#odmlModal').css('display', 'none');
+                        $('#odmlIdInput').val('');
+                        $('#approveCheckbox').prop('checked', false);
+                    });
+                    
+                    // Close modal when clicking outside
+                    $(window).on('click', function(e) {
+                        if ($(e.target).is('#odmlModal')) {
+                            $('#odmlModal').css('display', 'none');
+                            $('#odmlIdInput').val('');
+                            $('#approveCheckbox').prop('checked', false);
+                        }
+                    });
+                    
+                    // Initialize notification system
+                    updateNotifications();
+                    
+                    // Toggle notification dropdown
+                    $('#notificationBell').click(function(e) {
+                        e.stopPropagation();
+                        $('.notification-dropdown').toggleClass('show');
+                    });
+                    
+                    // Close dropdown when clicking outside
+                    $(document).click(function() {
+                        $('.notification-dropdown').removeClass('show');
+                    });
+                    
+                    // Update notifications every 30 seconds
+                    setInterval(updateNotifications, 30000);
+                    
+                    // Add event listeners for all dynamic elements
+                    $('.update-btn').on('click', function(e) {
+                        e.preventDefault();
+                        const type = $(this).data('type');
+                        const id = $(this).data('id');
+                        const name = $(this).data('name');
+                        const email = $(this).data('email');
+                        openOdmlModal(type, id, name, email);
+                    });
+                });
+                
+                function updateNotifications() {
+                    $.ajax({
+                        url: '../../backend/php/get_recent_notifications.php',
+                        method: 'GET',
+                        success: function(response) {
+                            try {
+                                const data = JSON.parse(response);
+                                // Update notification count
+                                $('#notificationCount').text(data.unread_count);
+                                
+                                // Clear existing notifications
+                                const notificationList = $('#notificationList');
+                                notificationList.empty();
+                                
+                                // Add new notifications
+                                data.notifications.forEach(function(notification) {
+                                    const notificationItem = $('<div>').addClass('notification-item');
+                                    
+                                    // Add type badge
+                                    const badge = $('<span>')
+                                        .addClass('notification-badge')
+                                        .addClass('type-' + notification.type)
+                                        .text(notification.type.replace('_', ' '));
+                                    
+                                    // Add message and time
+                                    const content = $('<div>').addClass('notification-content');
+                                    content.append($('<p>').addClass('notification-message').text(notification.message));
+                                    content.append($('<span>').addClass('notification-time').text(notification.time_ago));
+                                    
+                                    // Add link if available
+                                    if (notification.link_url) {
+                                        notificationItem.css('cursor', 'pointer');
+                                        notificationItem.click(function() {
+                                            window.location.href = notification.link_url;
+                                        });
+                                    }
+                                    
+                                    notificationItem.append(badge).append(content);
+                                    notificationList.append(notificationItem);
+                                });
+                                
+                                // Show "No notifications" message if empty
+                                if (data.notifications.length === 0) {
+                                    notificationList.append(
+                                        $('<div>')
+                                            .addClass('no-notifications')
+                                            .text('No unread notifications')
+                                    );
+                                }
+                            } catch (e) {
+                                console.error('Error parsing notifications:', e);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching notifications:', error);
+                        }
+                    });
+                }
 
+                // Close modal when clicking the close button or outside
+                $('.close').click(function() {
+                    $('#matchDetailsModal').fadeOut(300);
+                });
+
+                $(window).click(function(event) {
+                    if ($(event.target).is('#matchDetailsModal')) {
+                        $('#matchDetailsModal').fadeOut(300);
+                    }
+                });
+
+                $(document).ready(function() {
+                    // Add event listeners for all dynamic elements
+                    $('.update-btn').on('click', function(e) {
+                        e.preventDefault();
+                        const hospitalId = $(this).data('hospital-id');
+                        updateHospitalODMLID(hospitalId);
+                    });
+                });
+
+                function updateHospitalODMLID(hospitalId) {
+                    const odmlId = $(`#odml_id_${hospitalId}`).val();
+                    
                     $.ajax({
                         url: '../../backend/php/update_odml_id.php',
                         method: 'POST',
                         data: {
-                            type: currentEntityType,
-                            id: currentEntityId,
+                            type: 'hospital',
+                            id: hospitalId,
                             odml_id: odmlId
                         },
                         success: function(response) {
@@ -1476,8 +1699,6 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 const data = typeof response === 'string' ? JSON.parse(response) : response;
                                 if (data.success) {
                                     alert('ODML ID updated successfully');
-                                    closeOdmlModal();
-                                    location.reload();
                                 } else {
                                     alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
                                 }
@@ -1493,261 +1714,70 @@ $urgentRecipients = getUrgentRecipients($conn);
                     });
                 }
 
-                function openOdmlModal(type, id, name, email) {
-                    currentEntityId = id;
-                    currentEntityType = type;
-                    currentEntityName = name;
-                    currentEntityEmail = email;
-
-                    // Update modal content based on entity type
-                    let entityTitle = '';
-                    let checkboxLabel = '';
-                    
-                    if (type === 'hospital') {
-                        entityTitle = `Hospital: ${name}`;
-                        checkboxLabel = "This action will approve the hospital's registration";
-                    } else if (type === 'donor') {
-                        entityTitle = `Donor: ${name}`;
-                        checkboxLabel = "This action will approve the donor's registration";
-                    } else if (type === 'recipient') {
-                        entityTitle = `Recipient: ${name}`;
-                        checkboxLabel = "This action will approve the recipient's registration";
+                function updateHospitalStatus(hospitalId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${hospitalId}"].reject-hospital-btn`);
+                        openRejectModal('hospital', hospitalId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
                     }
-
-                    // Update modal content
-                    document.getElementById('entityDetails').innerHTML = `
-                        <div class="modal-info">
-                            <p><strong>Name:</strong> ${name}</p>
-                            <p><strong>Email:</strong> ${email}</p>
-                        </div>
-                    `;
-                    document.getElementById('approveCheckboxLabel').textContent = checkboxLabel;
-                    document.querySelector('#odmlModal h2').textContent = 'Update ODML ID';
-                    document.getElementById('odml_id').value = ''; // Clear previous value
-
-                    // Show modal
-                    document.getElementById('odmlModal').style.display = 'block';
+                    // Rest of the function for approval remains unchanged
                 }
 
-                function closeOdmlModal() {
-                    document.getElementById('odmlModal').style.display = 'none';
-                    document.getElementById('odml_id').value = '';
-                    document.getElementById('approveCheckbox').checked = false;
+                function updateDonorStatus(donorId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${donorId}"].reject-donor-btn`);
+                        openRejectModal('donor', donorId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
+                    }
+                    // Rest of the function for approval remains unchanged
                 }
 
-                // Initialize when document is ready
+                function updateRecipientStatus(recipientId, status) {
+                    if (status.toLowerCase() === 'rejected') {
+                        const button = document.querySelector(`button[data-id="${recipientId}"].reject-recipient-btn`);
+                        openRejectModal('recipient', recipientId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        return;
+                    }
+                    // Rest of the function for approval remains unchanged
+                }
+                
+                function updateButtonHandlers() {
+                    // For hospitals
+                    document.querySelectorAll('.reject-hospital-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('hospital', id, name, email);
+                        };
+                    });
+
+                    // For donors
+                    document.querySelectorAll('.reject-donor-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('donor', id, name, email);
+                        };
+                    });
+
+                    // For recipients
+                    document.querySelectorAll('.reject-recipient-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const email = this.getAttribute('data-email');
+                            openRejectModal('recipient', id, name, email);
+                        };
+                    });
+                }
+
+                // Call updateButtonHandlers when document is ready
                 $(document).ready(function() {
-                    // Initialize notification system
-                    updateNotifications();
-                    
-                    // Update button handlers
                     updateButtonHandlers();
                 });
             </script>
-            <script>
-            $(document).ready(function() {
-                // Initialize notification system
-                updateNotifications();
-                
-                // Toggle notification dropdown
-                $('#notificationBell').click(function(e) {
-                    e.stopPropagation();
-                    $('.notification-dropdown').toggleClass('show');
-                });
-                
-                // Close dropdown when clicking outside
-                $(document).click(function() {
-                    $('.notification-dropdown').removeClass('show');
-                });
-                
-                // Update notifications every 30 seconds
-                setInterval(updateNotifications, 30000);
-                
-                // Add event listeners for all dynamic elements
-                $('.update-btn').on('click', function(e) {
-                    e.preventDefault();
-                    const type = $(this).data('type');
-                    const id = $(this).data('id');
-                    const name = $(this).data('name');
-                    const email = $(this).data('email');
-                    openOdmlModal(type, id, name, email);
-                });
-            });
-            
-            function updateNotifications() {
-                $.ajax({
-                    url: '../../backend/php/get_recent_notifications.php',
-                    method: 'GET',
-                    success: function(response) {
-                        try {
-                            const data = JSON.parse(response);
-                            // Update notification count
-                            $('#notificationCount').text(data.unread_count);
-                            
-                            // Clear existing notifications
-                            const notificationList = $('#notificationList');
-                            notificationList.empty();
-                            
-                            // Add new notifications
-                            data.notifications.forEach(function(notification) {
-                                const notificationItem = $('<div>').addClass('notification-item');
-                                
-                                // Add type badge
-                                const badge = $('<span>')
-                                    .addClass('notification-badge')
-                                    .addClass('type-' + notification.type)
-                                    .text(notification.type.replace('_', ' '));
-                                
-                                // Add message and time
-                                const content = $('<div>').addClass('notification-content');
-                                content.append($('<p>').addClass('notification-message').text(notification.message));
-                                content.append($('<span>').addClass('notification-time').text(notification.time_ago));
-                                
-                                // Add link if available
-                                if (notification.link_url) {
-                                    notificationItem.css('cursor', 'pointer');
-                                    notificationItem.click(function() {
-                                        window.location.href = notification.link_url;
-                                    });
-                                }
-                                
-                                notificationItem.append(badge).append(content);
-                                notificationList.append(notificationItem);
-                            });
-                            
-                            // Show "No notifications" message if empty
-                            if (data.notifications.length === 0) {
-                                notificationList.append(
-                                    $('<div>')
-                                        .addClass('no-notifications')
-                                        .text('No unread notifications')
-                                );
-                            }
-                        } catch (e) {
-                            console.error('Error parsing notifications:', e);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching notifications:', error);
-                    }
-                });
-            }
-
-            // Close modal when clicking the close button or outside
-            $('.close').click(function() {
-                $('#matchDetailsModal').fadeOut(300);
-            });
-
-            $(window).click(function(event) {
-                if ($(event.target).is('#matchDetailsModal')) {
-                    $('#matchDetailsModal').fadeOut(300);
-                }
-            });
-
-            $(document).ready(function() {
-                // Add event listeners for all dynamic elements
-                $('.update-btn').on('click', function(e) {
-                    e.preventDefault();
-                    const hospitalId = $(this).data('hospital-id');
-                    updateHospitalODMLID(hospitalId);
-                });
-            });
-
-            function updateHospitalODMLID(hospitalId) {
-                const odmlId = $(`#odml_id_${hospitalId}`).val();
-                
-                $.ajax({
-                    url: '../../backend/php/update_odml_id.php',
-                    method: 'POST',
-                    data: {
-                        type: 'hospital',
-                        id: hospitalId,
-                        odml_id: odmlId
-                    },
-                    success: function(response) {
-                        try {
-                            const data = typeof response === 'string' ? JSON.parse(response) : response;
-                            if (data.success) {
-                                alert('ODML ID updated successfully');
-                            } else {
-                                alert('Failed to update ODML ID: ' + (data.message || 'Unknown error'));
-                            }
-                        } catch (e) {
-                            console.error('Error parsing response:', e);
-                            alert('Error updating ODML ID');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        alert('Error updating ODML ID');
-                    }
-                });
-            }
-
-            function updateHospitalStatus(hospitalId, status) {
-                if (status.toLowerCase() === 'rejected') {
-                    const button = document.querySelector(`button[data-id="${hospitalId}"].reject-hospital-btn`);
-                    openRejectModal('hospital', hospitalId, button.getAttribute('data-name'), button.getAttribute('data-email'));
-                    return;
-                }
-                // Rest of the function for approval remains unchanged
-            }
-
-            function updateDonorStatus(donorId, status) {
-                if (status.toLowerCase() === 'rejected') {
-                    const button = document.querySelector(`button[data-id="${donorId}"].reject-donor-btn`);
-                    openRejectModal('donor', donorId, button.getAttribute('data-name'), button.getAttribute('data-email'));
-                    return;
-                }
-                // Rest of the function for approval remains unchanged
-            }
-
-            function updateRecipientStatus(recipientId, status) {
-                if (status.toLowerCase() === 'rejected') {
-                    const button = document.querySelector(`button[data-id="${recipientId}"].reject-recipient-btn`);
-                    openRejectModal('recipient', recipientId, button.getAttribute('data-name'), button.getAttribute('data-email'));
-                    return;
-                }
-                // Rest of the function for approval remains unchanged
-            }
-            
-            function updateButtonHandlers() {
-                // For hospitals
-                document.querySelectorAll('.reject-hospital-btn').forEach(btn => {
-                    btn.onclick = function() {
-                        const id = this.getAttribute('data-id');
-                        const name = this.getAttribute('data-name');
-                        const email = this.getAttribute('data-email');
-                        openRejectModal('hospital', id, name, email);
-                    };
-                });
-
-                // For donors
-                document.querySelectorAll('.reject-donor-btn').forEach(btn => {
-                    btn.onclick = function() {
-                        const id = this.getAttribute('data-id');
-                        const name = this.getAttribute('data-name');
-                        const email = this.getAttribute('data-email');
-                        openRejectModal('donor', id, name, email);
-                    };
-                });
-
-                // For recipients
-                document.querySelectorAll('.reject-recipient-btn').forEach(btn => {
-                    btn.onclick = function() {
-                        const id = this.getAttribute('data-id');
-                        const name = this.getAttribute('data-name');
-                        const email = this.getAttribute('data-email');
-                        openRejectModal('recipient', id, name, email);
-                    };
-                });
-            }
-
-            // Call updateButtonHandlers when document is ready
-            $(document).ready(function() {
-                updateButtonHandlers();
-            });
-        </script>
-        <script src="../../assets/js/notifications.js"></script>
-    </body>
-</html>
+            <script src="../../assets/js/notifications.js"></script>
+        </body>
+    </html>
