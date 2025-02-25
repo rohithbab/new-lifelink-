@@ -68,16 +68,15 @@ try {
             
             error_log("Found recipient: " . print_r($recipient, true));
             
-            // Update ODML ID directly here instead of using the function
-            $updateStmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'approved' WHERE id = ?");
-            $success = $updateStmt->execute([$odml_id, $id]);
+            // Use the updateRecipientODMLID function which sets status to 'accepted'
+            $success = updateRecipientODMLID($conn, $id, $odml_id);
             
             if ($success) {
                 error_log("Successfully updated recipient ODML ID");
                 $phone = $recipient['phone_number'];
                 error_log("Recipient phone: $phone");
             } else {
-                error_log("Failed to update recipient. SQL Error: " . implode(", ", $updateStmt->errorInfo()));
+                error_log("Failed to update recipient ODML ID");
             }
             break;
             

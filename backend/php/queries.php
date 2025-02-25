@@ -460,8 +460,8 @@ function updateRecipientODMLID($conn, $recipient_id, $odml_id) {
             return false;
         }
         
-        // Update the ODML ID and set status to approved
-        $stmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'approved' WHERE id = ?");
+        // Update the ODML ID and set status to accepted
+        $stmt = $conn->prepare("UPDATE recipient_registration SET odml_id = ?, request_status = 'accepted' WHERE id = ?");
         $result = $stmt->execute([$odml_id, $recipient_id]);
         
         if ($result) {
