@@ -83,11 +83,11 @@ function getPendingDonors($conn) {
         $stmt = $conn->prepare("
             SELECT 
                 donor_id,
-                name,
+                name as full_name,
                 email,
                 phone,
                 blood_group as blood_type,
-                organs_to_donate as organ_type,
+                organs_to_donate,
                 DATE_FORMAT(created_at, '%Y-%m-%d') as registration_date,
                 status
             FROM 
@@ -95,7 +95,7 @@ function getPendingDonors($conn) {
             WHERE 
                 status = 'pending'
             ORDER BY 
-                created_at DESC
+                rejection_date DESC
         ");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -113,10 +113,13 @@ function getPendingRecipients($conn) {
         $stmt = $conn->prepare("
             SELECT 
                 id as recipient_id,
-                full_name as name,
+                full_name,
                 email,
-                phone_number as phone,
+                phone_number,
                 blood_type,
+                organ_required,
+                urgency_level,
+                DATE_FORMAT(rejected_at, '%Y-%m-%d') as registration_date,
                 request_status as status
             FROM 
                 recipient_registration 

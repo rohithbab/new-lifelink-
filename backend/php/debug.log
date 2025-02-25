@@ -14287,3 +14287,115 @@ Data: []
 2025-02-24 05:46:57: Hospital data inserted successfully. ID: 20
 2025-02-24 05:46:57: Notification created successfully
 2025-02-24 05:46:57: Transaction committed
+2025-02-25 07:11:16: Registration process started
+2025-02-25 07:11:16: POST data: Array
+(
+    [hospital_name] => Barani
+    [hospital_email] => dummyemailhos001@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 6381798892
+    [street] => Apm mahal
+    [city] => vellore
+    [state] => tamilnadu
+    [postal_code] => 742451
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => Aravindh
+    [designation] => dean
+    [contact_phone] => 6381798892
+    [contact_email] => dummyemailhos001@gmail.com
+    [license_number] => lics002
+    [username] => rohith
+    [password] => #Akash123
+    [confirm_password] => #Akash123
+    [terms] => on
+)
+
+2025-02-25 07:11:16: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpE361.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-02-25 07:11:16: Database connection successful
+2025-02-25 07:11:16: Sanitized inputs: name=Barani, email=dummyemailhos001@gmail.com, phone=6381798892
+2025-02-25 07:11:16: Address: Apm mahal, vellore, tamilnadu, 742451, India
+2025-02-25 07:11:16: Region: tamilnadu
+2025-02-25 07:11:16: Transaction started
+2025-02-25 07:11:16: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-02-25 07:11:16: SQL executed successfully
+2025-02-25 07:11:16: Hospital data inserted successfully. ID: 22
+2025-02-25 07:11:16: Notification created successfully
+2025-02-25 07:11:16: Transaction committed
+2025-02-25 07:13:29: Registration process started
+2025-02-25 07:13:29: POST data: Array
+(
+    [hospital_name] => Barani
+    [hospital_email] => dummyemailhoss001@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9345364408
+    [street] => Apm mahal
+    [city] => vellore
+    [state] => tamilnadu
+    [postal_code] => 742451
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => Aravindh
+    [designation] => dean
+    [contact_phone] => 9345364408
+    [contact_email] => dummyemailhos001@gmail.com
+    [license_number] => licss002
+    [username] => rohith
+    [password] => #Akash123
+    [confirm_password] => #Akash123
+    [terms] => on
+)
+
+2025-02-25 07:13:29: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpEB28.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-02-25 07:13:29: Database connection successful
+2025-02-25 07:13:29: Sanitized inputs: name=Barani, email=dummyemailhoss001@gmail.com, phone=9345364408
+2025-02-25 07:13:29: Address: Apm mahal, vellore, tamilnadu, 742451, India
+2025-02-25 07:13:29: Region: tamilnadu
+2025-02-25 07:13:29: Transaction started
+2025-02-25 07:13:29: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-02-25 07:13:29: SQL executed successfully
+2025-02-25 07:13:29: Hospital data inserted successfully. ID: 23
+2025-02-25 07:13:29: Notification created successfully
+2025-02-25 07:13:29: Transaction committed

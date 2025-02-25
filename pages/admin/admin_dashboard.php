@@ -1328,6 +1328,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td class="action-cell">
                                     <button class="reject-btn reject-hospital-btn" 
                                             data-id="<?php echo $hospital['hospital_id']; ?>"
+                                            data-reject-type="hospital"
                                             data-name="<?php echo htmlspecialchars($hospital['hospital_name']); ?>"
                                             data-email="<?php echo htmlspecialchars($hospital['email']); ?>">
                                         <i class="fas fa-times"></i> Reject
@@ -1363,7 +1364,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                         <tbody>
                             <?php foreach ($pendingDonors as $donor): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($donor['name']); ?></td>
+                                <td><?php echo htmlspecialchars($donor['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['email']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['blood_type']); ?></td>
                                 <td>
@@ -1374,7 +1375,8 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td class="action-cell">
                                     <button class="reject-btn reject-donor-btn"
                                             data-id="<?php echo $donor['donor_id']; ?>"
-                                            data-name="<?php echo htmlspecialchars($donor['name']); ?>"
+                                            data-reject-type="donor"
+                                            data-name="<?php echo htmlspecialchars($donor['full_name']); ?>"
                                             data-email="<?php echo htmlspecialchars($donor['email']); ?>">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
@@ -1400,8 +1402,9 @@ $urgentRecipients = getUrgentRecipients($conn);
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
+                                <th>Phone Number</th>
                                 <th>Blood Type</th>
+                                <th>Organ Required</th>
                                 <th>Update ODML ID</th>
                                 <th>Actions</th>
                                 <th>Details</th>
@@ -1410,10 +1413,11 @@ $urgentRecipients = getUrgentRecipients($conn);
                         <tbody>
                             <?php foreach ($pendingRecipients as $recipient): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($recipient['name']); ?></td>
+                                <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($recipient['email']); ?></td>
-                                <td><?php echo htmlspecialchars($recipient['phone']); ?></td>
+                                <td><?php echo htmlspecialchars($recipient['phone_number']); ?></td>
                                 <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
+                                <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
                                 <td>
                                     <button class="update-btn" data-entity-id="<?php echo $recipient['recipient_id']; ?>" data-entity-type="recipient">
                                         <i class="fas fa-edit"></i> Update ODML ID
@@ -1422,7 +1426,8 @@ $urgentRecipients = getUrgentRecipients($conn);
                                 <td class="action-cell">
                                     <button class="reject-btn reject-recipient-btn"
                                             data-id="<?php echo $recipient['recipient_id']; ?>"
-                                            data-name="<?php echo htmlspecialchars($recipient['name']); ?>"
+                                            data-reject-type="recipient"
+                                            data-name="<?php echo htmlspecialchars($recipient['full_name']); ?>"
                                             data-email="<?php echo htmlspecialchars($recipient['email']); ?>">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
@@ -1809,7 +1814,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                 function updateHospitalStatus(hospitalId, status) {
                     if (status.toLowerCase() === 'rejected') {
                         const button = document.querySelector(`button[data-id="${hospitalId}"].reject-hospital-btn`);
-                        openRejectModal('hospital', hospitalId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        openRejectionModal('hospital', hospitalId, button.getAttribute('data-name'), button.getAttribute('data-email'));
                         return;
                     }
                     // Rest of the function for approval remains unchanged
@@ -1818,7 +1823,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                 function updateDonorStatus(donorId, status) {
                     if (status.toLowerCase() === 'rejected') {
                         const button = document.querySelector(`button[data-id="${donorId}"].reject-donor-btn`);
-                        openRejectModal('donor', donorId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        openRejectionModal('donor', donorId, button.getAttribute('data-name'), button.getAttribute('data-email'));
                         return;
                     }
                     // Rest of the function for approval remains unchanged
@@ -1827,7 +1832,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                 function updateRecipientStatus(recipientId, status) {
                     if (status.toLowerCase() === 'rejected') {
                         const button = document.querySelector(`button[data-id="${recipientId}"].reject-recipient-btn`);
-                        openRejectModal('recipient', recipientId, button.getAttribute('data-name'), button.getAttribute('data-email'));
+                        openRejectionModal('recipient', recipientId, button.getAttribute('data-name'), button.getAttribute('data-email'));
                         return;
                     }
                     // Rest of the function for approval remains unchanged
@@ -1840,7 +1845,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             const id = this.getAttribute('data-id');
                             const name = this.getAttribute('data-name');
                             const email = this.getAttribute('data-email');
-                            openRejectModal('hospital', id, name, email);
+                            openRejectionModal('hospital', id, name, email);
                         };
                     });
 
@@ -1850,7 +1855,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             const id = this.getAttribute('data-id');
                             const name = this.getAttribute('data-name');
                             const email = this.getAttribute('data-email');
-                            openRejectModal('donor', id, name, email);
+                            openRejectionModal('donor', id, name, email);
                         };
                     });
 
@@ -1860,7 +1865,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             const id = this.getAttribute('data-id');
                             const name = this.getAttribute('data-name');
                             const email = this.getAttribute('data-email');
-                            openRejectModal('recipient', id, name, email);
+                            openRejectionModal('recipient', id, name, email);
                         };
                     });
                 }
@@ -2061,7 +2066,11 @@ $urgentRecipients = getUrgentRecipients($conn);
                 }),
                 success: function(response) {
                     if (response.success) {
-                        alert('Registration rejected successfully');
+                        let message = 'Registration rejected successfully.';
+                        if (response.whatsappStatus) {
+                            message += '\nWhatsApp notification: ' + response.whatsappStatus;
+                        }
+                        alert(message);
                         location.reload();
                     } else {
                         alert('Error: ' + response.message);
