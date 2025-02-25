@@ -1069,6 +1069,86 @@ $urgentRecipients = getUrgentRecipients($conn);
         .cancel-btn:hover {
             background: #5a6268;
         }
+        
+        /* Rejection Modal Styles */
+        .modal-header .header-icon {
+            font-size: 2em;
+            color: #f0ad4e;
+            margin-bottom: 15px;
+        }
+        
+        .modal-subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .entity-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            width: 100px;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .confirmation-box {
+            background: #fff5f5;
+            border: 1px solid #ffe0e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .confirmation-box ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .confirmation-box li {
+            margin-bottom: 5px;
+            color: #dc3545;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        #rejectionReason {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-outline {
+            border: 1px solid #ccc;
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background: #f8f9fa;
+        }
     </style>
 
     <!-- JavaScript Dependencies -->
@@ -1793,3 +1873,223 @@ $urgentRecipients = getUrgentRecipients($conn);
             <script src="../../assets/js/notifications.js"></script>
         </body>
     </html>
+
+    <!-- Rejection Modal -->
+    <div id="rejectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="header-icon">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                </div>
+                <h2>Confirm Rejection</h2>
+                <p class="modal-subtitle">Please review the details carefully before proceeding</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="entity-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span id="rejectionEntityName" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span id="rejectionEntityEmail" class="detail-value"></span>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="rejectionEntityType">
+                <input type="hidden" id="rejectionEntityId">
+                
+                <div class="form-group mt-4">
+                    <label for="rejectionReason">Reason for Rejection:</label>
+                    <textarea id="rejectionReason" class="form-control" rows="3" 
+                        placeholder="Please provide a detailed reason for rejection..."></textarea>
+                </div>
+                
+                <div class="confirmation-box mt-3">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="rejectionConfirm">
+                        <span class="checkbox-text">
+                            I understand that by rejecting this registration:
+                            <ul>
+                                <li>The applicant will not be approved for the LifeLink platform</li>
+                                <li>They will receive a WhatsApp message with the rejection reason</li>
+                                <li>This action cannot be undone</li>
+                            </ul>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeRejectionModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmReject">
+                    <i class="fas fa-times"></i> Confirm Rejection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-header .header-icon {
+            font-size: 2em;
+            color: #f0ad4e;
+            margin-bottom: 15px;
+        }
+        
+        .modal-subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .entity-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            width: 100px;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .confirmation-box {
+            background: #fff5f5;
+            border: 1px solid #ffe0e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .confirmation-box ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .confirmation-box li {
+            margin-bottom: 5px;
+            color: #dc3545;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        #rejectionReason {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-outline {
+            border: 1px solid #ccc;
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background: #f8f9fa;
+        }
+    </style>
+
+    <script>
+    $(document).ready(function() {
+        // Initialize rejection handlers
+        $('.reject-btn').on('click', function(e) {
+            e.preventDefault();
+            console.log('Reject button clicked:', this);
+            
+            const type = $(this).data('reject-type');
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const email = $(this).data('email');
+            
+            console.log('Opening rejection modal:', { type, id, name, email });
+            openRejectionModal(type, id, name, email);
+        });
+
+        // Handle rejection confirmation
+        $('#confirmReject').on('click', function() {
+            const type = $('#rejectionEntityType').val();
+            const id = $('#rejectionEntityId').val();
+            const reason = $('#rejectionReason').val().trim();
+            const confirmed = $('#rejectionConfirm').prop('checked');
+
+            if (!confirmed) {
+                alert('Please confirm the rejection by checking the checkbox');
+                return;
+            }
+
+            if (!reason) {
+                alert('Please provide a reason for rejection');
+                return;
+            }
+
+            // Show loading state
+            const $confirmBtn = $(this);
+            const originalHtml = $confirmBtn.html();
+            $confirmBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+
+            // Send rejection request
+            $.ajax({
+                url: '../../backend/php/handle_rejection.php',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    type: type,
+                    id: id,
+                    reason: reason
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('Registration rejected successfully');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                        $confirmBtn.prop('disabled', false).html(originalHtml);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the rejection');
+                    $confirmBtn.prop('disabled', false).html(originalHtml);
+                }
+            });
+        });
+    });
+
+    function openRejectionModal(type, id, name, email) {
+        $('#rejectionEntityType').val(type);
+        $('#rejectionEntityId').val(id);
+        $('#rejectionEntityName').text(name);
+        $('#rejectionEntityEmail').text(email);
+        $('#rejectionReason').val('');
+        $('#rejectionConfirm').prop('checked', false);
+        $('#rejectionModal').css('display', 'block');
+    }
+
+    function closeRejectionModal() {
+        $('#rejectionModal').css('display', 'none');
+        $('#rejectionReason').val('');
+        $('#rejectionConfirm').prop('checked', false);
+    }
+    </script>
