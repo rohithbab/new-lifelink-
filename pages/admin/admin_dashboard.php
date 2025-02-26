@@ -1355,6 +1355,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Blood Type</th>
                                 <th>Update ODML ID</th>
                                 <th>Actions</th>
@@ -1366,6 +1367,7 @@ $urgentRecipients = getUrgentRecipients($conn);
                             <tr>
                                 <td><?php echo htmlspecialchars($donor['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['email']); ?></td>
+                                <td><?php echo htmlspecialchars($donor['phone']); ?></td>
                                 <td><?php echo htmlspecialchars($donor['blood_type']); ?></td>
                                 <td>
                                     <button class="update-btn" data-entity-id="<?php echo $donor['donor_id']; ?>" data-entity-type="donor">
