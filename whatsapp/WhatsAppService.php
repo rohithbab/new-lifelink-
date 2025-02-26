@@ -15,13 +15,14 @@ class WhatsAppService {
         // Remove any non-digit characters
         $phone = preg_replace('/[^0-9]/', '', $phoneNumber);
         
-        // If number starts with 0, remove it
-        if (substr($phone, 0, 1) === '0') {
-            $phone = substr($phone, 1);
+        // If number has more than 10 digits and starts with "91", take last 10 digits
+        if (strlen($phone) > 10 && substr($phone, 0, 2) === '91') {
+            $phone = substr($phone, -10);
         }
         
-        // If number doesn't start with country code (91 for India), add it
-        if (substr($phone, 0, 2) !== '91') {
+        // If number is exactly 10 digits, use it as is
+        if (strlen($phone) === 10) {
+            // Add country code
             $phone = '91' . $phone;
         }
         
