@@ -1,9 +1,7 @@
 <?php
 require_once 'connection.php';
 require_once 'queries.php';
-require_once '../../whatsapp/config.php';
-require_once '../../vendor/autoload.php';
-use Twilio\Rest\Client;
+require_once __DIR__ . '/../../whatsapp/WhatsAppService.php';
 
 header('Content-Type: application/json');
 
@@ -86,37 +84,15 @@ try {
     }
     
     if ($success && $phone && $name) {
-        // Format the message
-        $message = "Dear " . $name . ",\n\n";
-        $message .= "We regret to inform you that your registration for LifeLink has been rejected.\n\n";
-        $message .= "Reason: " . $reason . "\n\n";
-        $message .= "If you have any questions, please contact our support team.\n\n";
-        $message .= "Best regards,\nLifeLink Team";
+        // Create WhatsApp service instance
+        $whatsappService = new WhatsAppService();
         
-        // Debug log
-        error_log("Attempting to send WhatsApp message to: " . $phone);
-        error_log("Message content: " . $message);
-        
-        // Send WhatsApp message using Twilio
         try {
-            $client = new Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+            // Send rejection message using WhatsAppService
+            $result = $whatsappService->sendRejectionMessage($phone, $reason);
             
-            // Format the phone number to WhatsApp format
-            $to = 'whatsapp:+' . ltrim($phone, '+');
-            $from = TWILIO_WHATSAPP_NUMBER;
-            
-            error_log("Sending from: " . $from . " to: " . $to);
-            
-            $message = $client->messages->create(
-                $to,
-                [
-                    'from' => $from,
-                    'body' => $message
-                ]
-            );
-            
-            error_log("WhatsApp message sent successfully. Message SID: " . $message->sid);
-            $whatsappStatus = "Message sent successfully";
+            error_log("WhatsApp Result: " . print_r($result, true));
+            $whatsappStatus = $result['success'] ? "Message sent successfully" : $result['message'];
         } catch (Exception $e) {
             error_log("Error sending WhatsApp message: " . $e->getMessage());
             if (strpos($e->getMessage(), 'exceeded the null daily messages limit') !== false) {
