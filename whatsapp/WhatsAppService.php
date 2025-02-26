@@ -36,11 +36,25 @@ class WhatsAppService {
             error_log("Sending WhatsApp message to: whatsapp:+" . $formattedPhone); // Debug log
             error_log("Using Twilio number: " . TWILIO_WHATSAPP_NUMBER); // Debug log
             
+            $message = "🎉 Congratulations!\n\n";
+            $message .= "Your registration with LifeLink has been successfully approved!\n\n";
+            $message .= "Login Credentials:\n";
+            $message .= "📱 ODML ID: " . $odmlId . "\n";
+            $message .= "📧 Email: Your registered email\n";
+            $message .= "🔑 Password: The one you created during registration\n\n";
+            $message .= "To access the system:\n";
+            $message .= "1. Visit our webapp\n";
+            $message .= "2. Login using your Email, Password and ODML ID\n";
+            $message .= "3. Save this WhatsApp contact for important updates\n\n";
+            $message .= "Welcome to the LifeLink family! Together, we can save lives. 🤝\n\n";
+            $message .= "Best regards,\nLifeLink Team\n\n";
+            $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
+            
             $message = $this->client->messages->create(
                 "whatsapp:+" . $formattedPhone,
                 [
                     "from" => TWILIO_WHATSAPP_NUMBER,
-                    "body" => "Your registration has been approved! Your ODML ID is: " . $odmlId . "\n\nNote: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER
+                    "body" => $message
                 ]
             );
             
@@ -57,11 +71,22 @@ class WhatsAppService {
             $formattedPhone = $this->formatPhoneNumber($phoneNumber);
             error_log("Sending WhatsApp rejection to: whatsapp:+" . $formattedPhone); // Debug log
             
+            $message = "Dear User,\n\n";
+            $message .= "We sincerely regret to inform you that your registration with LifeLink could not be approved at this time.\n\n";
+            $message .= "Reason for rejection: " . $reason . "\n\n";
+            $message .= "If you believe this was a mistake or would like to discuss this further:\n";
+            $message .= "1. Contact our support team\n";
+            $message .= "2. You can reapply with updated information\n";
+            $message .= "3. Save this WhatsApp contact for future communication\n\n";
+            $message .= "We appreciate your interest in LifeLink and hope to work with you in the future.\n\n";
+            $message .= "Best regards,\nLifeLink Team\n\n";
+            $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
+            
             $message = $this->client->messages->create(
                 "whatsapp:+" . $formattedPhone,
                 [
                     "from" => TWILIO_WHATSAPP_NUMBER,
-                    "body" => "Your registration status: Not Approved\nReason: " . $reason . "\n\nNote: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER
+                    "body" => $message
                 ]
             );
             
