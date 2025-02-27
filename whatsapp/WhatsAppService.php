@@ -100,7 +100,10 @@ class WhatsAppService {
     
     public function sendHospitalApprovalMessage($phoneNumber, $userType, $hospitalName, $reason) {
         try {
+            error_log("Hospital WhatsApp: Sending approval to $phoneNumber (Type: $userType)");
+            
             $formattedPhone = $this->formatPhoneNumber($phoneNumber);
+            error_log("Hospital WhatsApp: Formatted number: $formattedPhone");
             
             $message = "🎉 Great News!\n\n";
             $message .= "Your " . ucfirst($userType) . " request has been APPROVED by " . $hospitalName . "! 🏥\n\n";
@@ -111,11 +114,12 @@ class WhatsAppService {
             $message .= "2. The hospital will provide you with necessary medical support\n";
             $message .= "3. Keep this contact saved for important updates\n";
             $message .= "4. Stay in touch with your hospital for guidance\n\n";
-            $message .= "Together, we're making a difference! 💝\n\n";
+            $message .= "We're here to support you every step of the way! 💪\n\n";
             $message .= "Best regards,\nLifeLink & " . $hospitalName . "\n\n";
             $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
             
-            $message = $this->client->messages->create(
+            error_log("Hospital WhatsApp: Attempting to send message...");
+            $result = $this->client->messages->create(
                 "whatsapp:+" . $formattedPhone,
                 [
                     "from" => TWILIO_WHATSAPP_NUMBER,
@@ -123,16 +127,21 @@ class WhatsAppService {
                 ]
             );
             
-            return ["success" => true, "message" => "Message sent successfully", "sid" => $message->sid];
+            error_log("Hospital WhatsApp: Message sent successfully! SID: " . $result->sid);
+            return ["success" => true, "message" => "Message sent successfully", "sid" => $result->sid];
         } catch (Exception $e) {
-            error_log("WhatsApp Error: " . $e->getMessage());
+            error_log("Hospital WhatsApp Error: " . $e->getMessage());
+            error_log("Hospital WhatsApp Error Stack: " . $e->getTraceAsString());
             return ["success" => false, "message" => $e->getMessage()];
         }
     }
-    
+
     public function sendHospitalRejectionMessage($phoneNumber, $userType, $hospitalName, $reason) {
         try {
+            error_log("Hospital WhatsApp: Sending rejection to $phoneNumber (Type: $userType)");
+            
             $formattedPhone = $this->formatPhoneNumber($phoneNumber);
+            error_log("Hospital WhatsApp: Formatted number: $formattedPhone");
             
             $message = "Dear User,\n\n";
             $message .= "We regret to inform you that your " . ucfirst($userType) . " request at " . $hospitalName . " was not approved at this time.\n\n";
@@ -141,12 +150,13 @@ class WhatsAppService {
             $message .= "Don't lose hope! Here's what you can do:\n";
             $message .= "1. Review the feedback provided\n";
             $message .= "2. Consider applying to other hospitals in our network\n";
-            $message .= "3. Contact our support team if you need guidance\n\n";
+            $message .= "3. Update your information if needed\n\n";
             $message .= "We understand this might be disappointing, but remember there are many hospitals in our network ready to help! 🙏\n\n";
             $message .= "Best regards,\nLifeLink & " . $hospitalName . "\n\n";
             $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
             
-            $message = $this->client->messages->create(
+            error_log("Hospital WhatsApp: Attempting to send message...");
+            $result = $this->client->messages->create(
                 "whatsapp:+" . $formattedPhone,
                 [
                     "from" => TWILIO_WHATSAPP_NUMBER,
@@ -154,9 +164,11 @@ class WhatsAppService {
                 ]
             );
             
-            return ["success" => true, "message" => "Message sent successfully", "sid" => $message->sid];
+            error_log("Hospital WhatsApp: Message sent successfully! SID: " . $result->sid);
+            return ["success" => true, "message" => "Message sent successfully", "sid" => $result->sid];
         } catch (Exception $e) {
-            error_log("WhatsApp Error: " . $e->getMessage());
+            error_log("Hospital WhatsApp Error: " . $e->getMessage());
+            error_log("Hospital WhatsApp Error Stack: " . $e->getTraceAsString());
             return ["success" => false, "message" => $e->getMessage()];
         }
     }
