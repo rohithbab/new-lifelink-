@@ -27,6 +27,7 @@ $urgentRecipients = getUrgentRecipients($conn);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/admin-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
     <link rel="stylesheet" href="../../assets/css/notification-bell.css">
     
     <!-- Custom Styles -->
@@ -1153,6 +1154,7 @@ $urgentRecipients = getUrgentRecipients($conn);
 
     <!-- JavaScript Dependencies -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/js/responsive.js"></script>
 </head>
 <body>
     <div class="admin-container">

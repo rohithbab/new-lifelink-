@@ -9,6 +9,8 @@ session_start();
     <title>Admin Login - LifeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .logo-life {
             background: linear-gradient(45deg, var(--primary-blue), var(--primary-green));
@@ -159,6 +161,8 @@ session_start();
         </form>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/responsive.js"></script>
     <script>
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             let isValid = true;

@@ -9,6 +9,8 @@ session_start();
     <title>Donor Login - LifeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .login-container {
             max-width: 400px;
@@ -166,6 +168,8 @@ session_start();
         </form>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/responsive.js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', function(e) {
             let isValid = true;
