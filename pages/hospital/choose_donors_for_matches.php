@@ -59,6 +59,51 @@ try {
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #eee;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #eee;
+            color: #333;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+        }
+
         .switch-list-btn {
             padding: 0.5rem 1rem;
             background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
@@ -126,6 +171,16 @@ try {
             margin-bottom: 0.5rem;
             color: #333;
         }
+
+        #searchResults {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            margin: 2rem 0 1rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
     </style>
 </head>
 <body>
@@ -139,50 +194,182 @@ try {
                 </div>
                 <div class="header-right">
                     <a href="choose_recipients_for_matches.php" class="switch-list-btn">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-user-plus"></i>
                         Recipients List
                     </a>
                 </div>
             </div>
 
-            <?php if (empty($donors)): ?>
-                <div class="empty-state">
-                    <i class="fas fa-user-plus"></i>
-                    <h2>No Approved Donors Found</h2>
-                    <p>There are no approved donors available for matching at the moment.</p>
+            <!-- Search Section -->
+            <div class="search-section">
+                <h2>Search Donors</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Type to search...">
+                    <button class="filter-btn" data-type="blood">Blood Type</button>
+                    <button class="filter-btn" data-type="organ">Organ Type</button>
                 </div>
-            <?php else: ?>
-                <table class="donors-table">
-                    <thead>
-                        <tr>
-                            <th>Donor Name</th>
-                            <th>Blood Group</th>
-                            <th>Organ Type</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($donors as $donor): ?>
+            </div>
+
+            <!-- Search Results Section -->
+            <div id="searchResults"></div>
+
+            <!-- Current Approved Donors Section -->
+            <div class="approved-donors-section">
+                <h2 class="section-title">Your Hospital's Approved Donors</h2>
+                <?php if (empty($donors)): ?>
+                    <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <h2>No Approved Donors Found</h2>
+                        <p>There are no approved donors available for matching at the moment.</p>
+                    </div>
+                <?php else: ?>
+                    <table class="donors-table">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($donor['name']); ?></td>
-                                <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
-                                <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
-                                <td><?php echo htmlspecialchars($donor['status']); ?></td>
-                                <td>
-                                    <button class="select-btn" onclick="selectDonor(<?php echo $donor['donor_id']; ?>)">
-                                        Select for Match
-                                    </button>
-                                </td>
+                                <th>Donor Name</th>
+                                <th>Blood Group</th>
+                                <th>Organ Type</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($donors as $donor): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($donor['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['status']); ?></td>
+                                    <td>
+                                        <button class="select-btn" onclick="selectDonor(<?php echo $donor['donor_id']; ?>)">
+                                            Select for Match
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
         </main>
     </div>
 
     <script>
+        let activeFilter = null;
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // Add click event to filter buttons
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // If this button is already active, deactivate it
+                if (button.classList.contains('active')) {
+                    button.classList.remove('active');
+                    activeFilter = null;
+                    searchInput.placeholder = "Type to search...";
+                } else {
+                    // Deactivate all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Activate this button
+                    button.classList.add('active');
+                    activeFilter = button.dataset.type;
+                    searchInput.placeholder = activeFilter === 'blood' 
+                        ? "Enter blood type (e.g., A+, B-, O+)"
+                        : "Enter organ type (e.g., kidney, heart)";
+                }
+                // Clear search input
+                searchInput.value = '';
+                // Clear search results
+                document.getElementById('searchResults').innerHTML = '';
+            });
+        });
+
+        // Add input event to search input
+        searchInput.addEventListener('input', () => {
+            if (!activeFilter) {
+                document.getElementById('searchResults').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-info-circle"></i>
+                        <h2>Select a Filter</h2>
+                        <p>Please select either Blood Type or Organ Type to search</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const searchValue = searchInput.value.trim();
+            if (searchValue === '') {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            const formData = new FormData();
+            if (activeFilter === 'blood') {
+                formData.append('bloodType', searchValue);
+            } else {
+                formData.append('organType', searchValue);
+            }
+
+            fetch('../../ajax/search_donors.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('searchResults');
+                if (data.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <h2>No Results Found</h2>
+                            <p>Try adjusting your search criteria</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                resultsDiv.innerHTML = `
+                    <h2 class="section-title">Search Results</h2>
+                    <table class="donors-table">
+                        <thead>
+                            <tr>
+                                <th>Donor Name</th>
+                                <th>Blood Group</th>
+                                <th>Organ Type</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(donor => `
+                                <tr>
+                                    <td>${donor.name}</td>
+                                    <td>${donor.blood_group}</td>
+                                    <td>${donor.organ_type}</td>
+                                    <td>${donor.status}</td>
+                                    <td>
+                                        <button class="select-btn" onclick="selectDonor(${donor.donor_id})">
+                                            Select for Match
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('searchResults').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>Error</h2>
+                        <p>An error occurred while searching. Please try again.</p>
+                    </div>
+                `;
+            });
+        });
+
         function selectDonor(donorId) {
             // Get donor details from the row
             const row = event.target.closest('tr');
