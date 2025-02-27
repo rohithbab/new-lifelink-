@@ -87,9 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insert request into database
         $stmt = $conn->prepare("
             INSERT INTO hospital_recipient_approvals 
-            (recipient_id, hospital_id, status, request_date, required_organ, blood_group, 
-             priority_level, location, medical_reports, id_document)
-            VALUES (?, ?, 'Pending', NOW(), ?, ?, ?, ?, ?, ?)
+            (recipient_id, hospital_id, organ_required, blood_type, recipient_medical_reports, 
+             id_document, status, approval_date)
+            VALUES (?, ?, ?, ?, ?, ?, 'Pending', NOW())
         ");
         
         $stmt->execute([

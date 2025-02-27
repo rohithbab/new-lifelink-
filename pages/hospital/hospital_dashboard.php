@@ -29,12 +29,12 @@ try {
             r.full_name,
             r.blood_type,
             r.organ_required,
-            r.medical_condition
+            r.urgency_level
         FROM hospital_recipient_approvals hra
         JOIN recipient_registration r ON r.id = hra.recipient_id
         WHERE hra.hospital_id = :hospital_id 
         AND LOWER(hra.status) = 'pending'
-        ORDER BY hra.request_date DESC
+        ORDER BY hra.approval_date DESC
     ";
     
     $stmt = $conn->prepare($query);
@@ -221,18 +221,25 @@ try {
             color: white;
         }
 
-        .priority-high {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
+        .priority-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: capitalize;
         }
-
-        .priority-medium {
-            background: linear-gradient(45deg, #f1c40f, #f39c12);
-            color: white;
-        }
-
+        
         .priority-low {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .priority-medium {
+            background-color: #ffc107;
+            color: black;
+        }
+        
+        .priority-high {
+            background-color: #dc3545;
             color: white;
         }
 
@@ -434,18 +441,18 @@ try {
                                 <?php foreach ($recipient_requests as $request): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($request['full_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['required_organ']); ?></td>
+                                        <td><?php echo htmlspecialchars($request['organ_required']); ?></td>
                                         <td>
                                             <span class="status-badge">
-                                                <?php echo htmlspecialchars($request['blood_group']); ?>
+                                                <?php echo htmlspecialchars($request['blood_type']); ?>
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="priority-badge priority-<?php echo strtolower($request['priority_level']); ?>">
-                                                <?php echo htmlspecialchars($request['priority_level']); ?>
+                                            <span class="priority-badge priority-<?php echo strtolower($request['urgency_level']); ?>">
+                                                <?php echo htmlspecialchars($request['urgency_level']); ?>
                                             </span>
                                         </td>
-                                        <td><?php echo date('M d, Y', strtotime($request['request_date'])); ?></td>
+                                        <td><?php echo date('M d, Y', strtotime($request['approval_date'])); ?></td>
                                         <td>
                                             <span class="status-badge status-pending">
                                                 <?php echo htmlspecialchars($request['status']); ?>
