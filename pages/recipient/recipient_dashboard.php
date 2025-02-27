@@ -38,15 +38,13 @@ $stmt = $conn->prepare("
         h.address AS hospital_address,
         h.phone AS hospital_number,
         hra.status,
-        hra.request_date,
-        hra.approval_id AS request_id,
-        hra.medical_reports,
-        hra.id_document
+        hra.approval_date,
+        hra.approval_id AS request_id
     FROM hospital_recipient_approvals hra
     JOIN hospitals h ON hra.hospital_id = h.hospital_id
     JOIN recipient_registration r ON hra.recipient_id = r.id
     WHERE hra.recipient_id = ? AND hra.status = 'pending'
-    ORDER BY hra.request_date DESC
+    ORDER BY hra.approval_date DESC
 ");
 $stmt->execute([$recipient_id]);
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
