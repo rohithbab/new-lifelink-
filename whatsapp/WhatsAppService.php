@@ -98,6 +98,27 @@ class WhatsAppService {
         }
     }
     
+    private function getUserName($phoneNumber, $userType) {
+        try {
+            require __DIR__ . '/../config/db_connect.php';
+            
+            if ($userType === 'donor') {
+                $stmt = $conn->prepare("SELECT name FROM donor WHERE phone = ?");
+                $stmt->execute([$phoneNumber]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result ? $result['name'] : "Donor";
+            } else {
+                $stmt = $conn->prepare("SELECT full_name FROM recipient_registration WHERE phone_number = ?");
+                $stmt->execute([$phoneNumber]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result ? $result['full_name'] : "Recipient";
+            }
+        } catch (Exception $e) {
+            error_log("Error fetching user name: " . $e->getMessage());
+            return ucfirst($userType); // Fallback to "Donor" or "Recipient"
+        }
+    }
+
     public function sendHospitalApprovalMessage($phoneNumber, $userType, $hospitalName, $reason) {
         try {
             error_log("Hospital WhatsApp: Sending approval to $phoneNumber (Type: $userType)");
@@ -105,7 +126,12 @@ class WhatsAppService {
             $formattedPhone = $this->formatPhoneNumber($phoneNumber);
             error_log("Hospital WhatsApp: Formatted number: $formattedPhone");
             
+            // Get user's name
+            $userName = $this->getUserName($phoneNumber, $userType);
+            error_log("Hospital WhatsApp: User name: $userName");
+            
             $message = "🎉 Great News!\n\n";
+            $message .= "Dear " . $userName . ",\n\n";
             $message .= "Your " . ucfirst($userType) . " request has been APPROVED by " . $hospitalName . "! 🏥\n\n";
             $message .= "Message from the Hospital:\n";
             $message .= "\"" . $reason . "\"\n\n";
@@ -143,7 +169,11 @@ class WhatsAppService {
             $formattedPhone = $this->formatPhoneNumber($phoneNumber);
             error_log("Hospital WhatsApp: Formatted number: $formattedPhone");
             
-            $message = "Dear User,\n\n";
+            // Get user's name
+            $userName = $this->getUserName($phoneNumber, $userType);
+            error_log("Hospital WhatsApp: User name: $userName");
+            
+            $message = "Dear " . $userName . ",\n\n";
             $message .= "We regret to inform you that your " . ucfirst($userType) . " request at " . $hospitalName . " was not approved at this time.\n\n";
             $message .= "Message from the Hospital:\n";
             $message .= "\"" . $reason . "\"\n\n";
