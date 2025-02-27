@@ -10,7 +10,7 @@ if (!isset($_SESSION['is_recipient']) || !$_SESSION['is_recipient']) {
 
 // Get recipient info
 $recipient_id = $_SESSION['recipient_id'];
-$stmt = $conn->prepare("SELECT * FROM recipient_registration WHERE id = ?");
+$stmt = $conn->prepare("SELECT *, urgency_level FROM recipient_registration WHERE id = ?");
 $stmt->execute([$recipient_id]);
 $recipient = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -87,9 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insert request into database
         $stmt = $conn->prepare("
             INSERT INTO hospital_recipient_approvals 
-            (recipient_id, hospital_id, organ_required, blood_type, recipient_medical_reports, 
-             id_document, status, approval_date)
-            VALUES (?, ?, ?, ?, ?, ?, 'Pending', NOW())
+            (recipient_id, hospital_id, organ_required, blood_type,
+             recipient_medical_reports, id_document, status, approval_date)
+            VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
         ");
         
         $stmt->execute([
@@ -97,12 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hospital_id,
             $recipient['organ_required'],
             $recipient['blood_type'],
-            $recipient['urgency_level'],
-            $recipient['address'],
             $medical_reports_path,
             $id_proof_path
         ]);
-        
+
+        // After successful insert, let's log the urgency level for reference
+        error_log("Recipient Request - ID: " . $recipient_id . ", Urgency Level: " . $recipient['urgency_level']);
+
         $conn->commit();
         
         // Redirect to dashboard

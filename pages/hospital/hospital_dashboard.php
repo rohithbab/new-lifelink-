@@ -51,11 +51,15 @@ try {
 // Fetch donor requests
 try {
     $stmt = $conn->prepare("
-        SELECT hda.*, d.name as donor_name, d.blood_group 
+        SELECT 
+            hda.*, 
+            d.name as donor_name,
+            d.blood_group,
+            d.organs_to_donate as organ_type
         FROM hospital_donor_approvals hda
-        JOIN donor d ON hda.donor_id = d.donor_id
-        WHERE hda.hospital_id = ? AND hda.status = 'Pending'
-        ORDER BY hda.request_date DESC
+        JOIN donor d ON d.donor_id = hda.donor_id
+        WHERE hda.hospital_id = ? AND LOWER(hda.status) = 'pending'
+        ORDER BY hda.approval_date DESC
     ");
     $stmt->execute([$hospital_id]);
     $donor_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -304,12 +308,12 @@ try {
         }
 
         .btn-approve {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
         }
 
         .btn-reject {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
         }
 
@@ -592,14 +596,14 @@ try {
                             <?php else: ?>
                                 <?php foreach ($donor_requests as $request): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($request['donor_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['organ_type']); ?></td>
+                                        <td><?php echo htmlspecialchars($request['donor_name'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($request['organ_type'] ?? 'N/A'); ?></td>
                                         <td>
                                             <span class="blood-badge">
-                                                <?php echo htmlspecialchars($request['blood_group']); ?>
+                                                <?php echo htmlspecialchars($request['blood_group'] ?? 'N/A'); ?>
                                             </span>
                                         </td>
-                                        <td><?php echo date('M d, Y', strtotime($request['request_date'])); ?></td>
+                                        <td><?php echo date('M d, Y', strtotime($request['approval_date'])); ?></td>
                                         <td>
                                             <span class="status-badge <?php echo strtolower($request['status']); ?>">
                                                 <?php echo htmlspecialchars($request['status']); ?>
@@ -659,16 +663,12 @@ try {
                             <?php else: ?>
                                 <?php foreach ($recipient_requests as $request): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($request['full_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['organ_required']); ?></td>
+                                        <td><?php echo htmlspecialchars($request['full_name'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($request['organ_required'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($request['blood_type'] ?? 'N/A'); ?></td>
                                         <td>
-                                            <span class="status-badge">
-                                                <?php echo htmlspecialchars($request['blood_type']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="priority-badge priority-<?php echo strtolower($request['urgency_level']); ?>">
-                                                <?php echo htmlspecialchars($request['urgency_level']); ?>
+                                            <span class="priority-badge priority-<?php echo strtolower($request['urgency_level'] ?? 'normal'); ?>">
+                                                <?php echo htmlspecialchars($request['urgency_level'] ?? 'Normal'); ?>
                                             </span>
                                         </td>
                                         <td><?php echo date('M d, Y', strtotime($request['approval_date'])); ?></td>
