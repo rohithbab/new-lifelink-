@@ -16,11 +16,11 @@ try {
         SELECT 
             r.*,
             hra.status,
-            hra.request_date,
+            hra.approval_date,
             hra.approval_id,
-            hra.priority_level,
-            hra.id_document,
-            hra.medical_reports
+            r.urgency_level,
+            hra.recipient_medical_reports,
+            hra.id_document
         FROM hospital_recipient_approvals hra
         JOIN recipient_registration r ON hra.recipient_id = r.id
         WHERE hra.approval_id = ? AND hra.hospital_id = ?
@@ -260,8 +260,8 @@ try {
                 <div class="info-item">
                     <span class="info-label">Priority Level:</span>
                     <span class="info-value">
-                        <span class="priority-badge priority-<?php echo strtolower($recipient['priority_level']); ?>">
-                            <?php echo htmlspecialchars($recipient['priority_level']); ?>
+                        <span class="priority-badge priority-<?php echo strtolower($recipient['urgency_level']); ?>">
+                            <?php echo htmlspecialchars($recipient['urgency_level']); ?>
                         </span>
                     </span>
                 </div>
@@ -269,10 +269,10 @@ try {
 
             <div class="info-group">
                 <h2>Documents</h2>
-                <?php if (!empty($recipient['medical_reports'])): ?>
+                <?php if (!empty($recipient['recipient_medical_reports'])): ?>
                 <div class="info-item">
                     <span class="info-label">Medical Reports:</span>
-                    <a href="../../uploads/hospitals_recipients/medical_reports/<?php echo htmlspecialchars($recipient['medical_reports']); ?>" 
+                    <a href="../../uploads/hospitals_recipients/medical_reports/<?php echo htmlspecialchars($recipient['recipient_medical_reports']); ?>" 
                        target="_blank" 
                        class="document-link">
                         <i class="fas fa-file-medical"></i> View Medical Reports
