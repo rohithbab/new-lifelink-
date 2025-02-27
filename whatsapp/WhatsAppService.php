@@ -97,4 +97,67 @@ class WhatsAppService {
             return ["success" => false, "message" => $e->getMessage()];
         }
     }
+    
+    public function sendHospitalApprovalMessage($phoneNumber, $userType, $hospitalName, $reason) {
+        try {
+            $formattedPhone = $this->formatPhoneNumber($phoneNumber);
+            
+            $message = "🎉 Great News!\n\n";
+            $message .= "Your " . ucfirst($userType) . " request has been APPROVED by " . $hospitalName . "! 🏥\n\n";
+            $message .= "Message from the Hospital:\n";
+            $message .= "\"" . $reason . "\"\n\n";
+            $message .= "What's Next:\n";
+            $message .= "1. You are now officially registered under " . $hospitalName . "\n";
+            $message .= "2. The hospital will provide you with necessary medical support\n";
+            $message .= "3. Keep this contact saved for important updates\n";
+            $message .= "4. Stay in touch with your hospital for guidance\n\n";
+            $message .= "Together, we're making a difference! 💝\n\n";
+            $message .= "Best regards,\nLifeLink & " . $hospitalName . "\n\n";
+            $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
+            
+            $message = $this->client->messages->create(
+                "whatsapp:+" . $formattedPhone,
+                [
+                    "from" => TWILIO_WHATSAPP_NUMBER,
+                    "body" => $message
+                ]
+            );
+            
+            return ["success" => true, "message" => "Message sent successfully", "sid" => $message->sid];
+        } catch (Exception $e) {
+            error_log("WhatsApp Error: " . $e->getMessage());
+            return ["success" => false, "message" => $e->getMessage()];
+        }
+    }
+    
+    public function sendHospitalRejectionMessage($phoneNumber, $userType, $hospitalName, $reason) {
+        try {
+            $formattedPhone = $this->formatPhoneNumber($phoneNumber);
+            
+            $message = "Dear User,\n\n";
+            $message .= "We regret to inform you that your " . ucfirst($userType) . " request at " . $hospitalName . " was not approved at this time.\n\n";
+            $message .= "Message from the Hospital:\n";
+            $message .= "\"" . $reason . "\"\n\n";
+            $message .= "Don't lose hope! Here's what you can do:\n";
+            $message .= "1. Review the feedback provided\n";
+            $message .= "2. Consider applying to other hospitals in our network\n";
+            $message .= "3. Contact our support team if you need guidance\n\n";
+            $message .= "We understand this might be disappointing, but remember there are many hospitals in our network ready to help! 🙏\n\n";
+            $message .= "Best regards,\nLifeLink & " . $hospitalName . "\n\n";
+            $message .= "Note: This is a WhatsApp sandbox message. To continue receiving messages, please send 'join paint-taught' to " . TWILIO_WHATSAPP_NUMBER;
+            
+            $message = $this->client->messages->create(
+                "whatsapp:+" . $formattedPhone,
+                [
+                    "from" => TWILIO_WHATSAPP_NUMBER,
+                    "body" => $message
+                ]
+            );
+            
+            return ["success" => true, "message" => "Message sent successfully", "sid" => $message->sid];
+        } catch (Exception $e) {
+            error_log("WhatsApp Error: " . $e->getMessage());
+            return ["success" => false, "message" => $e->getMessage()];
+        }
+    }
 }

@@ -804,21 +804,27 @@ try {
                         return;
                     }
 
-                    // Make AJAX call based on type (donor or recipient)
-                    const url = currentRequestType === 'donor' ? 'approve_donor_request.php' : 'approve_recipient_request.php';
-                    
-                    $.post(url, {
+                    $.post('handle_hospital_approval.php', {
                         approval_id: currentRequestId,
+                        type: currentRequestType,
                         approval_reason: reason
                     }, function(response) {
-                        if (response.success) {
-                            location.reload();
-                        } else {
-                            alert('Error: ' + response.message);
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Request approved successfully! WhatsApp message has been sent.');
+                                location.reload();
+                            } else {
+                                alert('Error: ' + result.message);
+                            }
+                        } catch (e) {
+                            alert('Error processing the response');
                         }
                     }).fail(function() {
                         alert('Error occurred while processing the request');
                     });
+
+                    closeModal('approvalModal');
                 }
 
                 function submitRejection() {
@@ -828,21 +834,27 @@ try {
                         return;
                     }
 
-                    // Make AJAX call based on type (donor or recipient)
-                    const url = currentRequestType === 'donor' ? 'reject_donor_request.php' : 'reject_recipient_request.php';
-                    
-                    $.post(url, {
+                    $.post('handle_hospital_rejection.php', {
                         approval_id: currentRequestId,
+                        type: currentRequestType,
                         reject_reason: reason
                     }, function(response) {
-                        if (response.success) {
-                            location.reload();
-                        } else {
-                            alert('Error: ' + response.message);
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Request rejected. WhatsApp message has been sent with your feedback.');
+                                location.reload();
+                            } else {
+                                alert('Error: ' + result.message);
+                            }
+                        } catch (e) {
+                            alert('Error processing the response');
                         }
                     }).fail(function() {
                         alert('Error occurred while processing the request');
                     });
+
+                    closeModal('rejectionModal');
                 }
             </script>
         </main>
