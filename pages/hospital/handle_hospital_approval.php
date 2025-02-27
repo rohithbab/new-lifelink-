@@ -15,10 +15,10 @@ $approval_reason = $_POST['approval_reason'];
 
 try {
     // Get hospital name
-    $stmt = $conn->prepare("SELECT hospital_name FROM hospitals WHERE hospital_id = ?");
+    $stmt = $conn->prepare("SELECT name FROM hospitals WHERE hospital_id = ?");
     $stmt->execute([$hospital_id]);
     $hospital = $stmt->fetch(PDO::FETCH_ASSOC);
-    $hospital_name = $hospital['hospital_name'];
+    $hospital_name = $hospital['name'];
 
     if ($type === 'donor') {
         // Update donor approval status and reason
@@ -33,9 +33,9 @@ try {
 
         // Get donor details for WhatsApp message
         $stmt = $conn->prepare("
-            SELECT d.phone_number, d.donor_name 
-            FROM donor_registration d 
-            JOIN hospital_donor_approvals hda ON d.id = hda.donor_id 
+            SELECT d.phone, d.name as donor_name 
+            FROM donor d 
+            JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id 
             WHERE hda.approval_id = ?
         ");
         $stmt->execute([$approval_id]);
@@ -44,7 +44,7 @@ try {
         // Send WhatsApp message
         $whatsapp = new WhatsAppService();
         $result = $whatsapp->sendHospitalApprovalMessage(
-            $donor['phone_number'],
+            $donor['phone'],
             'donor',
             $hospital_name,
             $approval_reason

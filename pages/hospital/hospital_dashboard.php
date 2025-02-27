@@ -85,6 +85,7 @@ try {
     <link rel="stylesheet" href="../../assets/css/hospital-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -374,34 +375,31 @@ try {
 
         /* Modal Styles */
         .modal {
-            display: none; /* Initial state is hidden */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            animation: fadeIn 0.3s ease;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal.show {
             display: flex !important;
-            align-items: center;
-            justify-content: center;
         }
 
         .modal-content {
-            position: relative;
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            padding: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
             width: 90%;
             max-width: 600px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.4s ease;
-            margin: 0;
-            transform: translateY(0);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
         }
 
         .modal-header {
@@ -776,8 +774,9 @@ try {
                     currentRequestType = type;
                     currentName = name;
                     document.getElementById('approvalName').textContent = name;
+                    document.getElementById('approvalReason').value = '';  // Clear previous input
                     const modal = document.getElementById('approvalModal');
-                    modal.classList.add('show');
+                    modal.style.display = 'flex';
                 }
 
                 function showRejectionModal(id, type, name) {
@@ -785,13 +784,20 @@ try {
                     currentRequestType = type;
                     currentName = name;
                     document.getElementById('rejectionName').textContent = name;
+                    document.getElementById('rejectionReason').value = '';  // Clear previous input
                     const modal = document.getElementById('rejectionModal');
-                    modal.classList.add('show');
+                    modal.style.display = 'flex';
                 }
 
                 function closeModal(modalId) {
                     const modal = document.getElementById(modalId);
-                    modal.classList.remove('show');
+                    modal.style.display = 'none';
+                    // Clear the form fields
+                    if (modalId === 'approvalModal') {
+                        document.getElementById('approvalReason').value = '';
+                    } else if (modalId === 'rejectionModal') {
+                        document.getElementById('rejectionReason').value = '';
+                    }
                     currentRequestId = null;
                     currentRequestType = null;
                     currentName = null;
