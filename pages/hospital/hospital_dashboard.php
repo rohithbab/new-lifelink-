@@ -80,7 +80,46 @@ try {
     </style>
     <link rel="stylesheet" href="../../assets/css/hospital-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-content {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-header h3 {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .responsibility-message {
+            background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .responsibility-message strong {
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .responsibility-message p {
+            color: #34495e;
+            margin: 0;
+        }
+
         .status-select {
             padding: 8px;
             border: 1px solid #ddd;
@@ -276,7 +315,7 @@ try {
 
         .btn-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-action i {
@@ -327,6 +366,186 @@ try {
             font-size: 1.5rem;
             color: #2C3E50;
             font-weight: 600;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Initial state is hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease;
+            margin: 0;
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-header i {
+            font-size: 28px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-header h3 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .responsibility-message {
+            background: linear-gradient(135deg, #EBF5FB, #D6EAF8);
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            font-size: 14.5px;
+            line-height: 1.7;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .responsibility-message strong {
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .responsibility-message p {
+            color: #34495e;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .responsibility-message p i {
+            color: #3498db;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .reason-textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 14.5px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .reason-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-btn i {
+            font-size: 16px;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .modal-btn-reject {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .modal-btn-cancel {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -392,10 +611,10 @@ try {
                                             </a>
                                         </td>
                                         <td class="actions">
-                                            <button onclick="updateDonorStatus(<?php echo $request['approval_id']; ?>, 'Approved')" class="btn-approve">
+                                            <button onclick="showApprovalModal(<?php echo $request['approval_id']; ?>, 'donor', '<?php echo htmlspecialchars($request['donor_name']); ?>')" class="btn-approve">
                                                 <i class="fas fa-check"></i> Approve
                                             </button>
-                                            <button onclick="updateDonorStatus(<?php echo $request['approval_id']; ?>, 'Rejected')" class="btn-reject">
+                                            <button onclick="showRejectionModal(<?php echo $request['approval_id']; ?>, 'donor', '<?php echo htmlspecialchars($request['donor_name']); ?>')" class="btn-reject">
                                                 <i class="fas fa-times"></i> Reject
                                             </button>
                                         </td>
@@ -464,10 +683,10 @@ try {
                                             </a>
                                         </td>
                                         <td class="actions">
-                                            <button onclick="updateRecipientStatus(<?php echo $request['approval_id']; ?>, 'Approved')" class="btn-approve">
+                                            <button onclick="showApprovalModal(<?php echo $request['approval_id']; ?>, 'recipient', '<?php echo htmlspecialchars($request['full_name']); ?>')" class="btn-approve">
                                                 <i class="fas fa-check"></i> Approve
                                             </button>
-                                            <button onclick="updateRecipientStatus(<?php echo $request['approval_id']; ?>, 'Rejected')" class="btn-reject">
+                                            <button onclick="showRejectionModal(<?php echo $request['approval_id']; ?>, 'recipient', '<?php echo htmlspecialchars($request['full_name']); ?>')" class="btn-reject">
                                                 <i class="fas fa-times"></i> Reject
                                             </button>
                                         </td>
@@ -479,14 +698,70 @@ try {
                 </div>
             </div>
 
+            <!-- Approval Modal -->
+            <div id="approvalModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Approve Request</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to approve the request from <strong id="approvalName"></strong></p>
+                        
+                        <div class="responsibility-message">
+                            <strong><i class="fas fa-hospital-user"></i> HOSPITAL RESPONSIBILITY NOTICE</strong>
+                            <p><i class="fas fa-user-check"></i> The person will be registered under YOUR hospital's care</p>
+                            <p><i class="fas fa-hand-holding-medical"></i> You will provide necessary medical support and guidance</p>
+                            <p><i class="fas fa-comments-alt-medical"></i> You will maintain regular communication and updates</p>
+                            <p><i class="fas fa-file-medical-alt"></i> You will ensure proper documentation and follow-up</p>
+                            <p><i class="fas fa-heart"></i> This is a significant responsibility. Please proceed only if you are fully committed to providing the best possible care.</p>
+                        </div>
+
+                        <label for="approvalReason"><i class="fas fa-pen"></i> Please provide your approval message:</label>
+                        <textarea id="approvalReason" class="reason-textarea" 
+                            placeholder="Example: We are pleased to welcome you to [Hospital Name]. Our team is committed to providing you with excellent care and support throughout your journey. We look forward to working with you."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn modal-btn-cancel" onclick="closeModal('approvalModal')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button class="modal-btn modal-btn-confirm" onclick="submitApproval()">
+                            <i class="fas fa-check"></i> Confirm & Accept Responsibility
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Rejection Modal -->
             <div id="rejectionModal" class="modal">
                 <div class="modal-content">
-                    <h3>Rejection Reason</h3>
-                    <textarea id="rejectionReason" placeholder="Please provide a reason for rejection"></textarea>
-                    <div class="modal-actions">
-                        <button onclick="submitRejection()" class="btn-action approve">Submit</button>
-                        <button onclick="closeRejectionModal()" class="btn-action reject">Cancel</button>
+                    <div class="modal-header">
+                        <i class="fas fa-times-circle"></i>
+                        <h3>Request Rejection</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to reject the request from <strong id="rejectionName"></strong></p>
+
+                        <div class="responsibility-message">
+                            <strong><i class="fas fa-exclamation-triangle"></i> IMPORTANT NOTICE</strong>
+                            <p><i class="fas fa-comment-alt"></i> Be clear and professional in your explanation</p>
+                            <p><i class="fas fa-list-ul"></i> Provide specific reasons for the rejection</p>
+                            <p><i class="fas fa-lightbulb"></i> If possible, offer alternative suggestions or guidance</p>
+                            <p><i class="fas fa-heart"></i> Maintain a respectful and supportive tone</p>
+                            <p><i class="fas fa-info-circle"></i> Remember: Your response can significantly impact someone's healthcare journey.</p>
+                        </div>
+
+                        <label for="rejectionReason"><i class="fas fa-pen"></i> Please provide a detailed rejection reason:</label>
+                        <textarea id="rejectionReason" class="reason-textarea" 
+                            placeholder="Example: After careful review of your application and our current capabilities, we regret to inform you that we cannot proceed with your request because [specific reason]. We recommend [alternative suggestion if applicable]."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn modal-btn-cancel" onclick="closeModal('rejectionModal')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button class="modal-btn modal-btn-reject" onclick="submitRejection()">
+                            <i class="fas fa-paper-plane"></i> Submit Rejection
+                        </button>
                     </div>
                 </div>
             </div>
@@ -494,309 +769,80 @@ try {
             <script>
                 let currentRequestId = null;
                 let currentRequestType = null;
+                let currentName = null;
 
-                function handleDonorRequest(requestId, action) {
-                    currentRequestId = requestId;
-                    currentRequestType = 'donor';
-                    if (action === 'reject') {
-                        openRejectionModal();
-                    } else {
-                        updateRequestStatus(requestId, action, 'donor');
+                function showApprovalModal(id, type, name) {
+                    currentRequestId = id;
+                    currentRequestType = type;
+                    currentName = name;
+                    document.getElementById('approvalName').textContent = name;
+                    const modal = document.getElementById('approvalModal');
+                    modal.classList.add('show');
+                }
+
+                function showRejectionModal(id, type, name) {
+                    currentRequestId = id;
+                    currentRequestType = type;
+                    currentName = name;
+                    document.getElementById('rejectionName').textContent = name;
+                    const modal = document.getElementById('rejectionModal');
+                    modal.classList.add('show');
+                }
+
+                function closeModal(modalId) {
+                    const modal = document.getElementById(modalId);
+                    modal.classList.remove('show');
+                    currentRequestId = null;
+                    currentRequestType = null;
+                    currentName = null;
+                }
+
+                function submitApproval() {
+                    const reason = document.getElementById('approvalReason').value.trim();
+                    if (!reason) {
+                        alert('Please enter an approval reason');
+                        return;
                     }
-                }
 
-                function handleRecipientRequest(requestId, action) {
-                    currentRequestId = requestId;
-                    currentRequestType = 'recipient';
-                    if (action === 'reject') {
-                        openRejectionModal();
-                    } else {
-                        updateRequestStatus(requestId, action, 'recipient');
-                    }
-                }
-
-                function openRejectionModal() {
-                    document.getElementById('rejectionModal').style.display = 'flex';
-                }
-
-                function closeRejectionModal() {
-                    document.getElementById('rejectionModal').style.display = 'none';
-                    document.getElementById('rejectionReason').value = '';
+                    // Make AJAX call based on type (donor or recipient)
+                    const url = currentRequestType === 'donor' ? 'approve_donor_request.php' : 'approve_recipient_request.php';
+                    
+                    $.post(url, {
+                        approval_id: currentRequestId,
+                        approval_reason: reason
+                    }, function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    }).fail(function() {
+                        alert('Error occurred while processing the request');
+                    });
                 }
 
                 function submitRejection() {
-                    const reason = document.getElementById('rejectionReason').value;
-                    if (!reason.trim()) {
-                        alert('Please provide a reason for rejection');
-                        return;
-                    }
-                    updateRequestStatus(currentRequestId, 'reject', currentRequestType, reason);
-                    closeRejectionModal();
-                }
-
-                function updateRequestStatus(requestId, action, type, reason = '') {
-                    const formData = new FormData();
-                    formData.append('request_id', requestId);
-                    formData.append('action', action);
-                    formData.append('type', type);
-                    if (reason) formData.append('reason', reason);
-
-                    fetch('../../backend/php/update_request_status.php', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload(); // Reload to show updated status
-                        } else {
-                            throw new Error(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while updating the request');
-                    });
-                }
-            </script>
-
-            <script>
-                function viewDonorDetails(details) {
-                    // Create and show modal with donor details
-                    const modal = document.createElement('div');
-                    modal.className = 'modal';
-                    modal.innerHTML = `
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3>Donor Details</h3>
-                                <button onclick="this.closest('.modal').remove()" class="close-btn">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="donor-info">
-                                    <div class="info-group">
-                                        <label>Name:</label>
-                                        <span>${details.donor_name}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Blood Group:</label>
-                                        <span class="blood-badge">${details.blood_group}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Organ Type:</label>
-                                        <span>${details.organ_type}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Phone:</label>
-                                        <span>${details.phone}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Email:</label>
-                                        <span>${details.email}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Medical Conditions:</label>
-                                        <span>${details.medical_conditions || 'None'}</span>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Documents:</label>
-                                        <div class="document-links">
-                                            ${details.medical_reports ? 
-                                                `<a href="../../uploads/hospitals_donors/medical_reports/${details.medical_reports}" target="_blank" class="doc-link">
-                                                    <i class="fas fa-file-medical"></i> Medical Reports
-                                                </a>` : ''}
-                                            ${details.id_proof ? 
-                                                `<a href="../../uploads/hospitals_donors/id_proof/${details.id_proof}" target="_blank" class="doc-link">
-                                                    <i class="fas fa-id-card"></i> ID Proof
-                                                </a>` : ''}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
-                }
-
-                function approveDonor(approvalId) {
-                    if (confirm('Are you sure you want to approve this donor request?')) {
-                        fetch('../../ajax/handle_donor_approval.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `approval_id=${approvalId}&action=approve`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Donor request approved successfully!');
-                                location.reload();
-                            } else {
-                                alert('Error: ' + data.error);
-                            }
-                        })
-                        .catch(error => {
-                            alert('Error processing request');
-                        });
-                    }
-                }
-
-                function showRejectionModal(approvalId) {
-                    const modal = document.getElementById('rejectionModal');
-                    const form = modal.querySelector('form');
-                    form.onsubmit = (e) => {
-                        e.preventDefault();
-                        const reason = form.querySelector('textarea').value;
-                        rejectDonor(approvalId, reason);
-                    };
-                    modal.style.display = 'block';
-                }
-
-                function rejectDonor(approvalId, reason) {
-                    fetch('../../ajax/handle_donor_approval.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `approval_id=${approvalId}&action=reject&reason=${encodeURIComponent(reason)}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Donor request rejected successfully!');
-                            location.reload();
-                        } else {
-                            alert('Error: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        alert('Error processing request');
-                    });
-                }
-
-                // Close modal when clicking outside
-                window.onclick = function(event) {
-                    if (event.target.className === 'modal') {
-                        event.target.remove();
-                    }
-                }
-            </script>
-
-            <script>
-                function updateDonorStatus(approvalId, status) {
-                    const confirmMessage = status === 'Approved' ? 
-                        'Are you sure you want to approve this donor?' : 
-                        'Are you sure you want to reject this donor?';
-                        
-                    if (confirm(confirmMessage)) {
-                        fetch('../../ajax/update_donor_status.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `approval_id=${approvalId}&status=${status}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload(); // Reload to show updated status
-                            } else {
-                                alert('Error: ' + data.error);
-                            }
-                        })
-                        .catch(error => {
-                            alert('Error updating status');
-                        });
-                    }
-                }
-            </script>
-
-            <script>
-                function updateRecipientStatus(approvalId, status) {
-                    if (!confirm('Are you sure you want to ' + status.toLowerCase() + ' this request?')) {
+                    const reason = document.getElementById('rejectionReason').value.trim();
+                    if (!reason) {
+                        alert('Please enter a rejection reason');
                         return;
                     }
 
-                    const button = event.target.closest('button');
-                    const originalText = button.innerHTML;
-                    button.disabled = true;
-                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                    let rejectionReason = null;
-                    if (status === 'Rejected') {
-                        rejectionReason = prompt('Please provide a reason for rejection:');
-                        if (rejectionReason === null) {
-                            button.disabled = false;
-                            button.innerHTML = originalText;
-                            return;
-                        }
-                    }
-
-                    fetch('../../ajax/handle_recipient_request.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            approval_id: approvalId,
-                            status: status,
-                            rejection_reason: rejectionReason
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
+                    // Make AJAX call based on type (donor or recipient)
+                    const url = currentRequestType === 'donor' ? 'reject_donor_request.php' : 'reject_recipient_request.php';
+                    
+                    $.post(url, {
+                        approval_id: currentRequestId,
+                        reject_reason: reason
+                    }, function(response) {
+                        if (response.success) {
                             location.reload();
                         } else {
-                            throw new Error(data.message || 'Failed to update status');
+                            alert('Error: ' + response.message);
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error: ' + error.message);
-                        button.disabled = false;
-                        button.innerHTML = originalText;
+                    }).fail(function() {
+                        alert('Error occurred while processing the request');
                     });
-                }
-            </script>
-
-            <script>
-                function approveRequest(approvalId) {
-                    if (confirm('Are you sure you want to approve this request?')) {
-                        $.post('approve_recipient_request.php', {
-                            approval_id: approvalId,
-                            action: 'approve'
-                        }, function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert('Error: ' + response.message);
-                            }
-                        });
-                    }
-                }
-
-                function rejectRequest(approvalId) {
-                    const reason = prompt('Please enter a reason for rejection:');
-                    if (reason) {
-                        $.post('reject_recipient_request.php', {
-                            approval_id: approvalId,
-                            reason: reason,
-                            action: 'reject'
-                        }, function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert('Error: ' + response.message);
-                            }
-                        });
-                    }
                 }
             </script>
         </main>
