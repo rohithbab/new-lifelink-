@@ -84,36 +84,57 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Modern Table Styling */
+        /* Table Container Styling */
         .table-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 25px;
             margin: 20px 0;
         }
 
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-header h2 {
+            color: #2C3E50;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(45deg, #28a745, #4a90e2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Modern Table Styling */
         .table-responsive {
-            margin-top: 20px;
+            margin: 20px 0;
+            background: white;
+            padding: 20px;
             border-radius: 12px;
-            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
         }
 
         .modern-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            background: white;
+            background: #fff;
         }
 
         .modern-table th {
-            background: linear-gradient(45deg, #20bf55, #01baef);
+            background: linear-gradient(45deg, #28a745, #4a90e2);
             color: white;
-            padding: 15px;
             font-weight: 600;
-            text-transform: uppercase;
+            padding: 15px;
+            text-align: left;
             font-size: 0.9rem;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
+            border: none;
         }
 
         .modern-table th:first-child {
@@ -128,150 +149,52 @@ try {
             padding: 15px;
             border-bottom: 1px solid #e9ecef;
             color: #2C3E50;
-            font-size: 0.95rem;
-            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        .modern-table tr:last-child td {
+            border-bottom: none;
         }
 
         .modern-table tr:hover {
             background-color: #f8f9fa;
-            transform: scale(1.01);
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Status and Priority Badges */
-        .status-badge, .priority-badge {
-            padding: 8px 15px;
+        /* Status Badge Styling */
+        .status-badge {
+            padding: 6px 12px;
             border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
             text-transform: capitalize;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .status-pending {
-            background: linear-gradient(45deg, #f1c40f, #f39c12);
-            color: white;
+            display: inline-block;
         }
 
         .status-approved {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            color: white;
+            background-color: #e8f5e9;
+            color: #28a745;
+        }
+
+        .status-pending {
+            background-color: #fff3e0;
+            color: #f57c00;
         }
 
         .status-rejected {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
+            background-color: #ffebee;
+            color: #dc3545;
         }
 
-        .priority-high {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-        .priority-medium {
-            background: linear-gradient(45deg, #f1c40f, #f39c12);
-            color: white;
-        }
-
-        .priority-low {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            color: white;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #20bf55, #01baef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .empty-state h3 {
-            color: #2C3E50;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            color: #6c757d;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        /* Card Header */
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e9ecef;
-            margin-bottom: 20px;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #2C3E50;
-            font-weight: 600;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 400px;
-            max-width: 90%;
-        }
-
-        .modal textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            resize: vertical;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
+        /* Button Styling */
         .btn-reject {
             padding: 8px 16px;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            background: linear-gradient(45deg, #dc3545, #ff4b2b);
             color: white;
             border: none;
-            border-radius: 50px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 0.9rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 5px;
@@ -280,11 +203,47 @@ try {
 
         .btn-reject:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
         }
 
         .btn-reject i {
             font-size: 0.8rem;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        /* Empty State Styling */
+        .no-records {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .no-records p {
+            font-size: 1.1rem;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -292,9 +251,11 @@ try {
     <div class="dashboard-container">
         <?php include '../../includes/hospital_sidebar.php'; ?>
         <main class="main-content">
-            <div class="container mt-4">
-                <h2>Manage Recipients</h2>
-                
+            <div class="container">
+                <div class="section-header">
+                    <h2>Manage Recipients</h2>
+                </div>
+
                 <?php if (isset($error_message)): ?>
                     <div class="alert alert-danger">
                         <?php echo htmlspecialchars($error_message); ?>
@@ -308,48 +269,50 @@ try {
                 <?php endif; ?>
 
                 <div class="table-container">
-                    <?php if (empty($recipient_requests)): ?>
-                        <div class="no-records">
-                            <?php if ($total_count == 0): ?>
-                                <p>No recipient requests found for your hospital.</p>
-                            <?php else: ?>
-                                <p>No approved recipients found. Total requests: <?php echo $total_count; ?></p>
-                            <?php endif; ?>
-                        </div>
-                    <?php else: ?>
-                        <table class="modern-table">
-                            <thead>
-                                <tr>
-                                    <th>Recipient Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Approval Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($recipient_requests as $request): ?>
+                    <div class="table-responsive">
+                        <?php if (empty($recipient_requests)): ?>
+                            <div class="no-records">
+                                <?php if ($total_count == 0): ?>
+                                    <p><i class="fas fa-info-circle"></i> No recipient requests found for your hospital.</p>
+                                <?php else: ?>
+                                    <p><i class="fas fa-info-circle"></i> No approved recipients found. Total requests: <?php echo $total_count; ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <table class="modern-table">
+                                <thead>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($request['full_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['email']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['phone_number']); ?></td>
-                                        <td><?php echo date('Y-m-d', strtotime($request['approval_date'])); ?></td>
-                                        <td>
-                                            <span class="status-badge status-<?php echo strtolower($request['status']); ?>">
-                                                <?php echo htmlspecialchars($request['status']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button class="btn-reject" onclick="openRejectModal(<?php echo $request['approval_id']; ?>)">
-                                                <i class="fas fa-times"></i> Reject
-                                            </button>
-                                        </td>
+                                        <th>Recipient Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Approval Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($recipient_requests as $request): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($request['full_name']); ?></td>
+                                            <td><?php echo htmlspecialchars($request['email']); ?></td>
+                                            <td><?php echo htmlspecialchars($request['phone_number']); ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($request['approval_date'])); ?></td>
+                                            <td>
+                                                <span class="status-badge status-<?php echo strtolower($request['status']); ?>">
+                                                    <?php echo htmlspecialchars($request['status']); ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="btn-reject" onclick="openRejectModal(<?php echo $request['approval_id']; ?>)">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </main>
