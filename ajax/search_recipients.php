@@ -8,85 +8,81 @@ ini_set('display_errors', 1);
 
 // Check if hospital is logged in
 if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in']) {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Unauthorized']);
     exit();
 }
 
-// Get JSON input
-$data = json_decode(file_get_contents('php://input'), true);
-$searchTerm = $data['search'] ?? '';
-$filter = $data['filter'] ?? 'blood_group';
 $hospital_id = $_SESSION['hospital_id'];
 
-if (empty($searchTerm)) {
+// Get JSON input
+$data = json_decode(file_get_contents('php://input'), true);
+$bloodType = $data['bloodType'] ?? '';
+$organType = $data['organType'] ?? '';
+
+if (empty($bloodType) && empty($organType)) {
     echo json_encode(['success' => false, 'message' => 'Search term is required']);
     exit();
 }
 
 try {
-    // Base query structure depends on the filter type
-    if ($filter === 'blood_group') {
-        $query = "
-            SELECT DISTINCT 
-                h.hospital_id,
-                h.name as hospital_name,
-                h.phone as hospital_phone,
-                h.address as hospital_address,
-                GROUP_CONCAT(DISTINCT ha.blood_group) as blood_groups,
-                GROUP_CONCAT(DISTINCT ha.required_organ) as organ_types,
-                COUNT(DISTINCT r.id) as recipient_count
-            FROM hospitals h
-            JOIN hospital_recipient_approvals ha ON h.hospital_id = ha.hospital_id
-            JOIN recipient_registration r ON ha.recipient_id = r.id
-            WHERE ha.status = 'Approved'
-            AND h.hospital_id != ?
-            AND LOWER(ha.blood_group) LIKE LOWER(?)
-            GROUP BY h.hospital_id
-            ORDER BY h.name ASC";
-    } else { // organs
-        $query = "
-            SELECT DISTINCT 
-                h.hospital_id,
-                h.name as hospital_name,
-                h.phone as hospital_phone,
-                h.address as hospital_address,
-                GROUP_CONCAT(DISTINCT ha.blood_group) as blood_groups,
-                GROUP_CONCAT(DISTINCT ha.required_organ) as organ_types,
-                COUNT(DISTINCT r.id) as recipient_count
-            FROM hospitals h
-            JOIN hospital_recipient_approvals ha ON h.hospital_id = ha.hospital_id
-            JOIN recipient_registration r ON ha.recipient_id = r.id
-            WHERE ha.status = 'Approved'
-            AND h.hospital_id != ?
-            AND LOWER(ha.required_organ) LIKE LOWER(?)
-            GROUP BY h.hospital_id
-            ORDER BY h.name ASC";
+    // Build the query
+    $query = "
+        SELECT 
+            r.*,
+            h.name as hospital_name,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+    ";
+    
+    $params = [$hospital_id];
+    
+    // Add search conditions
+    if (!empty($bloodType)) {
+        $query .= " AND LOWER(r.blood_type) LIKE LOWER(?)";
+        $params[] = "%$bloodType%";
     }
-
+    
+    if (!empty($organType)) {
+        $query .= " AND LOWER(r.organ_required) LIKE LOWER(?)";
+        $params[] = "%$organType%";
+    }
+    
+    $query .= " ORDER BY r.full_name ASC";
+    
     // Log the query and parameters for debugging
-    error_log("Search Term: " . $searchTerm);
-    error_log("Filter: " . $filter);
+    error_log("Blood Type: " . $bloodType);
+    error_log("Organ Type: " . $organType);
     error_log("Hospital ID: " . $hospital_id);
     
     $stmt = $conn->prepare($query);
-    $stmt->execute([$hospital_id, "%$searchTerm%"]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    $stmt->execute($params);
+    $recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
     // Log the number of results
-    error_log("Number of results: " . count($results));
+    error_log("Number of results: " . count($recipients));
 
     // Format results
     $formattedResults = array_map(function($row) {
         return [
-            'hospital_id' => $row['hospital_id'],
+            'id' => $row['id'],
+            'full_name' => htmlspecialchars($row['full_name']),
+            'email' => htmlspecialchars($row['email']),
+            'phone' => htmlspecialchars($row['phone']),
+            'blood_type' => htmlspecialchars($row['blood_type']),
+            'organ_required' => htmlspecialchars($row['organ_required']),
             'hospital_name' => htmlspecialchars($row['hospital_name']),
-            'phone' => htmlspecialchars($row['hospital_phone']),
-            'address' => htmlspecialchars($row['hospital_address']),
-            'recipient_count' => $row['recipient_count'],
-            'blood_groups' => array_unique(explode(',', $row['blood_groups'])),
-            'organ_types' => array_unique(explode(',', $row['organ_types']))
+            'approval_status' => htmlspecialchars($row['approval_status'])
         ];
-    }, $results);
+    }, $recipients);
 
     echo json_encode([
         'success' => true,
