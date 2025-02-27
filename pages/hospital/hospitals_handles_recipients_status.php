@@ -38,23 +38,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approval_id']) && iss
 
 // Fetch only approved recipient requests
 try {
+    // First, let's check if we have any records at all
+    $check_stmt = $conn->prepare("
+        SELECT COUNT(*) as count 
+        FROM hospital_recipient_approvals 
+        WHERE hospital_id = ?
+    ");
+    $check_stmt->execute([$hospital_id]);
+    $total_count = $check_stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+    // Now get the approved recipients with correct table structure
     $stmt = $conn->prepare("
         SELECT 
             hra.*,
             r.full_name,
-            r.blood_type,
-            r.organ_required,
             r.email,
             r.phone_number
         FROM hospital_recipient_approvals hra
         JOIN recipient_registration r ON hra.recipient_id = r.id
-        WHERE hra.hospital_id = ? AND hra.status = 'Approved'
-        ORDER BY hra.request_date DESC
+        WHERE hra.hospital_id = ? 
+        AND hra.status = 'approved'
+        ORDER BY hra.approval_date DESC
     ");
     $stmt->execute([$hospital_id]);
     $recipient_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // For debugging
+    error_log("Total records for hospital " . $hospital_id . ": " . $total_count);
+    error_log("Approved recipients found: " . count($recipient_requests));
+    
 } catch(PDOException $e) {
-    error_log("Error: " . $e->getMessage());
+    error_log("Error in hospitals_handles_recipients_status.php: " . $e->getMessage());
     $error_message = "An error occurred while fetching the data.";
 }
 
@@ -279,66 +293,63 @@ try {
         <?php include '../../includes/hospital_sidebar.php'; ?>
         <main class="main-content">
             <div class="container mt-4">
-                <div class="table-container">
-                    <div class="card-header">
-                        <h2>Recipient Requests Status</h2>
+                <h2>Manage Recipients</h2>
+                
+                <?php if (isset($error_message)): ?>
+                    <div class="alert alert-danger">
+                        <?php echo htmlspecialchars($error_message); ?>
                     </div>
-                    <div class="table-responsive">
+                <?php endif; ?>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <div class="alert alert-success">
+                        Status updated successfully!
+                    </div>
+                <?php endif; ?>
+
+                <div class="table-container">
+                    <?php if (empty($recipient_requests)): ?>
+                        <div class="no-records">
+                            <?php if ($total_count == 0): ?>
+                                <p>No recipient requests found for your hospital.</p>
+                            <?php else: ?>
+                                <p>No approved recipients found. Total requests: <?php echo $total_count; ?></p>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
                         <table class="modern-table">
                             <thead>
                                 <tr>
                                     <th>Recipient Name</th>
-                                    <th>Required Organ</th>
-                                    <th>Blood Group</th>
-                                    <th>Priority Level</th>
-                                    <th>Request Date</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Approval Date</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (empty($recipient_requests)): ?>
+                                <?php foreach ($recipient_requests as $request): ?>
                                     <tr>
-                                        <td colspan="7">
-                                            <div class="empty-state">
-                                                <i class="fas fa-inbox"></i>
-                                                <h3>No Requests Found</h3>
-                                                <p>There are no recipient requests at this time.</p>
-                                            </div>
+                                        <td><?php echo htmlspecialchars($request['full_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($request['email']); ?></td>
+                                        <td><?php echo htmlspecialchars($request['phone_number']); ?></td>
+                                        <td><?php echo date('Y-m-d', strtotime($request['approval_date'])); ?></td>
+                                        <td>
+                                            <span class="status-badge status-<?php echo strtolower($request['status']); ?>">
+                                                <?php echo htmlspecialchars($request['status']); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn-reject" onclick="openRejectModal(<?php echo $request['approval_id']; ?>)">
+                                                <i class="fas fa-times"></i> Reject
+                                            </button>
                                         </td>
                                     </tr>
-                                <?php else: ?>
-                                    <?php foreach ($recipient_requests as $request): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($request['full_name']); ?></td>
-                                            <td><?php echo htmlspecialchars($request['organ_required']); ?></td>
-                                            <td>
-                                                <span class="status-badge">
-                                                    <?php echo htmlspecialchars($request['blood_type']); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="priority-badge priority-<?php echo strtolower($request['priority_level']); ?>">
-                                                    <?php echo htmlspecialchars($request['priority_level']); ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo date('M d, Y', strtotime($request['request_date'])); ?></td>
-                                            <td>
-                                                <span class="status-badge status-<?php echo strtolower($request['status']); ?>">
-                                                    <?php echo htmlspecialchars($request['status']); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button class="btn-reject" onclick="openRejectModal(<?php echo $request['approval_id']; ?>)">
-                                                    <i class="fas fa-times"></i> Reject
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
