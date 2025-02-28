@@ -36,12 +36,6 @@ debug_log("Search parameters:", [
 ]);
 
 try {
-    // First, let's check what statuses exist in the table
-    $statusQuery = "SELECT DISTINCT status FROM hospital_recipient_approvals";
-    $statusStmt = $conn->query($statusQuery);
-    $existingStatuses = $statusStmt->fetchAll(PDO::FETCH_COLUMN);
-    debug_log("Existing status values in hospital_recipient_approvals:", $existingStatuses);
-
     // Build the query
     $query = "
         SELECT 
@@ -53,14 +47,19 @@ try {
             r.phone_number as recipient_phone,
             r.medical_condition,
             r.urgency_level,
+            h.hospital_id,
             h.name as hospital_name,
             h.email as hospital_email,
             h.phone as hospital_phone,
-            hra.status as approval_status
+            hra.status as approval_status,
+            rr.status as request_status
         FROM recipient_registration r
         INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
         INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
-        WHERE hra.status IN (" . implode(',', array_fill(0, count($existingStatuses), '?')) . ")
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
         AND h.hospital_id != ?
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
@@ -68,7 +67,7 @@ try {
         )
     ";
     
-    $params = array_merge($existingStatuses, [$hospital_id]);
+    $params = [$hospital_id, $hospital_id];
     
     // Add search conditions based on filter type
     if (!empty($bloodType)) {
@@ -96,32 +95,6 @@ try {
     $recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     debug_log("Number of results found:", count($recipients));
-    if (count($recipients) > 0) {
-        debug_log("First result:", $recipients[0]);
-    } else {
-        debug_log("No results found");
-        
-        // Let's check if there are any approved recipients at all
-        $checkQuery = "
-            SELECT COUNT(*) as count, status 
-            FROM hospital_recipient_approvals 
-            GROUP BY status
-        ";
-        $checkStmt = $conn->query($checkQuery);
-        $statusCounts = $checkStmt->fetchAll(PDO::FETCH_ASSOC);
-        debug_log("Recipients by status:", $statusCounts);
-
-        // Let's also check a sample recipient
-        $sampleQuery = "
-            SELECT r.id, r.full_name, hra.status
-            FROM recipient_registration r
-            INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
-            LIMIT 1
-        ";
-        $sampleStmt = $conn->query($sampleQuery);
-        $sampleRecipient = $sampleStmt->fetch(PDO::FETCH_ASSOC);
-        debug_log("Sample recipient record:", $sampleRecipient);
-    }
     
     // Format the results for display
     $formattedRecipients = array_map(function($recipient) {
@@ -134,28 +107,20 @@ try {
             'recipient_phone' => htmlspecialchars($recipient['recipient_phone']),
             'medical_condition' => htmlspecialchars($recipient['medical_condition']),
             'urgency_level' => htmlspecialchars($recipient['urgency_level']),
+            'hospital_id' => $recipient['hospital_id'],
             'hospital_name' => htmlspecialchars($recipient['hospital_name']),
             'hospital_email' => htmlspecialchars($recipient['hospital_email']),
             'hospital_phone' => htmlspecialchars($recipient['hospital_phone']),
-            'approval_status' => htmlspecialchars($recipient['approval_status'])
+            'request_status' => $recipient['request_status']
         ];
     }, $recipients);
-    
-    debug_log("Formatted results:", $formattedRecipients);
     
     header('Content-Type: application/json');
     echo json_encode($formattedRecipients);
     
 } catch(PDOException $e) {
-    debug_log("Database error occurred:", [
-        'message' => $e->getMessage(),
-        'code' => $e->getCode(),
-        'trace' => $e->getTraceAsString()
-    ]);
-    
+    debug_log("Database error:", $e->getMessage());
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'Database error']);
+    echo json_encode(['error' => 'Database error occurred']);
 }
-
-debug_log("Search request completed");
 ?>

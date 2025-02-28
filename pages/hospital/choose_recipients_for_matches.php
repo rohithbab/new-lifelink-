@@ -193,66 +193,65 @@ try {
                     <h1>Choose Recipients</h1>
                 </div>
                 <div class="header-right">
-                    <a href="choose_donors_for_matches.php" class="switch-list-btn">
+                    <a href="choose_donors_for_matches.php" class="btn btn-primary">
                         <i class="fas fa-user-plus"></i>
                         Donors List
                     </a>
                 </div>
             </div>
 
-            <!-- Search Section -->
-            <div class="search-section">
-                <h2>Search Recipients</h2>
-                <div class="search-container">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Type to search...">
-                    <button class="filter-btn" data-type="blood">Blood Type</button>
-                    <button class="filter-btn" data-type="organ">Organ Type</button>
-                </div>
-            </div>
+            <!-- Search other hospitals' recipients -->
+<div class="search-section">
+    <h2 class="section-title">Search Other Hospitals' Recipients</h2>
+    <div class="search-container">
+        <button class="filter-btn" data-type="blood">
+            <i class="fas fa-tint"></i> Filter by Blood Type
+        </button>
+        <button class="filter-btn" data-type="organ">
+            <i class="fas fa-heart"></i> Filter by Organ Type
+        </button>
+        <input type="text" id="searchInput" class="search-input" placeholder="Type to search...">
+    </div>
+    <div id="searchResults"></div>
+</div>
 
-            <!-- Search Results Section -->
-            <div id="searchResults"></div>
-
-            <!-- Current Approved Recipients Section -->
-            <div class="approved-recipients-section">
-                <h2 class="section-title">Your Hospital's Approved Recipients</h2>
-                <?php if (empty($recipients)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-user-plus"></i>
-                        <h2>No Approved Recipients Found</h2>
-                        <p>There are no approved recipients available for matching at the moment.</p>
-                    </div>
-                <?php else: ?>
-                    <table class="recipients-table">
-                        <thead>
-                            <tr>
-                                <th>Recipient Name</th>
-                                <th>Blood Group</th>
-                                <th>Required Organ</th>
-                                <th>Hospital</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($recipients as $recipient): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
-                                    <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
-                                    <td><?php echo htmlspecialchars($recipient['hospital_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($recipient['approval_status']); ?></td>
-                                    <td>
-                                        <button class="select-btn" onclick="selectRecipient(<?php echo $recipient['id']; ?>)">
-                                            Select for Match
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php endif; ?>
-            </div>
+<!-- Hospital's own approved recipients -->
+<?php if (!empty($recipients)): ?>
+    <div class="search-section mt-4">
+        <h2 class="section-title">Your Approved Recipients</h2>
+        <table class="recipients-table">
+            <thead>
+                <tr>
+                    <th>Recipient Name</th>
+                    <th>Blood Type</th>
+                    <th>Organ Required</th>
+                    <th>Medical Condition</th>
+                    <th>Urgency Level</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($recipients as $recipient): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
+                        <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
+                        <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
+                        <td><?php echo htmlspecialchars($recipient['medical_condition']); ?></td>
+                        <td><?php echo htmlspecialchars($recipient['urgency_level']); ?></td>
+                        <td>
+                            Email: <?php echo htmlspecialchars($recipient['email']); ?><br>
+                            Phone: <?php echo htmlspecialchars($recipient['phone_number']); ?>
+                        </td>
+                        <td>
+                            <span class="status-badge status-approved">Approved</span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
         </main>
     </div>
 
@@ -264,27 +263,66 @@ try {
         // Add click event to filter buttons
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // If this button is already active, deactivate it
                 if (button.classList.contains('active')) {
                     button.classList.remove('active');
                     activeFilter = null;
                     searchInput.placeholder = "Type to search...";
                 } else {
-                    // Deactivate all buttons
                     filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Activate this button
                     button.classList.add('active');
                     activeFilter = button.dataset.type;
                     searchInput.placeholder = activeFilter === 'blood' 
-                        ? "Enter blood type (e.g., A+, B-, O+, a plus, b minus)"
-                        : "Enter organ type (e.g., kidney, heart, liver)";
+                        ? "Enter blood type (e.g., A+, B-, O+)"
+                        : "Enter organ type (e.g., kidney, heart)";
                 }
-                // Clear search input
                 searchInput.value = '';
-                // Clear search results
                 document.getElementById('searchResults').innerHTML = '';
             });
         });
+
+        async function handleRecipientRequest(recipientId, hospitalId, action) {
+            try {
+                const response = await fetch('../../ajax/handle_recipient_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recipientId: recipientId,
+                        recipientHospitalId: hospitalId,
+                        action: action
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Refresh the search results
+                if (searchInput.value.trim() !== '') {
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+
+                showNotification(data.message, 'success');
+
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notificationDiv = document.createElement('div');
+            notificationDiv.className = `alert alert-${type} notification`;
+            notificationDiv.textContent = message;
+            document.body.appendChild(notificationDiv);
+
+            setTimeout(() => {
+                notificationDiv.remove();
+            }, 3000);
+        }
 
         // Add input event to search input
         searchInput.addEventListener('input', () => {
@@ -331,17 +369,17 @@ try {
                 }
 
                 resultsDiv.innerHTML = `
-                    <h2 class="section-title">Search Results</h2>
                     <table class="recipients-table">
                         <thead>
                             <tr>
                                 <th>Recipient Name</th>
                                 <th>Blood Type</th>
-                                <th>Required Organ</th>
-                                <th>Medical Info</th>
-                                <th>Recipient Contact</th>
+                                <th>Organ Required</th>
+                                <th>Medical Condition</th>
+                                <th>Urgency Level</th>
                                 <th>Hospital</th>
                                 <th>Hospital Contact</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -351,23 +389,30 @@ try {
                                     <td>${recipient.recipient_name}</td>
                                     <td>${recipient.blood_type}</td>
                                     <td>${recipient.organ_required}</td>
-                                    <td>
-                                        Condition: ${recipient.medical_condition}<br>
-                                        Urgency: ${recipient.urgency_level}
-                                    </td>
-                                    <td>
-                                        Email: ${recipient.recipient_email}<br>
-                                        Phone: ${recipient.recipient_phone}
-                                    </td>
+                                    <td>${recipient.medical_condition}</td>
+                                    <td>${recipient.urgency_level}</td>
                                     <td>${recipient.hospital_name}</td>
                                     <td>
                                         Email: ${recipient.hospital_email}<br>
                                         Phone: ${recipient.hospital_phone}
                                     </td>
                                     <td>
-                                        <button class="select-btn" onclick="selectRecipient(${recipient.recipient_id})">
-                                            Select for Match
-                                        </button>
+                                        ${recipient.request_status ? `
+                                            <span class="status-badge status-${recipient.request_status.toLowerCase()}">
+                                                ${recipient.request_status}
+                                            </span>
+                                        ` : ''}
+                                    </td>
+                                    <td>
+                                        ${!recipient.request_status ? `
+                                            <button class="btn btn-request" onclick="handleRecipientRequest(${recipient.recipient_id}, ${recipient.hospital_id}, 'request')">
+                                                Request
+                                            </button>
+                                        ` : recipient.request_status === 'Pending' ? `
+                                            <button class="btn btn-cancel" onclick="handleRecipientRequest(${recipient.recipient_id}, ${recipient.hospital_id}, 'cancel')">
+                                                Cancel
+                                            </button>
+                                        ` : ''}
                                     </td>
                                 </tr>
                             `).join('')}
