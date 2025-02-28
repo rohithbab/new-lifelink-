@@ -336,21 +336,27 @@ try {
                                 <th>Donor Name</th>
                                 <th>Blood Group</th>
                                 <th>Organ Type</th>
+                                <th>Donor Contact</th>
                                 <th>Hospital</th>
-                                <th>Hospital Email</th>
-                                <th>Hospital Phone</th>
+                                <th>Hospital Contact</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${data.map(donor => `
                                 <tr>
-                                    <td>${donor.full_name}</td>
-                                    <td>${donor.blood_type}</td>
+                                    <td>${donor.donor_name}</td>
+                                    <td>${donor.blood_group}</td>
                                     <td>${donor.organ_type}</td>
+                                    <td>
+                                        Email: ${donor.donor_email}<br>
+                                        Phone: ${donor.donor_phone}
+                                    </td>
                                     <td>${donor.hospital_name}</td>
-                                    <td>${donor.hospital_email}</td>
-                                    <td>${donor.hospital_phone}</td>
+                                    <td>
+                                        Email: ${donor.hospital_email}<br>
+                                        Phone: ${donor.hospital_phone}
+                                    </td>
                                     <td>
                                         <button class="select-btn" onclick="selectDonor(${donor.donor_id})">
                                             Select for Match
@@ -380,7 +386,7 @@ try {
             const donorName = row.cells[0].textContent.trim();
             const bloodGroup = row.cells[1].textContent.trim();
             const organType = row.cells[2].textContent.trim();
-            const hospital = row.cells[3].textContent.trim();
+            const hospital = row.cells[4].textContent.trim();
 
             // Here you can add the logic to handle the donor selection
             console.log('Selected donor:', {
