@@ -36,13 +36,18 @@ try {
     
     // Add search conditions
     if (!empty($bloodType)) {
-        $query .= " AND LOWER(d.blood_group) LIKE LOWER(?)";
-        $params[] = "%$bloodType%";
+        // Handle common variations of blood types
+        $searchBlood = strtolower($bloodType);
+        $searchBlood = str_replace(['plus', '+'], '+', $searchBlood);
+        $searchBlood = str_replace(['minus', '-'], '-', $searchBlood);
+        
+        $query .= " AND LOWER(d.blood_group) LIKE ?";
+        $params[] = "%" . $searchBlood . "%";
     }
     
     if (!empty($organType)) {
-        $query .= " AND LOWER(ha.organ_type) LIKE LOWER(?)";
-        $params[] = "%$organType%";
+        $query .= " AND LOWER(ha.organ_type) LIKE ?";
+        $params[] = "%" . strtolower($organType) . "%";
     }
     
     $query .= " ORDER BY d.name ASC";

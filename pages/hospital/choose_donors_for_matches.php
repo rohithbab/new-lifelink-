@@ -274,8 +274,8 @@ try {
                     button.classList.add('active');
                     activeFilter = button.dataset.type;
                     searchInput.placeholder = activeFilter === 'blood' 
-                        ? "Enter blood type (e.g., A+, B-, O+)"
-                        : "Enter organ type (e.g., kidney, heart)";
+                        ? "Enter blood type (e.g., A+, B-, O+, a plus, b minus)"
+                        : "Enter organ type (e.g., kidney, heart, liver)";
                 }
                 // Clear search input
                 searchInput.value = '';
@@ -317,7 +317,7 @@ try {
             .then(response => response.json())
             .then(data => {
                 const resultsDiv = document.getElementById('searchResults');
-                if (data.length === 0) {
+                if (!Array.isArray(data) || data.length === 0) {
                     resultsDiv.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-search"></i>
@@ -336,17 +336,21 @@ try {
                                 <th>Donor Name</th>
                                 <th>Blood Group</th>
                                 <th>Organ Type</th>
-                                <th>Status</th>
+                                <th>Hospital</th>
+                                <th>Hospital Email</th>
+                                <th>Hospital Phone</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${data.map(donor => `
                                 <tr>
-                                    <td>${donor.name}</td>
-                                    <td>${donor.blood_group}</td>
+                                    <td>${donor.full_name}</td>
+                                    <td>${donor.blood_type}</td>
                                     <td>${donor.organ_type}</td>
-                                    <td>${donor.status}</td>
+                                    <td>${donor.hospital_name}</td>
+                                    <td>${donor.hospital_email}</td>
+                                    <td>${donor.hospital_phone}</td>
                                     <td>
                                         <button class="select-btn" onclick="selectDonor(${donor.donor_id})">
                                             Select for Match
@@ -376,14 +380,15 @@ try {
             const donorName = row.cells[0].textContent.trim();
             const bloodGroup = row.cells[1].textContent.trim();
             const organType = row.cells[2].textContent.trim();
+            const hospital = row.cells[3].textContent.trim();
 
             // Here you can add the logic to handle the donor selection
-            // For example, redirect to a matching page or show a modal
             console.log('Selected donor:', {
                 id: donorId,
                 name: donorName,
                 bloodGroup: bloodGroup,
-                organType: organType
+                organType: organType,
+                hospital: hospital
             });
         }
     </script>
