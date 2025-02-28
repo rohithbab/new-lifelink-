@@ -25,22 +25,26 @@ try {
             d.email as donor_email,
             d.phone as donor_phone,
             hda.organ_type,
+            h.hospital_id,
             h.name as hospital_name,
             h.email as hospital_email,
             h.phone as hospital_phone,
-            hda.status as approval_status
+            dr.status as request_status
         FROM donor d
         INNER JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
         INNER JOIN hospitals h ON hda.hospital_id = h.hospital_id
+        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id 
+            AND dr.requesting_hospital_id = ? 
+            AND dr.status IN ('Pending', 'Approved', 'Rejected')
         WHERE hda.status = 'approved'
-        AND hda.hospital_id != ?
+        AND h.hospital_id != ?
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
             WHERE donor_id = d.donor_id
         )
     ";
     
-    $params = [$hospital_id];
+    $params = [$hospital_id, $hospital_id];
     
     // Add search conditions based on filter type
     if (!empty($bloodType)) {
@@ -77,10 +81,11 @@ try {
             'organ_type' => htmlspecialchars($donor['organ_type']),
             'donor_email' => htmlspecialchars($donor['donor_email']),
             'donor_phone' => htmlspecialchars($donor['donor_phone']),
+            'hospital_id' => $donor['hospital_id'],
             'hospital_name' => htmlspecialchars($donor['hospital_name']),
             'hospital_email' => htmlspecialchars($donor['hospital_email']),
             'hospital_phone' => htmlspecialchars($donor['hospital_phone']),
-            'approval_status' => htmlspecialchars($donor['approval_status'])
+            'request_status' => $donor['request_status']
         ];
     }, $donors);
     
