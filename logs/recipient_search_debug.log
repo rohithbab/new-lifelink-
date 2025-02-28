@@ -1,0 +1,842 @@
+2025-02-28 04:35:28 - Search request started
+----------------------------------------
+2025-02-28 04:35:28 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:35:28 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:28 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:28 - Search term is required
+----------------------------------------
+2025-02-28 04:35:29 - Search request started
+----------------------------------------
+2025-02-28 04:35:29 - POST data received:
+Array
+(
+    [organType] => ki
+)
+
+----------------------------------------
+2025-02-28 04:35:29 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:29 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:29 - Search term is required
+----------------------------------------
+2025-02-28 04:35:30 - Search request started
+----------------------------------------
+2025-02-28 04:35:30 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:30 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Search term is required
+----------------------------------------
+2025-02-28 04:35:30 - Search request started
+----------------------------------------
+2025-02-28 04:35:30 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:30 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Search term is required
+----------------------------------------
+2025-02-28 04:35:30 - Search request started
+----------------------------------------
+2025-02-28 04:35:30 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:30 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:30 - Search term is required
+----------------------------------------
+2025-02-28 04:35:31 - Search request started
+----------------------------------------
+2025-02-28 04:35:31 - POST data received:
+Array
+(
+    [organType] => liv
+)
+
+----------------------------------------
+2025-02-28 04:35:31 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:31 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:31 - Search term is required
+----------------------------------------
+2025-02-28 04:35:31 - Search request started
+----------------------------------------
+2025-02-28 04:35:31 - POST data received:
+Array
+(
+    [organType] => live
+)
+
+----------------------------------------
+2025-02-28 04:35:31 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:31 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:31 - Search term is required
+----------------------------------------
+2025-02-28 04:35:32 - Search request started
+----------------------------------------
+2025-02-28 04:35:32 - POST data received:
+Array
+(
+    [organType] => liv
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Search term is required
+----------------------------------------
+2025-02-28 04:35:32 - Search request started
+----------------------------------------
+2025-02-28 04:35:32 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Search term is required
+----------------------------------------
+2025-02-28 04:35:32 - Search request started
+----------------------------------------
+2025-02-28 04:35:32 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => 
+)
+
+----------------------------------------
+2025-02-28 04:35:32 - Search term is required
+----------------------------------------
+2025-02-28 04:36:36 - Search request started
+----------------------------------------
+2025-02-28 04:36:36 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:36:36 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Existing status values in hospital_recipient_approvals:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status IN (?,?,?)
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-02-28 04:36:36 - Query Parameters:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+    [3] => 26
+    [4] => %k%
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Number of results found:
+0
+----------------------------------------
+2025-02-28 04:36:36 - No results found
+----------------------------------------
+2025-02-28 04:36:36 - Recipients by status:
+Array
+(
+    [0] => Array
+        (
+            [count] => 2
+            [status] => pending
+        )
+
+    [1] => Array
+        (
+            [count] => 4
+            [status] => approved
+        )
+
+    [2] => Array
+        (
+            [count] => 1
+            [status] => rejected
+        )
+
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Sample recipient record:
+Array
+(
+    [id] => 1
+    [full_name] => amrecipient
+    [status] => rejected
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Formatted results:
+Array
+(
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Search request completed
+----------------------------------------
+2025-02-28 04:36:36 - Search request started
+----------------------------------------
+2025-02-28 04:36:36 - POST data received:
+Array
+(
+    [organType] => ki
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:36:36 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => ki
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Existing status values in hospital_recipient_approvals:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status IN (?,?,?)
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-02-28 04:36:36 - Query Parameters:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+    [3] => 26
+    [4] => %ki%
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Number of results found:
+0
+----------------------------------------
+2025-02-28 04:36:36 - No results found
+----------------------------------------
+2025-02-28 04:36:36 - Recipients by status:
+Array
+(
+    [0] => Array
+        (
+            [count] => 2
+            [status] => pending
+        )
+
+    [1] => Array
+        (
+            [count] => 4
+            [status] => approved
+        )
+
+    [2] => Array
+        (
+            [count] => 1
+            [status] => rejected
+        )
+
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Sample recipient record:
+Array
+(
+    [id] => 1
+    [full_name] => amrecipient
+    [status] => rejected
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Formatted results:
+Array
+(
+)
+
+----------------------------------------
+2025-02-28 04:36:36 - Search request completed
+----------------------------------------
+2025-02-28 04:36:37 - Search request started
+----------------------------------------
+2025-02-28 04:36:37 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:36:37 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => k
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Existing status values in hospital_recipient_approvals:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status IN (?,?,?)
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-02-28 04:36:37 - Query Parameters:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+    [3] => 26
+    [4] => %k%
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Number of results found:
+0
+----------------------------------------
+2025-02-28 04:36:37 - No results found
+----------------------------------------
+2025-02-28 04:36:37 - Recipients by status:
+Array
+(
+    [0] => Array
+        (
+            [count] => 2
+            [status] => pending
+        )
+
+    [1] => Array
+        (
+            [count] => 4
+            [status] => approved
+        )
+
+    [2] => Array
+        (
+            [count] => 1
+            [status] => rejected
+        )
+
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Sample recipient record:
+Array
+(
+    [id] => 1
+    [full_name] => amrecipient
+    [status] => rejected
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Formatted results:
+Array
+(
+)
+
+----------------------------------------
+2025-02-28 04:36:37 - Search request completed
+----------------------------------------
+2025-02-28 04:36:38 - Search request started
+----------------------------------------
+2025-02-28 04:36:38 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:36:38 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Existing status values in hospital_recipient_approvals:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status IN (?,?,?)
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-02-28 04:36:38 - Query Parameters:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+    [3] => 26
+    [4] => %l%
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Number of results found:
+3
+----------------------------------------
+2025-02-28 04:36:38 - First result:
+Array
+(
+    [recipient_id] => 4
+    [recipient_name] => Gopal varma
+    [blood_type] => B+
+    [organ_required] => liver
+    [recipient_email] => 007gopalvarma123@gmail.com
+    [recipient_phone] => 8798706787
+    [medical_condition] => I have liver problem
+    [urgency_level] => High
+    [hospital_name] => ramg hospitals
+    [hospital_email] => ramg65244@gmail.com
+    [hospital_phone] => 7658756432
+    [approval_status] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Formatted results:
+Array
+(
+    [0] => Array
+        (
+            [recipient_id] => 4
+            [recipient_name] => Gopal varma
+            [blood_type] => B+
+            [organ_required] => liver
+            [recipient_email] => 007gopalvarma123@gmail.com
+            [recipient_phone] => 8798706787
+            [medical_condition] => I have liver problem
+            [urgency_level] => High
+            [hospital_name] => ramg hospitals
+            [hospital_email] => ramg65244@gmail.com
+            [hospital_phone] => 7658756432
+            [approval_status] => pending
+        )
+
+    [1] => Array
+        (
+            [recipient_id] => 4
+            [recipient_name] => Gopal varma
+            [blood_type] => B+
+            [organ_required] => liver
+            [recipient_email] => 007gopalvarma123@gmail.com
+            [recipient_phone] => 8798706787
+            [medical_condition] => I have liver problem
+            [urgency_level] => High
+            [hospital_name] => ramg hospitals
+            [hospital_email] => ramg65244@gmail.com
+            [hospital_phone] => 7658756432
+            [approval_status] => pending
+        )
+
+    [2] => Array
+        (
+            [recipient_id] => 13
+            [recipient_name] => Rohith Rec
+            [blood_type] => A-
+            [organ_required] => liver
+            [recipient_email] => dummyrr03@gmail.com
+            [recipient_phone] => 919150272441
+            [medical_condition] => abc
+            [urgency_level] => Low
+            [hospital_name] => Sandhiya Hospitals
+            [hospital_email] => sandhiyassenthil1408@gmail.com
+            [hospital_phone] => 9345728466
+            [approval_status] => approved
+        )
+
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Search request completed
+----------------------------------------
+2025-02-28 04:36:38 - Search request started
+----------------------------------------
+2025-02-28 04:36:38 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Hospital ID:
+26
+----------------------------------------
+2025-02-28 04:36:38 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => li
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Existing status values in hospital_recipient_approvals:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE hra.status IN (?,?,?)
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-02-28 04:36:38 - Query Parameters:
+Array
+(
+    [0] => rejected
+    [1] => approved
+    [2] => pending
+    [3] => 26
+    [4] => %li%
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Number of results found:
+3
+----------------------------------------
+2025-02-28 04:36:38 - First result:
+Array
+(
+    [recipient_id] => 4
+    [recipient_name] => Gopal varma
+    [blood_type] => B+
+    [organ_required] => liver
+    [recipient_email] => 007gopalvarma123@gmail.com
+    [recipient_phone] => 8798706787
+    [medical_condition] => I have liver problem
+    [urgency_level] => High
+    [hospital_name] => ramg hospitals
+    [hospital_email] => ramg65244@gmail.com
+    [hospital_phone] => 7658756432
+    [approval_status] => pending
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Formatted results:
+Array
+(
+    [0] => Array
+        (
+            [recipient_id] => 4
+            [recipient_name] => Gopal varma
+            [blood_type] => B+
+            [organ_required] => liver
+            [recipient_email] => 007gopalvarma123@gmail.com
+            [recipient_phone] => 8798706787
+            [medical_condition] => I have liver problem
+            [urgency_level] => High
+            [hospital_name] => ramg hospitals
+            [hospital_email] => ramg65244@gmail.com
+            [hospital_phone] => 7658756432
+            [approval_status] => pending
+        )
+
+    [1] => Array
+        (
+            [recipient_id] => 4
+            [recipient_name] => Gopal varma
+            [blood_type] => B+
+            [organ_required] => liver
+            [recipient_email] => 007gopalvarma123@gmail.com
+            [recipient_phone] => 8798706787
+            [medical_condition] => I have liver problem
+            [urgency_level] => High
+            [hospital_name] => ramg hospitals
+            [hospital_email] => ramg65244@gmail.com
+            [hospital_phone] => 7658756432
+            [approval_status] => pending
+        )
+
+    [2] => Array
+        (
+            [recipient_id] => 13
+            [recipient_name] => Rohith Rec
+            [blood_type] => A-
+            [organ_required] => liver
+            [recipient_email] => dummyrr03@gmail.com
+            [recipient_phone] => 919150272441
+            [medical_condition] => abc
+            [urgency_level] => Low
+            [hospital_name] => Sandhiya Hospitals
+            [hospital_email] => sandhiyassenthil1408@gmail.com
+            [hospital_phone] => 9345728466
+            [approval_status] => approved
+        )
+
+)
+
+----------------------------------------
+2025-02-28 04:36:38 - Search request completed
+----------------------------------------

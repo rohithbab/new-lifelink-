@@ -276,8 +276,8 @@ try {
                     button.classList.add('active');
                     activeFilter = button.dataset.type;
                     searchInput.placeholder = activeFilter === 'blood' 
-                        ? "Enter blood type (e.g., A+, B-, O+)"
-                        : "Enter organ type (e.g., kidney, heart)";
+                        ? "Enter blood type (e.g., A+, B-, O+, a plus, b minus)"
+                        : "Enter organ type (e.g., kidney, heart, liver)";
                 }
                 // Clear search input
                 searchInput.value = '';
@@ -319,7 +319,7 @@ try {
             .then(response => response.json())
             .then(data => {
                 const resultsDiv = document.getElementById('searchResults');
-                if (data.length === 0) {
+                if (!Array.isArray(data) || data.length === 0) {
                     resultsDiv.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-search"></i>
@@ -336,23 +336,36 @@ try {
                         <thead>
                             <tr>
                                 <th>Recipient Name</th>
-                                <th>Blood Group</th>
+                                <th>Blood Type</th>
                                 <th>Required Organ</th>
+                                <th>Medical Info</th>
+                                <th>Recipient Contact</th>
                                 <th>Hospital</th>
-                                <th>Status</th>
+                                <th>Hospital Contact</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${data.map(recipient => `
                                 <tr>
-                                    <td>${recipient.full_name}</td>
+                                    <td>${recipient.recipient_name}</td>
                                     <td>${recipient.blood_type}</td>
                                     <td>${recipient.organ_required}</td>
-                                    <td>${recipient.hospital_name}</td>
-                                    <td>${recipient.approval_status}</td>
                                     <td>
-                                        <button class="select-btn" onclick="selectRecipient(${recipient.id})">
+                                        Condition: ${recipient.medical_condition}<br>
+                                        Urgency: ${recipient.urgency_level}
+                                    </td>
+                                    <td>
+                                        Email: ${recipient.recipient_email}<br>
+                                        Phone: ${recipient.recipient_phone}
+                                    </td>
+                                    <td>${recipient.hospital_name}</td>
+                                    <td>
+                                        Email: ${recipient.hospital_email}<br>
+                                        Phone: ${recipient.hospital_phone}
+                                    </td>
+                                    <td>
+                                        <button class="select-btn" onclick="selectRecipient(${recipient.recipient_id})">
                                             Select for Match
                                         </button>
                                     </td>
@@ -378,17 +391,16 @@ try {
             // Get recipient details from the row
             const row = event.target.closest('tr');
             const recipientName = row.cells[0].textContent.trim();
-            const bloodGroup = row.cells[1].textContent.trim();
-            const organType = row.cells[2].textContent.trim();
-            const hospital = row.cells[3].textContent.trim();
+            const bloodType = row.cells[1].textContent.trim();
+            const organRequired = row.cells[2].textContent.trim();
+            const hospital = row.cells[5].textContent.trim();
 
             // Here you can add the logic to handle the recipient selection
-            // For example, redirect to a matching page or show a modal
             console.log('Selected recipient:', {
                 id: recipientId,
                 name: recipientName,
-                bloodGroup: bloodGroup,
-                organType: organType,
+                bloodType: bloodType,
+                organRequired: organRequired,
                 hospital: hospital
             });
         }
