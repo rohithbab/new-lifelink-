@@ -117,30 +117,28 @@ try {
             transition: all 0.3s ease;
         }
 
+        /* Table Styles */
         .recipients-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
             margin-top: 1rem;
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipients-table th,
+        .recipients-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
         .recipients-table th {
-            background-color: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .recipients-table td {
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-            vertical-align: middle;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+            font-weight: 500;
         }
 
         .recipients-table tbody tr:hover {
