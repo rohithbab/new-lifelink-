@@ -20,9 +20,14 @@ try {
 
 // Fetch matches made by this hospital
 try {
-    $query = "SELECT * FROM made_matches_by_hospitals 
-              WHERE match_made_by = :hospital_id 
-              ORDER BY match_date DESC";
+    $query = "SELECT m.*, 
+              d.blood_group as donor_blood_group,
+              r.blood_type as recipient_blood_group
+              FROM made_matches_by_hospitals m
+              LEFT JOIN donor d ON m.donor_id = d.donor_id
+              LEFT JOIN recipient_registration r ON m.recipient_id = r.id
+              WHERE m.match_made_by = :hospital_id 
+              ORDER BY m.match_date DESC";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':hospital_id', $hospital_id);
     $stmt->execute();
@@ -192,7 +197,13 @@ try {
                                         <td><?php echo htmlspecialchars($match['recipient_name']); ?></td>
                                         <td><?php echo htmlspecialchars($match['recipient_hospital_name']); ?></td>
                                         <td><?php echo htmlspecialchars($match['organ_type']); ?></td>
-                                        <td><?php echo htmlspecialchars($match['blood_group']); ?></td>
+                                        <td><?php 
+                                            if ($match['donor_blood_group'] === $match['recipient_blood_group']) {
+                                                echo htmlspecialchars($match['donor_blood_group']);
+                                            } else {
+                                                echo "Not same type";
+                                            }
+                                        ?></td>
                                         <td><?php echo date('M d, Y', strtotime($match['match_date'])); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
