@@ -15,6 +15,7 @@ $hospital_name = $_SESSION['hospital_name'];
 try {
     $stmt = $conn->prepare("
         SELECT 
+            d.donor_id,
             d.name,
             d.blood_group,
             d.email,
@@ -221,11 +222,12 @@ try {
                     <table class="donors-table">
                         <thead>
                             <tr>
-                                <th>Donor Name</th>
+                                <th>Name</th>
                                 <th>Blood Group</th>
+                                <th>Email</th>
+                                <th>Phone</th>
                                 <th>Organ Type</th>
-                                <th>Donor Contact</th>
-                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -233,16 +235,33 @@ try {
                                 <tr>
                                     <td><?php echo htmlspecialchars($donor['name']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['email']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['phone']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
                                     <td>
-                                        Email: <?php echo htmlspecialchars($donor['email']); ?><br>
-                                        Phone: <?php echo htmlspecialchars($donor['phone']); ?>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge status-approved">Approved</span>
+                                        <button class="select-btn" onclick="selectDonor('<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>')">
+                                            Select
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="search-section">
+                    <h2 class="section-title">Your Approved Donors</h2>
+                    <table class="donors-table">
+                        <tbody>
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <i class="fas fa-user-times"></i>
+                                        <h2>No approved donors found</h2>
+                                        <p>There are currently no approved donors in your hospital.</p>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -332,6 +351,13 @@ try {
             setTimeout(() => {
                 notificationDiv.remove();
             }, 3000);
+        }
+
+        function selectDonor(donorId, donorName) {
+            if (confirm(`Are you sure you want to select donor ${donorName}?`)) {
+                // Add your logic here to handle donor selection
+                console.log(`Selected donor: ${donorId}`);
+            }
         }
 
         // Add input event to search input
