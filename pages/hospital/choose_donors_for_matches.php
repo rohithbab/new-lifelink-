@@ -202,6 +202,21 @@ try {
         .mt-4 {
             margin-top: 2rem;
         }
+
+        .select-btn {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -246,7 +261,15 @@ try {
                                         Email: <?php echo htmlspecialchars($donor['email']); ?><br>
                                         Phone: <?php echo htmlspecialchars($donor['phone']); ?>
                                     </td>
-                                    <td><?php echo htmlspecialchars($donor['from_hospital']); ?></td>
+                                    <td>
+                                        <?php 
+                                        if ($donor['from_hospital'] == $hospital_name) {
+                                            echo "Your Hospital";
+                                        } else {
+                                            echo htmlspecialchars($donor['from_hospital']);
+                                        }
+                                        ?>
+                                    </td>
                                     <td>
                                         <button class="select-btn" onclick="selectDonor('<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>')">
                                             Select
