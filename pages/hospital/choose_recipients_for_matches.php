@@ -11,31 +11,44 @@ if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in'])
 $hospital_id = $_SESSION['hospital_id'];
 $hospital_name = $_SESSION['hospital_name'];
 
-// Fetch hospital's recipients
+// Fetch hospital's approved recipients
 try {
     $stmt = $conn->prepare("
         SELECT 
-            r.*,
-            h.name as hospital_name,
-            hra.status as approval_status
+            r.id as recipient_id,
+            r.full_name,
+            r.blood_type,
+            r.medical_condition,
+            r.urgency_level,
+            r.phone_number,
+            r.email,
+            hra.organ_required,
+            h.name as from_hospital
         FROM recipient_registration r
-        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
-        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
-        WHERE hra.hospital_id = ?
+        JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        LEFT JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        WHERE (hra.hospital_id = ? OR 
+            EXISTS (
+                SELECT 1 FROM recipient_requests rr 
+                WHERE rr.recipient_id = r.id 
+                AND rr.requesting_hospital_id = ? 
+                AND rr.status = 'approved'
+            )
+        )
         AND hra.status = 'approved'
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
             WHERE recipient_id = r.id
         )
-        ORDER BY r.full_name ASC
+        ORDER BY r.urgency_level DESC, r.full_name ASC
     ");
     
-    $stmt->execute([$hospital_id]);
-    $recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute([$hospital_id, $hospital_id]);
+    $hospital_recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch(PDOException $e) {
     error_log("Error fetching recipients: " . $e->getMessage());
-    $recipients = [];
+    $hospital_recipients = [];
 }
 ?>
 
@@ -321,42 +334,55 @@ try {
 </div>
 
 <!-- Hospital's own approved recipients -->
-<?php if (!empty($recipients)): ?>
-    <div class="search-section mt-4">
-        <h2 class="section-title">Your Approved Recipients</h2>
-        <table class="recipients-table">
-            <thead>
+<div class="search-section mt-4">
+    <h2 class="section-title">Your Approved Recipients</h2>
+    <table class="recipients-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Blood Type</th>
+                <th>Required Organ</th>
+                <th>Medical Info</th>
+                <th>Contact</th>
+                <th>From Hospital</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (empty($hospital_recipients)): ?>
                 <tr>
-                    <th>Recipient Name</th>
-                    <th>Blood Type</th>
-                    <th>Organ Required</th>
-                    <th>Medical Condition</th>
-                    <th>Urgency Level</th>
-                    <th>Contact</th>
-                    <th>Status</th>
+                    <td colspan="7" class="empty-state">
+                        <i class="fas fa-user-alt-slash"></i>
+                        <h2>No recipients found</h2>
+                        <p>There are no approved recipients available for matching.</p>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($recipients as $recipient): ?>
+            <?php else: ?>
+                <?php foreach ($hospital_recipients as $recipient): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
                         <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
                         <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
-                        <td><?php echo htmlspecialchars($recipient['medical_condition']); ?></td>
-                        <td><?php echo htmlspecialchars($recipient['urgency_level']); ?></td>
                         <td>
-                            Email: <?php echo htmlspecialchars($recipient['email']); ?><br>
-                            Phone: <?php echo htmlspecialchars($recipient['phone_number']); ?>
+                            <p>Condition: <?php echo htmlspecialchars($recipient['medical_condition']); ?></p>
+                            <p>Urgency: <?php echo htmlspecialchars($recipient['urgency_level']); ?></p>
                         </td>
                         <td>
-                            <span class="status-badge status-approved">Approved</span>
+                            <p>Email: <?php echo htmlspecialchars($recipient['email']); ?></p>
+                            <p>Phone: <?php echo htmlspecialchars($recipient['phone_number']); ?></p>
+                        </td>
+                        <td><?php echo $recipient['from_hospital'] === $hospital_name ? 'Your Hospital' : htmlspecialchars($recipient['from_hospital']); ?></td>
+                        <td>
+                            <button class="btn btn-request" onclick="selectRecipient(<?php echo $recipient['recipient_id']; ?>, '<?php echo htmlspecialchars($recipient['full_name']); ?>')">
+                                Select
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
         </main>
     </div>
 
@@ -537,22 +563,11 @@ try {
             });
         });
 
-        function selectRecipient(recipientId) {
-            // Get recipient details from the row
-            const row = event.target.closest('tr');
-            const recipientName = row.cells[0].textContent.trim();
-            const bloodType = row.cells[1].textContent.trim();
-            const organRequired = row.cells[2].textContent.trim();
-            const hospital = row.cells[5].textContent.trim();
-
-            // Here you can add the logic to handle the recipient selection
-            console.log('Selected recipient:', {
-                id: recipientId,
-                name: recipientName,
-                bloodType: bloodType,
-                organRequired: organRequired,
-                hospital: hospital
-            });
+        function selectRecipient(recipientId, recipientName) {
+            if (confirm(`Are you sure you want to select recipient ${recipientName}?`)) {
+                // Add your logic here to handle recipient selection
+                window.location.href = `select_donors.php?recipient_id=${recipientId}`;
+            }
         }
     </script>
 </body>
