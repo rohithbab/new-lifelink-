@@ -20,31 +20,45 @@ function addOrganMatch($conn, $data) {
         // Start transaction
         $conn->beginTransaction();
 
-        // First check if donor and recipient exist and get donor's hospital
-        $check_sql = "SELECT d.donor_id, d.blood_group, r.id, r.blood_type, hda.hospital_id as donor_hospital_id 
-                     FROM donor d
-                     JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
-                     CROSS JOIN recipient_registration r 
-                     WHERE d.donor_id = :donor_id 
-                     AND r.id = :recipient_id 
-                     AND hda.status = 'Approved'
-                     AND hda.organ_type = :organ_type";
+        // Check donor approval and get donor hospital
+        $donor_check = "SELECT hospital_id as donor_hospital_id 
+                       FROM hospital_donor_approvals 
+                       WHERE donor_id = :donor_id 
+                       AND status = 'Approved' 
+                       AND organ_type = :organ_type";
         
-        $check_stmt = $conn->prepare($check_sql);
-        $check_stmt->execute([
+        $donor_stmt = $conn->prepare($donor_check);
+        $donor_stmt->execute([
             'donor_id' => $data['donor_id'],
+            'organ_type' => $data['organ_type']
+        ]);
+        
+        if ($donor_stmt->rowCount() === 0) {
+            throw new Exception("Donor not found or not approved for this organ type");
+        }
+        $donor_result = $donor_stmt->fetch(PDO::FETCH_ASSOC);
+        $donor_hospital_id = $donor_result['donor_hospital_id'];
+
+        // Check recipient approval and get recipient hospital
+        $recipient_check = "SELECT hospital_id as recipient_hospital_id 
+                          FROM hospital_recipient_approvals 
+                          WHERE recipient_id = :recipient_id 
+                          AND status = 'Approved' 
+                          AND organ_required = :organ_type";
+        
+        $recipient_stmt = $conn->prepare($recipient_check);
+        $recipient_stmt->execute([
             'recipient_id' => $data['recipient_id'],
             'organ_type' => $data['organ_type']
         ]);
         
-        if ($check_stmt->rowCount() === 0) {
-            throw new Exception("Donor or recipient not found or donor not approved for this organ type");
+        if ($recipient_stmt->rowCount() === 0) {
+            throw new Exception("Recipient not found or not approved for this organ type");
         }
+        $recipient_result = $recipient_stmt->fetch(PDO::FETCH_ASSOC);
+        $recipient_hospital_id = $recipient_result['recipient_hospital_id'];
 
-        $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
-        $donor_hospital_id = $result['donor_hospital_id'];
-
-        // First insert into donor_and_recipient_requests
+        // Insert into donor_and_recipient_requests
         $request_sql = "INSERT INTO donor_and_recipient_requests (
             requesting_hospital_id,
             requested_hospital_id,
@@ -76,7 +90,7 @@ function addOrganMatch($conn, $data) {
             'organ_type' => $data['organ_type']
         ]);
 
-        // Then insert into made_matches_by_hospitals
+        // Insert into made_matches_by_hospitals
         $match_sql = "INSERT INTO made_matches_by_hospitals (
             match_made_by,
             donor_id,
@@ -113,7 +127,7 @@ function addOrganMatch($conn, $data) {
             'donor_id' => $data['donor_id'],
             'donor_hospital_id' => $donor_hospital_id,
             'recipient_id' => $data['recipient_id'],
-            'recipient_hospital_id' => $data['recipient_hospital_id'],
+            'recipient_hospital_id' => $recipient_hospital_id,
             'organ_type' => $data['organ_type']
         ]);
 
