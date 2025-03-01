@@ -572,9 +572,11 @@ try {
                     name: recipientName,
                     blood_group: row.querySelector('td:nth-child(2)').textContent,
                     organ_type: row.querySelector('td:nth-child(3)').textContent,
-                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0],
-                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1],
-                    from_hospital: row.querySelector('td:nth-child(5)').textContent
+                    medical_condition: row.querySelector('td:nth-child(4)').textContent.split('Condition: ')[1].split('\n')[0],
+                    urgency: row.querySelector('td:nth-child(4)').textContent.split('Urgency: ')[1],
+                    email: row.querySelector('td:nth-child(5)').textContent.split('Email: ')[1].split('\n')[0],
+                    phone: row.querySelector('td:nth-child(5)').textContent.split('Phone: ')[1],
+                    from_hospital: row.querySelector('td:nth-child(6)').textContent
                 };
 
                 // Store in session storage
