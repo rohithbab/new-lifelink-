@@ -359,7 +359,7 @@ try {
                 </tr>
             <?php else: ?>
                 <?php foreach ($hospital_recipients as $recipient): ?>
-                    <tr>
+                    <tr data-recipient-id="<?php echo $recipient['recipient_id']; ?>">
                         <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
                         <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
                         <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
@@ -564,9 +564,24 @@ try {
         });
 
         function selectRecipient(recipientId, recipientName) {
-            if (confirm(`Are you sure you want to select recipient ${recipientName}?`)) {
-                // Add your logic here to handle recipient selection
-                window.location.href = `select_donors.php?recipient_id=${recipientId}`;
+            if (confirm('Are you sure you want to select this recipient?')) {
+                // Get all the recipient details from the row
+                const row = document.querySelector(`[data-recipient-id="${recipientId}"]`);
+                const recipientInfo = {
+                    id: recipientId,
+                    name: recipientName,
+                    blood_group: row.querySelector('td:nth-child(2)').textContent,
+                    organ_type: row.querySelector('td:nth-child(3)').textContent,
+                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0],
+                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1],
+                    from_hospital: row.querySelector('td:nth-child(5)').textContent
+                };
+
+                // Store in session storage
+                sessionStorage.setItem('selectedRecipient', JSON.stringify(recipientInfo));
+
+                // Redirect to make matches page
+                window.location.href = 'make_matches.php';
             }
         }
     </script>

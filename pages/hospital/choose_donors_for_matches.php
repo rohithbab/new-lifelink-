@@ -253,7 +253,7 @@ try {
                         </thead>
                         <tbody>
                             <?php foreach ($hospital_donors as $donor): ?>
-                                <tr>
+                                <tr data-donor-id="<?php echo $donor['donor_id']; ?>">
                                     <td><?php echo htmlspecialchars($donor['name']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
@@ -386,9 +386,24 @@ try {
         }
 
         function selectDonor(donorId, donorName) {
-            if (confirm(`Are you sure you want to select donor ${donorName}?`)) {
-                // Add your logic here to handle donor selection
-                console.log(`Selected donor: ${donorId}`);
+            if (confirm('Are you sure you want to select this donor?')) {
+                // Get all the donor details from the row
+                const row = document.querySelector(`[data-donor-id="${donorId}"]`);
+                const donorInfo = {
+                    id: donorId,
+                    name: donorName,
+                    blood_group: row.querySelector('td:nth-child(2)').textContent,
+                    organ_type: row.querySelector('td:nth-child(3)').textContent,
+                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0],
+                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1],
+                    from_hospital: row.querySelector('td:nth-child(5)').textContent
+                };
+
+                // Store in session storage
+                sessionStorage.setItem('selectedDonor', JSON.stringify(donorInfo));
+
+                // Redirect to make matches page
+                window.location.href = 'make_matches.php';
             }
         }
 
