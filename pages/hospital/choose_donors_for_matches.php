@@ -20,10 +20,12 @@ try {
             d.blood_group,
             d.email,
             d.phone,
-            hda.organ_type
+            hda.organ_type,
+            h.name as from_hospital
         FROM donor d
         LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id
         JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
+        LEFT JOIN hospitals h ON hda.hospital_id = h.hospital_id
         WHERE (
             (hda.hospital_id = ? AND hda.status = 'approved')
             OR 
@@ -228,9 +230,9 @@ try {
                             <tr>
                                 <th>Name</th>
                                 <th>Blood Group</th>
-                                <th>Email</th>
-                                <th>Phone</th>
                                 <th>Organ Type</th>
+                                <th>Contact</th>
+                                <th>From Hospital</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -239,9 +241,12 @@ try {
                                 <tr>
                                     <td><?php echo htmlspecialchars($donor['name']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
-                                    <td><?php echo htmlspecialchars($donor['email']); ?></td>
-                                    <td><?php echo htmlspecialchars($donor['phone']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
+                                    <td>
+                                        Email: <?php echo htmlspecialchars($donor['email']); ?><br>
+                                        Phone: <?php echo htmlspecialchars($donor['phone']); ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($donor['from_hospital']); ?></td>
                                     <td>
                                         <button class="select-btn" onclick="selectDonor('<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>')">
                                             Select
