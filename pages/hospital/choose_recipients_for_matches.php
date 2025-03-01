@@ -570,13 +570,13 @@ try {
                 const recipientInfo = {
                     id: recipientId,
                     name: recipientName,
-                    blood_group: row.querySelector('td:nth-child(2)').textContent,
-                    organ_type: row.querySelector('td:nth-child(3)').textContent,
-                    medical_condition: row.querySelector('td:nth-child(4)').textContent.split('Condition: ')[1].split('\n')[0],
-                    urgency: row.querySelector('td:nth-child(4)').textContent.split('Urgency: ')[1],
-                    email: row.querySelector('td:nth-child(5)').textContent.split('Email: ')[1].split('\n')[0],
-                    phone: row.querySelector('td:nth-child(5)').textContent.split('Phone: ')[1],
-                    from_hospital: row.querySelector('td:nth-child(6)').textContent
+                    bloodGroup: row.querySelector('td:nth-child(2)').textContent.trim(),
+                    requiredOrgan: row.querySelector('td:nth-child(3)').textContent.trim(),
+                    medical_condition: row.querySelector('td:nth-child(4)').textContent.split('Condition: ')[1].split('\n')[0].trim(),
+                    urgency: row.querySelector('td:nth-child(4)').textContent.split('Urgency: ')[1].trim(),
+                    email: row.querySelector('td:nth-child(5)').textContent.split('Email: ')[1].split('\n')[0].trim(),
+                    phone: row.querySelector('td:nth-child(5)').textContent.split('Phone: ')[1].trim(),
+                    from_hospital: row.querySelector('td:nth-child(6)').textContent.trim()
                 };
 
                 // Store in session storage

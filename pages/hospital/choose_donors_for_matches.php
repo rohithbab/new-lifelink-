@@ -392,11 +392,11 @@ try {
                 const donorInfo = {
                     id: donorId,
                     name: donorName,
-                    blood_group: row.querySelector('td:nth-child(2)').textContent,
-                    organ_type: row.querySelector('td:nth-child(3)').textContent,
-                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0],
-                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1],
-                    from_hospital: row.querySelector('td:nth-child(5)').textContent
+                    bloodGroup: row.querySelector('td:nth-child(2)').textContent.trim(),
+                    organType: row.querySelector('td:nth-child(3)').textContent.trim(),
+                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0].trim(),
+                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1].trim(),
+                    from_hospital: row.querySelector('td:nth-child(5)').textContent.trim()
                 };
 
                 // Store in session storage
