@@ -392,20 +392,16 @@ try {
                                 </div>
                             </div>
 
-                            <div class="request-actions">
-                                <?php if ($request_type === 'incoming' && $request['status'] === 'Pending'): ?>
+                            <?php if ($request['status'] === 'Pending' && $request_type === 'incoming'): ?>
+                                <div class="request-actions">
                                     <button class="action-btn approve-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'approve')">
                                         <i class="fas fa-check"></i> Approve
                                     </button>
                                     <button class="action-btn reject-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'reject')">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
-                                <?php elseif ($request_type === 'outgoing' && $request['status'] === 'Pending'): ?>
-                                    <button class="action-btn cancel-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'cancel')">
-                                        <i class="fas fa-ban"></i> Cancel Request
-                                    </button>
-                                <?php endif; ?>
-                            </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -416,12 +412,11 @@ try {
     <!-- Response Modal -->
     <div id="responseModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Response Message</h2>
-            <textarea id="responseMessage" rows="4" placeholder="Enter your response message (optional)"></textarea>
+            <h3 id="modalTitle">Response</h3>
+            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
             <div class="modal-actions">
-                <button id="confirmAction" class="action-btn">Confirm</button>
-                <button class="action-btn cancel-btn close-modal">Cancel</button>
+                <button class="action-btn" onclick="closeModal()">Cancel</button>
+                <button id="submitResponse" class="action-btn" onclick="submitResponse()">Submit</button>
             </div>
         </div>
     </div>
@@ -429,73 +424,83 @@ try {
     <script>
         let currentRequestId = null;
         let currentAction = null;
-        const modal = document.getElementById('responseModal');
-        const closeButtons = document.getElementsByClassName('close');
-        const closeModalButtons = document.getElementsByClassName('close-modal');
 
         function handleAction(requestId, action) {
             currentRequestId = requestId;
             currentAction = action;
             
-            if (action === 'approve' || action === 'reject') {
-                modal.style.display = 'block';
-                document.getElementById('confirmAction').textContent = 
-                    action === 'approve' ? 'Confirm Approval' : 'Confirm Rejection';
-            } else {
-                submitAction();
+            // Show modal
+            const modal = document.getElementById('responseModal');
+            modal.style.display = 'block';
+            
+            // Update modal title and button
+            const modalTitle = document.getElementById('modalTitle');
+            const submitBtn = document.getElementById('submitResponse');
+            
+            if (action === 'approve') {
+                modalTitle.textContent = 'Approve Request';
+                submitBtn.textContent = 'Approve';
+                submitBtn.className = 'action-btn approve-btn';
+            } else if (action === 'reject') {
+                modalTitle.textContent = 'Reject Request';
+                submitBtn.textContent = 'Reject';
+                submitBtn.className = 'action-btn reject-btn';
             }
         }
 
-        async function submitAction() {
-            const responseMessage = document.getElementById('responseMessage').value;
-            
-            try {
-                const response = await fetch('../../ajax/handle_recipient_request.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        request_id: currentRequestId,
-                        action: currentAction,
-                        message: responseMessage
-                    })
-                });
+        function closeModal() {
+            const modal = document.getElementById('responseModal');
+            modal.style.display = 'none';
+            document.getElementById('responseMessage').value = '';
+            currentRequestId = null;
+            currentAction = null;
+        }
 
-                const data = await response.json();
-                
+        function submitResponse() {
+            const message = document.getElementById('responseMessage').value.trim();
+            
+            if (!message) {
+                alert('Please enter a response message');
+                return;
+            }
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('request_id', currentRequestId);
+            formData.append('action', currentAction);
+            formData.append('message', message);
+
+            // Send request to backend
+            fetch('../../backend/php/update_recipient_request.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
                 if (data.error) {
                     throw new Error(data.error);
                 }
-
-                // Reload the page to show updated status
-                location.reload();
-
-            } catch (error) {
+                // Show success message
+                alert(data.message);
+                // Reload page to show updated status
+                window.location.reload();
+            })
+            .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while processing your request. Please try again.');
-            }
-
-            // Close modal if open
-            modal.style.display = 'none';
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                closeModal();
+            });
         }
 
-        // Close modal when clicking close button or outside modal
-        Array.from(closeButtons).forEach(btn => {
-            btn.onclick = () => modal.style.display = 'none';
-        });
-
-        Array.from(closeModalButtons).forEach(btn => {
-            btn.onclick = () => modal.style.display = 'none';
-        });
-
-        document.getElementById('confirmAction').onclick = submitAction;
-
-        window.onclick = (event) => {
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('responseModal');
             if (event.target === modal) {
-                modal.style.display = 'none';
+                closeModal();
             }
-        };
+        }
     </script>
 </body>
 </html>
