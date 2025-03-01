@@ -29,11 +29,11 @@ try {
                 d.donor_id,
                 d.name as donor_name,
                 d.blood_group,
-                ha.organ_type
+                hda.organ_type
             FROM donor_requests dr
             JOIN hospitals h ON h.hospital_id = dr.requesting_hospital_id
             JOIN donor d ON d.donor_id = dr.donor_id
-            JOIN hospital_donor_approvals ha ON ha.donor_id = d.donor_id
+            JOIN hospital_donor_approvals hda ON hda.donor_id = d.donor_id AND hda.hospital_id = dr.donor_hospital_id
             WHERE dr.donor_hospital_id = ?
             ORDER BY dr.request_date DESC
         ");
@@ -54,11 +54,11 @@ try {
                 d.donor_id,
                 d.name as donor_name,
                 d.blood_group,
-                ha.organ_type
+                hda.organ_type
             FROM donor_requests dr
             JOIN hospitals h ON h.hospital_id = dr.donor_hospital_id
             JOIN donor d ON d.donor_id = dr.donor_id
-            JOIN hospital_donor_approvals ha ON ha.donor_id = d.donor_id
+            JOIN hospital_donor_approvals hda ON hda.donor_id = d.donor_id AND hda.hospital_id = dr.donor_hospital_id
             WHERE dr.requesting_hospital_id = ?
             ORDER BY dr.request_date DESC
         ");
@@ -377,10 +377,10 @@ try {
     <div id="responseModal" class="modal">
         <div class="modal-content">
             <h3 id="modalTitle">Response</h3>
-            <textarea id="responseMessage" placeholder="Enter your response message (optional)"></textarea>
+            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
             <div class="modal-actions">
                 <button class="action-btn" onclick="closeModal()">Cancel</button>
-                <button id="confirmButton" class="action-btn">Confirm</button>
+                <button id="submitResponse" class="action-btn" onclick="submitResponse()">Submit</button>
             </div>
         </div>
     </div>
@@ -392,70 +392,82 @@ try {
         function handleAction(requestId, action) {
             currentRequestId = requestId;
             currentAction = action;
-
-            const modal = document.getElementById('responseModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const confirmButton = document.getElementById('confirmButton');
-
-            switch(action) {
-                case 'approve':
-                    modalTitle.textContent = 'Approve Request';
-                    confirmButton.textContent = 'Approve';
-                    confirmButton.className = 'action-btn approve-btn';
-                    break;
-                case 'reject':
-                    modalTitle.textContent = 'Reject Request';
-                    confirmButton.textContent = 'Reject';
-                    confirmButton.className = 'action-btn reject-btn';
-                    break;
-                case 'cancel':
-                    modalTitle.textContent = 'Cancel Request';
-                    confirmButton.textContent = 'Cancel';
-                    confirmButton.className = 'action-btn reject-btn';
-                    break;
-            }
-
-            modal.style.display = 'block';
-            document.getElementById('responseMessage').value = '';
             
-            confirmButton.onclick = submitResponse;
+            // Show modal
+            const modal = document.getElementById('responseModal');
+            modal.style.display = 'block';
+            
+            // Update modal title and button
+            const modalTitle = document.getElementById('modalTitle');
+            const submitBtn = document.getElementById('submitResponse');
+            
+            if (action === 'approve') {
+                modalTitle.textContent = 'Approve Request';
+                submitBtn.textContent = 'Approve';
+                submitBtn.className = 'action-btn approve-btn';
+            } else if (action === 'reject') {
+                modalTitle.textContent = 'Reject Request';
+                submitBtn.textContent = 'Reject';
+                submitBtn.className = 'action-btn reject-btn';
+            } else if (action === 'cancel') {
+                modalTitle.textContent = 'Cancel Request';
+                submitBtn.textContent = 'Cancel';
+                submitBtn.className = 'action-btn reject-btn';
+            }
         }
 
         function closeModal() {
-            document.getElementById('responseModal').style.display = 'none';
+            const modal = document.getElementById('responseModal');
+            modal.style.display = 'none';
+            document.getElementById('responseMessage').value = '';
             currentRequestId = null;
             currentAction = null;
         }
 
         function submitResponse() {
-            const message = document.getElementById('responseMessage').value;
+            const message = document.getElementById('responseMessage').value.trim();
+            
+            if (!message) {
+                alert('Please enter a response message');
+                return;
+            }
 
-            fetch('../../ajax/handle_donor_request.php', {
+            // Create form data
+            const formData = new FormData();
+            formData.append('request_id', currentRequestId);
+            formData.append('action', currentAction);
+            formData.append('message', message);
+
+            // Send request to backend
+            fetch('../../backend/php/update_donor_request.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    request_id: currentRequestId,
-                    action: currentAction,
-                    message: message
-                })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.message);
+                if (data.error) {
+                    throw new Error(data.error);
                 }
+                // Show success message
+                alert(data.message);
+                // Reload page to show updated status
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while processing your request');
+                alert('Error: ' + error.message);
             })
             .finally(() => {
                 closeModal();
             });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('responseModal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
     </script>
 </body>
