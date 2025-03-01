@@ -17,27 +17,115 @@ function createOrganMatchesTable($conn) {
 // Add new organ match
 function addOrganMatch($conn, $data) {
     try {
-        $sql = "INSERT INTO made_matches_by_hospitals (
-            donor_id, recipient_id, match_made_by,
-            donor_hospital_id, recipient_hospital_id,
-            organ_type, match_date, status
-        ) VALUES (
-            :donor_id, :recipient_id, :match_made_by,
-            :donor_hospital_id, :recipient_hospital_id,
-            :organ_type, NOW(), 'Pending'
-        )";
+        // Start transaction
+        $conn->beginTransaction();
 
-        $stmt = $conn->prepare($sql);
-        $stmt->execute($data);
-        $match_id = $conn->lastInsertId();
-
-        if ($match_id) {
-            // Create notification for the new match
-            createMatchNotification($conn, $match_id);
+        // First check if donor and recipient exist and get donor's hospital
+        $check_sql = "SELECT d.donor_id, d.blood_group, r.id, r.blood_type, hda.hospital_id as donor_hospital_id 
+                     FROM donor d
+                     JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
+                     CROSS JOIN recipient_registration r 
+                     WHERE d.donor_id = :donor_id 
+                     AND r.id = :recipient_id 
+                     AND hda.status = 'Approved'
+                     AND hda.organ_type = :organ_type";
+        
+        $check_stmt = $conn->prepare($check_sql);
+        $check_stmt->execute([
+            'donor_id' => $data['donor_id'],
+            'recipient_id' => $data['recipient_id'],
+            'organ_type' => $data['organ_type']
+        ]);
+        
+        if ($check_stmt->rowCount() === 0) {
+            throw new Exception("Donor or recipient not found or donor not approved for this organ type");
         }
 
+        $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
+        $donor_hospital_id = $result['donor_hospital_id'];
+
+        // First insert into donor_and_recipient_requests
+        $request_sql = "INSERT INTO donor_and_recipient_requests (
+            requesting_hospital_id,
+            requested_hospital_id,
+            donor_id,
+            recipient_id,
+            blood_type,
+            organ_type,
+            request_date,
+            status,
+            notification_status
+        ) VALUES (
+            :requesting_hospital_id,
+            :requested_hospital_id,
+            :donor_id,
+            :recipient_id,
+            (SELECT blood_group FROM donor WHERE donor_id = :donor_id),
+            :organ_type,
+            NOW(),
+            'Pending',
+            'Unread'
+        )";
+
+        $request_stmt = $conn->prepare($request_sql);
+        $request_stmt->execute([
+            'requesting_hospital_id' => $data['match_made_by'],
+            'requested_hospital_id' => $donor_hospital_id,
+            'donor_id' => $data['donor_id'],
+            'recipient_id' => $data['recipient_id'],
+            'organ_type' => $data['organ_type']
+        ]);
+
+        // Then insert into made_matches_by_hospitals
+        $match_sql = "INSERT INTO made_matches_by_hospitals (
+            match_made_by,
+            donor_id,
+            donor_name,
+            donor_blood_group,
+            donor_hospital_id,
+            donor_hospital_name,
+            recipient_id,
+            recipient_name,
+            recipient_blood_group,
+            recipient_hospital_id,
+            recipient_hospital_name,
+            organ_type,
+            match_date
+        ) VALUES (
+            :match_made_by,
+            :donor_id,
+            (SELECT name FROM donor WHERE donor_id = :donor_id),
+            (SELECT blood_group FROM donor WHERE donor_id = :donor_id),
+            :donor_hospital_id,
+            (SELECT name FROM hospitals WHERE hospital_id = :donor_hospital_id),
+            :recipient_id,
+            (SELECT full_name FROM recipient_registration WHERE id = :recipient_id),
+            (SELECT blood_type FROM recipient_registration WHERE id = :recipient_id),
+            :recipient_hospital_id,
+            (SELECT name FROM hospitals WHERE hospital_id = :recipient_hospital_id),
+            :organ_type,
+            NOW()
+        )";
+
+        $match_stmt = $conn->prepare($match_sql);
+        $match_stmt->execute([
+            'match_made_by' => $data['match_made_by'],
+            'donor_id' => $data['donor_id'],
+            'donor_hospital_id' => $donor_hospital_id,
+            'recipient_id' => $data['recipient_id'],
+            'recipient_hospital_id' => $data['recipient_hospital_id'],
+            'organ_type' => $data['organ_type']
+        ]);
+
+        $match_id = $conn->lastInsertId();
+
+        // Commit transaction
+        $conn->commit();
         return $match_id;
-    } catch (PDOException $e) {
+
+    } catch (Exception $e) {
+        // Rollback on error
+        $conn->rollBack();
         error_log("Error adding organ match: " . $e->getMessage());
         return false;
     }
@@ -344,5 +432,23 @@ function updateMatchStatus($conn, $match_id, $new_status) {
         error_log("Error updating match status: " . $e->getMessage());
         return false;
     }
+}
+
+// Handle POST request for creating new match
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get POST data
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    // Add match
+    $match_id = addOrganMatch($conn, $data);
+    
+    // Return response
+    header('Content-Type: application/json');
+    if ($match_id) {
+        echo json_encode(['match_id' => $match_id]);
+    } else {
+        echo json_encode(['error' => 'Failed to create match']);
+    }
+    exit();
 }
 ?>
