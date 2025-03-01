@@ -1481,9 +1481,9 @@ $urgentRecipients = getUrgentRecipients($conn);
                                         <td><?php echo htmlspecialchars($match['recipient_name']); ?></td>
                                         <td><?php echo $match_date; ?></td>
                                         <td>
-                                            <button class="view-btn" onclick="viewMatchDetails(<?php echo $match['match_id']; ?>)">
+                                            <a href="organ_match_info_for_admin.php?match_id=<?php echo $match['match_id']; ?>" class="view-btn">
                                                 <i class="fas fa-eye"></i> View
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                     <?php
