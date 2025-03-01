@@ -24,11 +24,18 @@ $message = $_POST['message'];
 $hospital_id = $_SESSION['hospital_id'];
 
 try {
-    // First verify that this hospital owns this request
+    // First verify that this hospital owns this request and get donor details
     $verify_stmt = $conn->prepare("
-        SELECT donor_hospital_id 
-        FROM donor_requests 
-        WHERE request_id = ? AND status = 'Pending'
+        SELECT 
+            dr.donor_hospital_id,
+            dr.requesting_hospital_id,
+            dr.donor_id,
+            d.name as donor_name,
+            hda.organ_type
+        FROM donor_requests dr
+        JOIN donor d ON d.donor_id = dr.donor_id
+        JOIN hospital_donor_approvals hda ON hda.donor_id = dr.donor_id AND hda.hospital_id = dr.donor_hospital_id
+        WHERE dr.request_id = ? AND dr.status = 'Pending'
     ");
     $verify_stmt->execute([$request_id]);
     $request = $verify_stmt->fetch(PDO::FETCH_ASSOC);
@@ -51,6 +58,21 @@ try {
     ");
     
     $update_stmt->execute([$status, $message, $request_id]);
+
+    // If approved, create a new donor approval for the requesting hospital
+    if ($status === 'Approved') {
+        // Create new approval
+        $approve_stmt = $conn->prepare("
+            INSERT INTO hospital_donor_approvals 
+            (donor_id, hospital_id, status, organ_type, approval_date) 
+            VALUES (?, ?, 'approved', ?, CURRENT_TIMESTAMP)
+        ");
+        $approve_stmt->execute([
+            $request['donor_id'],
+            $request['requesting_hospital_id'],
+            $request['organ_type']
+        ]);
+    }
 
     echo json_encode([
         'success' => true,

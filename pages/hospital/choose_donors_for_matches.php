@@ -11,10 +11,10 @@ if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in'])
 $hospital_id = $_SESSION['hospital_id'];
 $hospital_name = $_SESSION['hospital_name'];
 
-// Fetch hospital's own approved donors
+// Fetch hospital's own approved donors and approved requests from other hospitals
 try {
     $stmt = $conn->prepare("
-        SELECT 
+        SELECT DISTINCT
             d.donor_id,
             d.name,
             d.blood_group,
@@ -22,9 +22,13 @@ try {
             d.phone,
             hda.organ_type
         FROM donor d
+        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id
         JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
-        WHERE hda.hospital_id = ? 
-        AND hda.status = 'approved'
+        WHERE (
+            (hda.hospital_id = ? AND hda.status = 'approved')
+            OR 
+            (dr.requesting_hospital_id = ? AND dr.status = 'Approved')
+        )
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
             WHERE donor_id = d.donor_id
@@ -32,7 +36,7 @@ try {
         ORDER BY d.name ASC
     ");
     
-    $stmt->execute([$hospital_id]);
+    $stmt->execute([$hospital_id, $hospital_id]);
     $hospital_donors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch(PDOException $e) {
