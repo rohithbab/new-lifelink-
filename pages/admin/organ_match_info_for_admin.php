@@ -152,7 +152,7 @@ error_log("Number of matches in page: " . count($matches));
                                     <td><?php echo htmlspecialchars($match['recipient_hospital_id']); ?></td>
                                     <td><?php echo htmlspecialchars($match['recipient_hospital_name']); ?></td>
                                     <td><?php echo htmlspecialchars($match['organ_type']); ?></td>
-                                    <td><?php echo htmlspecialchars($match['blood_group']); ?></td>
+                                    <td><?php echo htmlspecialchars($match['blood_group_display']); ?></td>
                                     <td><?php echo date('Y-m-d', strtotime($match['match_date'])); ?></td>
                                 </tr>
                             <?php 

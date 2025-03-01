@@ -287,22 +287,19 @@ function getRecentOrganMatches($conn, $limit = 5) {
 // Get all organ matches with pagination and search
 function getAllOrganMatches($conn) {
     try {
-        $query = "SELECT 
-            match_id,
-            match_made_by,
-            donor_id,
-            donor_name,
-            donor_hospital_id,
-            donor_hospital_name,
-            recipient_id,
-            recipient_name,
-            recipient_hospital_id,
-            recipient_hospital_name,
-            organ_type,
-            blood_group,
-            match_date
-        FROM made_matches_by_hospitals
-        ORDER BY match_date DESC";
+        $query = "SELECT m.*, 
+                  d.blood_group as donor_blood_group,
+                  r.blood_type as recipient_blood_group,
+                  h1.name as donor_hospital_name,
+                  h2.name as recipient_hospital_name,
+                  d.name as donor_name,
+                  r.full_name as recipient_name
+                  FROM made_matches_by_hospitals m
+                  LEFT JOIN donor d ON m.donor_id = d.donor_id
+                  LEFT JOIN recipient_registration r ON m.recipient_id = r.id
+                  LEFT JOIN hospitals h1 ON m.donor_hospital_id = h1.hospital_id
+                  LEFT JOIN hospitals h2 ON m.recipient_hospital_id = h2.hospital_id
+                  ORDER BY m.match_date DESC";
 
         $stmt = $conn->prepare($query);
         $stmt->execute();
@@ -310,6 +307,16 @@ function getAllOrganMatches($conn) {
         // Debug: Log the number of rows returned
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         error_log("Number of matches found: " . count($results));
+        
+        // Format blood group display
+        foreach ($results as &$match) {
+            if ($match['donor_blood_group'] === $match['recipient_blood_group']) {
+                $match['blood_group_display'] = $match['donor_blood_group'];
+            } else {
+                $match['blood_group_display'] = 'Not same type';
+            }
+        }
+        
         return $results;
     } catch (PDOException $e) {
         error_log("Error in getAllOrganMatches: " . $e->getMessage());
