@@ -15006,3 +15006,59 @@ Data: []
 2025-02-26 05:03:03: Hospital data inserted successfully. ID: 33
 2025-02-26 05:03:03: Notification created successfully
 2025-02-26 05:03:03: Transaction committed
+2025-03-03 06:55:20: Registration process started
+2025-03-03 06:55:20: POST data: Array
+(
+    [hospital_name] => bbc
+    [hospital_email] => dummyemail123@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9989769179
+    [street] => no 90
+    [city] => aab
+    [state] => tn
+    [postal_code] => 900021
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => wasim
+    [designation] => dean
+    [contact_phone] => 9989769179
+    [contact_email] => dummyemail123@gmail.com
+    [license_number] => lice001
+    [username] => wasim
+    [password] => #Wasim123
+    [confirm_password] => #Wasim123
+    [terms] => on
+)
+
+2025-03-03 06:55:20: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpE04B.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-03-03 06:55:20: Database connection successful
+2025-03-03 06:55:20: Sanitized inputs: name=bbc, email=dummyemail123@gmail.com, phone=9989769179
+2025-03-03 06:55:20: Address: no 90, aab, tn, 900021, India
+2025-03-03 06:55:20: Region: tn
+2025-03-03 06:55:21: Transaction started
+2025-03-03 06:55:21: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-03-03 06:55:21: SQL executed successfully
+2025-03-03 06:55:21: Hospital data inserted successfully. ID: 34
+2025-03-03 06:55:21: Notification created successfully
+2025-03-03 06:55:21: Transaction committed
