@@ -384,21 +384,31 @@ try {
         </main>
     </div>
 
+    <!-- Response Modal -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Response</h3>
+            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
+            <div class="modal-buttons">
+                <button id="closeModal" class="btn-cancel">Cancel</button>
+                <button id="submitResponse" class="btn-yes">Submit</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentRequestId = null;
-        let currentType = null;
+        let currentAction = null;
 
         function cancelRequest(requestId, type, hospitalName) {
             if (confirm('Are you sure you want to cancel this request?')) {
+                const formData = new FormData();
+                formData.append('requestId', requestId);
+                formData.append('type', type);
+
                 fetch('../../ajax/cancel_request.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        requestId: requestId,
-                        type: type
-                    })
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -435,15 +445,11 @@ try {
             if (action === 'approve') {
                 modalTitle.textContent = 'Approve Request';
                 submitBtn.textContent = 'Approve';
-                submitBtn.className = 'action-btn approve-btn';
+                submitBtn.className = 'btn-yes';
             } else if (action === 'reject') {
                 modalTitle.textContent = 'Reject Request';
                 submitBtn.textContent = 'Reject';
-                submitBtn.className = 'action-btn reject-btn';
-            } else if (action === 'cancel') {
-                modalTitle.textContent = 'Cancel Request';
-                submitBtn.textContent = 'Cancel';
-                submitBtn.className = 'action-btn cancel-btn';
+                submitBtn.className = 'btn-cancel';
             }
         }
 
@@ -480,7 +486,7 @@ try {
                     throw new Error(data.error);
                 }
                 // Show success message
-                alert(data.message);
+                alert('Request ' + currentAction + 'ed successfully');
                 // Reload page to show updated status
                 window.location.reload();
             })
@@ -493,13 +499,17 @@ try {
             });
         }
 
+        // Add event listeners
+        document.getElementById('closeModal').onclick = closeModal;
+        document.getElementById('submitResponse').onclick = submitResponse;
+
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('responseModal');
             if (event.target === modal) {
                 closeModal();
             }
-        }
+        };
     </script>
 </body>
 </html>

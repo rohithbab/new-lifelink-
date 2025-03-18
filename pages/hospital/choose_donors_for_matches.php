@@ -447,17 +447,16 @@ try {
             document.getElementById('confirmRequest').onclick = function() {
                 document.getElementById('confirmationOverlay').style.display = 'none';
                 
+                // Create form data
+                const formData = new FormData();
+                formData.append('donorId', donorId);
+                formData.append('hospitalId', hospitalId);
+                formData.append('action', 'request');
+
                 // Send the request
                 fetch('../../ajax/donor_request.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        donorId: donorId,
-                        hospitalId: hospitalId,
-                        action: 'request'
-                    })
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
