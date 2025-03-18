@@ -19,18 +19,22 @@ try {
 
     if ($type === 'donor') {
         // Update donor_requests table
-        $query = "UPDATE donor_requests 
-                 SET status = 'Canceled' 
-                 WHERE request_id = :requestId 
-                 AND requesting_hospital_id = :hospitalId 
-                 AND status = 'Pending'";
+        $query = "
+            UPDATE donor_requests 
+            SET status = 'Canceled', 
+                updated_at = NOW() 
+            WHERE request_id = :requestId 
+            AND requesting_hospital_id = :hospitalId 
+            AND status = 'Pending'";
     } else {
         // Update recipient_requests table
-        $query = "UPDATE recipient_requests 
-                 SET status = 'Canceled' 
-                 WHERE request_id = :requestId 
-                 AND requesting_hospital_id = :hospitalId 
-                 AND status = 'Pending'";
+        $query = "
+            UPDATE recipient_requests 
+            SET status = 'Canceled', 
+                updated_at = NOW() 
+            WHERE request_id = :requestId 
+            AND requesting_hospital_id = :hospitalId 
+            AND status = 'Pending'";
     }
 
     $stmt = $conn->prepare($query);
@@ -40,7 +44,7 @@ try {
 
     if ($stmt->rowCount() > 0) {
         $conn->commit();
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Request canceled successfully']);
     } else {
         $conn->rollBack();
         echo json_encode(['success' => false, 'message' => 'Request not found or already processed']);
@@ -48,7 +52,7 @@ try {
 
 } catch (PDOException $e) {
     $conn->rollBack();
-    error_log("Error canceling request: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Database error occurred']);
+    header('HTTP/1.1 500 Internal Server Error');
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
 ?>
