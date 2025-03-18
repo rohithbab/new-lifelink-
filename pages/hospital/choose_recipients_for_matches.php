@@ -22,28 +22,29 @@ try {
             r.urgency_level,
             r.phone_number,
             r.email,
-            hra.organ_required,
+            r.organ_required,
             h.name as from_hospital
         FROM recipient_registration r
-        JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
-        LEFT JOIN hospitals h ON hra.hospital_id = h.hospital_id
-        WHERE (hra.hospital_id = ? OR 
-            EXISTS (
-                SELECT 1 FROM recipient_requests rr 
-                WHERE rr.recipient_id = r.id 
-                AND rr.requesting_hospital_id = ? 
-                AND rr.status = 'approved'
-            )
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id AND rr.requesting_hospital_id = ?
+        WHERE (
+            hra.hospital_id = ?  -- Hospital's own recipients
+            OR 
+            (rr.requesting_hospital_id = ? AND rr.status = 'approved')  -- Approved requests from other hospitals
         )
         AND hra.status = 'approved'
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
             WHERE recipient_id = r.id
         )
-        ORDER BY r.urgency_level DESC, r.full_name ASC
+        ORDER BY 
+            CASE WHEN hra.hospital_id = ? THEN 0 ELSE 1 END,  -- Show own recipients first
+            r.urgency_level DESC,
+            r.full_name ASC
     ");
     
-    $stmt->execute([$hospital_id, $hospital_id]);
+    $stmt->execute([$hospital_id, $hospital_id, $hospital_id, $hospital_id]);
     $hospital_recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch(PDOException $e) {
@@ -299,6 +300,72 @@ try {
                 opacity: 1;
             }
         }
+
+        /* Source Badge Styling */
+        .hospital-name {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .hospital-name.your-hospital {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .hospital-name.other-hospital {
+            background: linear-gradient(45deg, #17a2b8, #0dcaf0);
+            color: white;
+            box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
+        }
+
+        /* Organ Badge Styling */
+        .organ-badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            background: linear-gradient(45deg, #007bff, #66d9ef);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Urgency Badge Styling */
+        .urgency-badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .urgency-critical {
+            background: linear-gradient(45deg, #dc3545, #ff6f6f);
+            color: white;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.2);
+        }
+
+        .urgency-high {
+            background: linear-gradient(45deg, #ffc107, #ffd07b);
+            color: white;
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.2);
+        }
+
+        .urgency-medium {
+            background: linear-gradient(45deg, #28a745, #51cf66);
+            color: white;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .urgency-low {
+            background: linear-gradient(45deg, #17a2b8, #45b3fa);
+            color: white;
+            box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -341,8 +408,8 @@ try {
             <tr>
                 <th>Name</th>
                 <th>Blood Type</th>
-                <th>Required Organ</th>
-                <th>Medical Info</th>
+                <th>Organ Required</th>
+                <th>Urgency</th>
                 <th>Contact</th>
                 <th>From Hospital</th>
                 <th>Action</th>
@@ -362,18 +429,27 @@ try {
                     <tr data-recipient-id="<?php echo $recipient['recipient_id']; ?>">
                         <td><?php echo htmlspecialchars($recipient['full_name']); ?></td>
                         <td><?php echo htmlspecialchars($recipient['blood_type']); ?></td>
-                        <td><?php echo htmlspecialchars($recipient['organ_required']); ?></td>
                         <td>
-                            <p>Condition: <?php echo htmlspecialchars($recipient['medical_condition']); ?></p>
-                            <p>Urgency: <?php echo htmlspecialchars($recipient['urgency_level']); ?></p>
+                            <span class="organ-badge">
+                                <?php echo htmlspecialchars($recipient['organ_required']); ?>
+                            </span>
                         </td>
                         <td>
-                            <p>Email: <?php echo htmlspecialchars($recipient['email']); ?></p>
-                            <p>Phone: <?php echo htmlspecialchars($recipient['phone_number']); ?></p>
+                            <span class="urgency-badge urgency-<?php echo strtolower($recipient['urgency_level']); ?>">
+                                <?php echo htmlspecialchars($recipient['urgency_level']); ?>
+                            </span>
                         </td>
-                        <td><?php echo $recipient['from_hospital'] === $hospital_name ? 'Your Hospital' : htmlspecialchars($recipient['from_hospital']); ?></td>
                         <td>
-                            <button class="btn btn-request" onclick="selectRecipient(<?php echo $recipient['recipient_id']; ?>, '<?php echo htmlspecialchars($recipient['full_name']); ?>')">
+                            Email: <?php echo htmlspecialchars($recipient['email']); ?><br>
+                            Phone: <?php echo htmlspecialchars($recipient['phone_number']); ?>
+                        </td>
+                        <td>
+                            <span class="hospital-name <?php echo $recipient['from_hospital'] === $hospital_name ? 'your-hospital' : 'other-hospital'; ?>">
+                                <?php echo $recipient['from_hospital'] === $hospital_name ? 'Your Hospital' : htmlspecialchars($recipient['from_hospital']); ?>
+                            </span>
+                        </td>
+                        <td>
+                            <button class="select-btn" onclick="selectRecipient('<?php echo $recipient['recipient_id']; ?>', '<?php echo htmlspecialchars($recipient['full_name']); ?>')">
                                 Select
                             </button>
                         </td>

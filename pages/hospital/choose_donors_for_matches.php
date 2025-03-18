@@ -20,25 +20,28 @@ try {
             d.blood_group,
             d.email,
             d.phone,
-            hda.organ_type,
+            d.organs_to_donate,
             h.name as from_hospital
         FROM donor d
-        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id
-        JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
-        LEFT JOIN hospitals h ON hda.hospital_id = h.hospital_id
+        INNER JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
+        INNER JOIN hospitals h ON hda.hospital_id = h.hospital_id
+        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id AND dr.requesting_hospital_id = ?
         WHERE (
-            (hda.hospital_id = ? AND hda.status = 'approved')
+            hda.hospital_id = ?  -- Hospital's own donors
             OR 
-            (dr.requesting_hospital_id = ? AND dr.status = 'Approved')
+            (dr.requesting_hospital_id = ? AND dr.status = 'Approved')  -- Approved requests from other hospitals
         )
+        AND hda.status = 'approved'
         AND NOT EXISTS (
             SELECT 1 FROM donor_and_recipient_requests 
             WHERE donor_id = d.donor_id
         )
-        ORDER BY d.name ASC
+        ORDER BY 
+            CASE WHEN hda.hospital_id = ? THEN 0 ELSE 1 END,  -- Show own donors first
+            d.name ASC
     ");
     
-    $stmt->execute([$hospital_id, $hospital_id]);
+    $stmt->execute([$hospital_id, $hospital_id, $hospital_id, $hospital_id]);
     $hospital_donors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch(PDOException $e) {
@@ -217,6 +220,27 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
+        /* Hospital Name Badge Styling */
+        .hospital-name {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .your-hospital {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .other-hospital {
+            background: linear-gradient(45deg, #17a2b8, #0dcaf0);
+            color: white;
+            box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -256,19 +280,15 @@ try {
                                 <tr data-donor-id="<?php echo $donor['donor_id']; ?>">
                                     <td><?php echo htmlspecialchars($donor['name']); ?></td>
                                     <td><?php echo htmlspecialchars($donor['blood_group']); ?></td>
-                                    <td><?php echo htmlspecialchars($donor['organ_type']); ?></td>
+                                    <td><?php echo htmlspecialchars($donor['organs_to_donate']); ?></td>
                                     <td>
                                         Email: <?php echo htmlspecialchars($donor['email']); ?><br>
                                         Phone: <?php echo htmlspecialchars($donor['phone']); ?>
                                     </td>
                                     <td>
-                                        <?php 
-                                        if ($donor['from_hospital'] == $hospital_name) {
-                                            echo "Your Hospital";
-                                        } else {
-                                            echo htmlspecialchars($donor['from_hospital']);
-                                        }
-                                        ?>
+                                        <span class="hospital-name <?php echo $donor['from_hospital'] === $hospital_name ? 'your-hospital' : 'other-hospital'; ?>">
+                                            <?php echo $donor['from_hospital'] === $hospital_name ? 'Your Hospital' : htmlspecialchars($donor['from_hospital']); ?>
+                                        </span>
                                     </td>
                                     <td>
                                         <button class="select-btn" onclick="selectDonor('<?php echo $donor['donor_id']; ?>', '<?php echo htmlspecialchars($donor['name']); ?>')">
