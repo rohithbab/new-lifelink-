@@ -4,7 +4,7 @@ session_start();
 
 // Check if hospital is logged in
 if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in']) {
-    header('HTTP/1.1 401 Unauthorized');
+    header('Content-Type: application/json');
     echo json_encode(['error' => 'Unauthorized']);
     exit();
 }
@@ -27,17 +27,11 @@ try {
             d.organs_to_donate,
             h.hospital_id,
             h.name as hospital_name,
-            CASE 
-                WHEN dr.status = 'Pending' THEN 'Pending'
-                WHEN dr.status = 'Approved' THEN 'Approved'
-                ELSE 'Not Requested'
-            END as request_status
+            COALESCE(dr.status, 'Not Requested') as request_status
         FROM donor d
         INNER JOIN hospital_donor_approvals hda ON d.donor_id = hda.donor_id
         INNER JOIN hospitals h ON hda.hospital_id = h.hospital_id
-        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id 
-            AND dr.requesting_hospital_id = :hospitalId
-            AND dr.status IN ('Pending', 'Approved')
+        LEFT JOIN donor_requests dr ON d.donor_id = dr.donor_id AND dr.requesting_hospital_id = :hospitalId
         WHERE hda.status = 'approved'
         AND h.hospital_id != :hospitalId
         AND NOT EXISTS (

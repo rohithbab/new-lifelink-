@@ -171,7 +171,7 @@ try {
             color: white;
         }
 
-        .status.canceled {
+        .status.cancelled {
             background-color: #6c757d;
             color: white;
         }
@@ -237,15 +237,6 @@ try {
         .cancel-btn {
             background-color: #6c757d;
             color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
         }
 
         .cancel-btn:hover {
@@ -327,72 +318,6 @@ try {
             gap: 1rem;
             margin-top: 1rem;
         }
-
-        .urgency-badge {
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            margin-left: 10px;
-        }
-
-        .urgency-high { background: #dc3545; color: white; }
-        .urgency-medium { background: #ffc107; color: #000; }
-        .urgency-low { background: #28a745; color: white; }
-
-        /* Confirmation Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn-yes, .btn-cancel {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-yes {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-yes:hover, .btn-cancel:hover {
-            transform: translateY(-2px);
-        }
     </style>
 </head>
 <body>
@@ -437,9 +362,6 @@ try {
                                             $hospital_address = $request['recipient_hospital_address'];
                                         }
                                         ?>
-                                        <span class="urgency-badge urgency-<?php echo strtolower($request['urgency_level']); ?>">
-                                            <?php echo $request['urgency_level']; ?>
-                                        </span>
                                     </h3>
                                     <p><i class="fas fa-phone"></i> <?php echo htmlspecialchars($hospital_phone); ?></p>
                                     <p><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($hospital_address); ?></p>
@@ -479,12 +401,6 @@ try {
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </div>
-                            <?php elseif ($request['status'] === 'Pending' && $request_type === 'outgoing'): ?>
-                                <div class="request-actions">
-                                    <button class="cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, '<?php echo $request_type; ?>', '<?php echo htmlspecialchars($request['recipient_hospital_name']); ?>')">
-                                        <i class="fas fa-ban"></i> Cancel
-                                    </button>
-                                </div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -493,21 +409,21 @@ try {
         </main>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal">
+    <!-- Response Modal -->
+    <div id="responseModal" class="modal">
         <div class="modal-content">
-            <h3>Cancel Request</h3>
-            <p>Are you sure you want to cancel your request to <span id="hospitalName"></span>?</p>
-            <div class="modal-buttons">
-                <button id="confirmCancel" class="btn-yes">Yes</button>
-                <button id="closeModal" class="btn-cancel">Cancel</button>
+            <h3 id="modalTitle">Response</h3>
+            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
+            <div class="modal-actions">
+                <button class="action-btn" onclick="closeModal()">Cancel</button>
+                <button id="submitResponse" class="action-btn" onclick="submitResponse()">Submit</button>
             </div>
         </div>
     </div>
 
     <script>
         let currentRequestId = null;
-        let currentType = null;
+        let currentAction = null;
 
         function handleAction(requestId, action) {
             currentRequestId = requestId;
@@ -578,62 +494,13 @@ try {
             });
         }
 
-        function cancelRequest(requestId, type, hospitalName) {
-            currentRequestId = requestId;
-            currentType = type;
-            document.getElementById('hospitalName').textContent = hospitalName;
-            document.getElementById('confirmationModal').style.display = 'block';
-        }
-
-        document.getElementById('confirmCancel').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-            
-            fetch('../../ajax/cancel_request.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    requestId: currentRequestId,
-                    type: currentType
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const requestCard = document.querySelector(`[data-request-id="${currentRequestId}"]`);
-                    if (requestCard) {
-                        const statusBadge = requestCard.querySelector('.status-badge');
-                        statusBadge.className = 'status-badge status-canceled';
-                        statusBadge.textContent = 'Canceled';
-                        
-                        const cancelBtn = requestCard.querySelector('.cancel-btn');
-                        if (cancelBtn) {
-                            cancelBtn.remove();
-                        }
-                    }
-                    alert('Request canceled successfully');
-                } else {
-                    alert(data.message || 'Failed to cancel request');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while canceling the request');
-            });
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-        };
-
         // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('confirmationModal');
+            const modal = document.getElementById('responseModal');
             if (event.target === modal) {
-                modal.style.display = 'none';
+                closeModal();
             }
-        };
+        }
     </script>
 </body>
 </html>
