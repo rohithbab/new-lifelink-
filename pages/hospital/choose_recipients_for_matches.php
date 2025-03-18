@@ -366,6 +366,81 @@ try {
             color: white;
             box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
         }
+
+        /* Confirmation Dialog Styling */
+        .confirmation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .confirmation-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .confirmation-dialog h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .confirmation-dialog p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .confirm-btn, .cancel-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .cancel-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -449,8 +524,8 @@ try {
                             </span>
                         </td>
                         <td>
-                            <button class="select-btn" onclick="selectRecipient('<?php echo $recipient['recipient_id']; ?>', '<?php echo htmlspecialchars($recipient['full_name']); ?>')">
-                                Select
+                            <button class="btn-request" onclick="handleRecipientRequest('<?php echo $recipient['recipient_id']; ?>', '<?php echo $recipient['hospital_id']; ?>', '<?php echo htmlspecialchars($recipient['from_hospital']); ?>')">
+                                Request Access
                             </button>
                         </td>
                     </tr>
@@ -460,6 +535,18 @@ try {
     </table>
 </div>
         </main>
+    </div>
+
+    <!-- Confirmation Dialog HTML -->
+    <div id="confirmationOverlay" class="confirmation-overlay">
+        <div class="confirmation-dialog">
+            <h2>Request Recipient Access</h2>
+            <p>Are you sure you want to request access to this recipient from <span id="hospitalName"></span>?</p>
+            <div class="confirmation-buttons">
+                <button id="confirmRequest" class="confirm-btn">Yes, Request Access</button>
+                <button id="cancelRequest" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -487,49 +574,58 @@ try {
             });
         });
 
-        async function handleRecipientRequest(recipientId, hospitalId, action) {
-            try {
-                const response = await fetch('../../ajax/handle_recipient_request.php', {
+        async function handleRecipientRequest(recipientId, hospitalId, hospitalName) {
+            // Update the confirmation dialog
+            document.getElementById('hospitalName').textContent = hospitalName;
+            document.getElementById('confirmationOverlay').style.display = 'block';
+
+            // Store the IDs for the confirmation handler
+            document.getElementById('confirmRequest').onclick = function() {
+                document.getElementById('confirmationOverlay').style.display = 'none';
+                
+                // Send the request
+                fetch('../../ajax/recipient_request.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         recipientId: recipientId,
-                        recipientHospitalId: hospitalId,
-                        action: action
+                        hospitalId: hospitalId,
+                        action: 'request'
                     })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the button to show pending status
+                        const button = document.querySelector(`[data-recipient-id="${recipientId}"] .btn-request`);
+                        if (button) {
+                            button.outerHTML = '<button class="btn btn-secondary" disabled>Request Pending</button>';
+                        }
+                        showNotification('Request sent successfully!', 'success');
+                    } else {
+                        showNotification(data.message || 'Failed to send request', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('An error occurred while sending the request', 'error');
                 });
+            };
 
-                const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+            // Handle cancel button
+            document.getElementById('cancelRequest').onclick = function() {
+                document.getElementById('confirmationOverlay').style.display = 'none';
+            };
+        }
 
-                // Refresh the search results
-                if (searchInput.value.trim() !== '') {
-                    searchInput.dispatchEvent(new Event('input'));
-                }
-
-                showNotification(data.message, 'success');
-
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification(error.message, 'error');
+        // Close dialog when clicking outside
+        document.getElementById('confirmationOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
             }
-        }
-
-        function showNotification(message, type) {
-            const notificationDiv = document.createElement('div');
-            notificationDiv.className = `alert alert-${type} notification`;
-            notificationDiv.textContent = message;
-            document.body.appendChild(notificationDiv);
-
-            setTimeout(() => {
-                notificationDiv.remove();
-            }, 3000);
-        }
+        });
 
         // Add input event to search input
         searchInput.addEventListener('input', () => {
@@ -575,7 +671,7 @@ try {
                     return;
                 }
 
-                resultsDiv.innerHTML = `
+                let tableHTML = `
                     <table class="recipients-table">
                         <thead>
                             <tr>
@@ -591,41 +687,50 @@ try {
                             </tr>
                         </thead>
                         <tbody>
-                            ${data.map(recipient => `
-                                <tr>
-                                    <td>${recipient.recipient_name}</td>
-                                    <td>${recipient.blood_type}</td>
-                                    <td>${recipient.organ_required}</td>
-                                    <td>${recipient.medical_condition}</td>
-                                    <td>${recipient.urgency_level}</td>
-                                    <td>${recipient.hospital_name}</td>
-                                    <td>
-                                        Email: ${recipient.hospital_email}<br>
-                                        Phone: ${recipient.hospital_phone}
-                                    </td>
-                                    <td>
-                                        ${recipient.request_status ? `
-                                            <span class="status-badge status-${recipient.request_status.toLowerCase()}">
-                                                ${recipient.request_status}
-                                            </span>
-                                        ` : ''}
-                                    </td>
-                                    <td>
-                                        ${!recipient.request_status ? `
-                                            <button class="btn btn-request" onclick="handleRecipientRequest(${recipient.recipient_id}, ${recipient.hospital_id}, 'request')">
-                                                Request
-                                            </button>
-                                        ` : recipient.request_status === 'Pending' ? `
-                                            <button class="btn btn-cancel" onclick="handleRecipientRequest(${recipient.recipient_id}, ${recipient.hospital_id}, 'cancel')">
-                                                Cancel
-                                            </button>
-                                        ` : ''}
-                                    </td>
-                                </tr>
-                            `).join('')}
+                `;
+
+                data.forEach(recipient => {
+                    tableHTML += `
+                        <tr data-recipient-id="${recipient.recipient_id}">
+                            <td>${recipient.full_name}</td>
+                            <td>${recipient.blood_type}</td>
+                            <td>
+                                <span class="organ-badge">
+                                    ${recipient.organ_required}
+                                </span>
+                            </td>
+                            <td>${recipient.medical_condition}</td>
+                            <td>
+                                <span class="urgency-badge urgency-${recipient.urgency_level.toLowerCase()}">
+                                    ${recipient.urgency_level}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="hospital-name ${recipient.hospital_name === '<?php echo $hospital_name; ?>' ? 'your-hospital' : 'other-hospital'}">
+                                    ${recipient.hospital_name === '<?php echo $hospital_name; ?>' ? 'Your Hospital' : recipient.hospital_name}
+                                </span>
+                            </td>
+                            <td>
+                                Email: ${recipient.email}<br>
+                                Phone: ${recipient.phone_number}
+                            </td>
+                            <td>
+                                ${recipient.request_status === 'Pending' 
+                                    ? '<button class="btn btn-secondary" disabled>Request Pending</button>'
+                                    : recipient.request_status === 'Approved'
+                                    ? '<button class="select-btn" onclick="selectRecipient(\'' + recipient.recipient_id + '\', \'' + recipient.full_name + '\')">Select</button>'
+                                    : '<button class="btn-request" onclick="handleRecipientRequest(\'' + recipient.recipient_id + '\', \'' + recipient.hospital_id + '\', \'' + recipient.hospital_name + '\')">Request Access</button>'
+                                }
+                            </td>
+                        </tr>`;
+                });
+
+                tableHTML += `
                         </tbody>
                     </table>
                 `;
+
+                resultsDiv.innerHTML = tableHTML;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -638,6 +743,17 @@ try {
                 `;
             });
         });
+
+        function showNotification(message, type) {
+            const notificationDiv = document.createElement('div');
+            notificationDiv.className = `alert alert-${type} notification`;
+            notificationDiv.textContent = message;
+            document.body.appendChild(notificationDiv);
+
+            setTimeout(() => {
+                notificationDiv.remove();
+            }, 3000);
+        }
 
         function selectRecipient(recipientId, recipientName) {
             if (confirm('Are you sure you want to select this recipient?')) {
