@@ -2,17 +2,16 @@
 require_once '../config/db_connect.php';
 session_start();
 
-header('Content-Type: application/json');
-
 if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in']) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+    header('HTTP/1.1 401 Unauthorized');
+    echo json_encode(['error' => 'Unauthorized']);
     exit();
 }
 
-// Get POST data
-$requestId = $_POST['requestId'];
-$type = $_POST['type'];
+// Get JSON data
+$data = json_decode(file_get_contents('php://input'), true);
+$requestId = $data['requestId'];
+$type = $data['type'];
 $hospitalId = $_SESSION['hospital_id'];
 
 try {

@@ -493,31 +493,18 @@ try {
         </main>
     </div>
 
-    <!-- Response Modal -->
-    <div id="responseModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Response</h3>
-            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
-            <div class="modal-buttons">
-                <button id="closeModal" class="btn-cancel">Cancel</button>
-                <button id="submitResponse" class="btn-yes">Submit</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let currentRequestId = null;
-        let currentAction = null;
-
         function cancelRequest(requestId, type, hospitalName) {
             if (confirm('Are you sure you want to cancel this request?')) {
-                const formData = new FormData();
-                formData.append('requestId', requestId);
-                formData.append('type', type);
-
                 fetch('../../ajax/cancel_request.php', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        requestId: requestId,
+                        type: type
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -538,87 +525,6 @@ try {
                 });
             }
         }
-
-        function handleAction(requestId, action) {
-            currentRequestId = requestId;
-            currentAction = action;
-            
-            // Show modal
-            const modal = document.getElementById('responseModal');
-            modal.style.display = 'block';
-            
-            // Update modal title and button
-            const modalTitle = document.getElementById('modalTitle');
-            const submitBtn = document.getElementById('submitResponse');
-            
-            if (action === 'approve') {
-                modalTitle.textContent = 'Approve Request';
-                submitBtn.textContent = 'Approve';
-                submitBtn.className = 'btn-yes';
-            } else if (action === 'reject') {
-                modalTitle.textContent = 'Reject Request';
-                submitBtn.textContent = 'Reject';
-                submitBtn.className = 'btn-cancel';
-            }
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('responseModal');
-            modal.style.display = 'none';
-            document.getElementById('responseMessage').value = '';
-            currentRequestId = null;
-            currentAction = null;
-        }
-
-        function submitResponse() {
-            const message = document.getElementById('responseMessage').value.trim();
-            
-            if (!message) {
-                alert('Please enter a response message');
-                return;
-            }
-
-            // Create form data
-            const formData = new FormData();
-            formData.append('request_id', currentRequestId);
-            formData.append('action', currentAction);
-            formData.append('message', message);
-
-            // Send request to backend
-            fetch('../../backend/php/update_recipient_request.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                // Show success message
-                alert('Request ' + currentAction + 'ed successfully');
-                // Reload page to show updated status
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
-            })
-            .finally(() => {
-                closeModal();
-            });
-        }
-
-        // Add event listeners
-        document.getElementById('closeModal').onclick = closeModal;
-        document.getElementById('submitResponse').onclick = submitResponse;
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('responseModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
     </script>
 </body>
 </html>

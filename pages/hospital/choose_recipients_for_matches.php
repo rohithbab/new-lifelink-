@@ -583,16 +583,17 @@ try {
             document.getElementById('confirmRequest').onclick = function() {
                 document.getElementById('confirmationOverlay').style.display = 'none';
                 
-                // Create form data
-                const formData = new FormData();
-                formData.append('recipientId', recipientId);
-                formData.append('hospitalId', hospitalId);
-                formData.append('action', 'request');
-
                 // Send the request
                 fetch('../../ajax/recipient_request.php', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recipientId: recipientId,
+                        hospitalId: hospitalId,
+                        action: 'request'
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
