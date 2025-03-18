@@ -49,11 +49,17 @@ try {
             r.organ_required,
             h.hospital_id,
             h.name as hospital_name,
-            COALESCE(rr.status, 'Not Requested') as request_status
+            CASE 
+                WHEN rr.status = 'Pending' THEN 'Pending'
+                WHEN rr.status = 'Approved' THEN 'Approved'
+                ELSE 'Not Requested'
+            END as request_status
         FROM recipient_registration r
         INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
         INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
-        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id AND rr.requesting_hospital_id = ?
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ?
+            AND rr.status IN ('Pending', 'Approved')
         WHERE hra.status = 'approved'
         AND h.hospital_id != ?
         AND NOT EXISTS (

@@ -151,6 +151,11 @@ try {
             color: white;
         }
 
+        .status-canceled {
+            background: #e9ecef;
+            color: #495057;
+        }
+
         .request-actions {
             margin-top: 1rem;
             display: flex;
@@ -177,7 +182,12 @@ try {
             color: white;
         }
 
-        .approve-btn:hover, .reject-btn:hover {
+        .cancel-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .approve-btn:hover, .reject-btn:hover, .cancel-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
@@ -194,47 +204,46 @@ try {
         }
 
         .modal-content {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 2rem;
+            padding: 25px;
             border-radius: 10px;
             width: 90%;
-            max-width: 500px;
-        }
-
-        .modal h3 {
-            margin-bottom: 1rem;
-        }
-
-        .modal textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-
-        .empty-state {
+            max-width: 400px;
             text-align: center;
-            padding: 3rem;
-            color: #666;
         }
 
-        .empty-state i {
-            font-size: 3em;
-            color: #ddd;
-            margin-bottom: 1rem;
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-yes, .btn-cancel {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-yes {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-yes:hover, .btn-cancel:hover {
+            transform: translateY(-2px);
         }
 
         .tabs {
@@ -287,7 +296,7 @@ try {
                     </div>
                 <?php else: ?>
                     <?php foreach ($requests as $request): ?>
-                        <div class="request-card">
+                        <div class="request-card" data-request-id="<?php echo $request['request_id']; ?>">
                             <div class="request-header">
                                 <div class="hospital-info">
                                     <h3>
@@ -360,8 +369,8 @@ try {
                                     <button class="action-btn reject-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'reject')">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
-                                <?php elseif ($request_type === 'outgoing' && $request['status'] === 'Approved'): ?>
-                                    <button class="action-btn reject-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'cancel')">
+                                <?php elseif ($request_type === 'outgoing' && $request['status'] === 'Pending'): ?>
+                                    <button class="action-btn cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, '<?php echo $request_type; ?>', '<?php echo htmlspecialchars($request['donor_hospital_name']); ?>')">
                                         <i class="fas fa-times"></i> Cancel Request
                                     </button>
                                 <?php endif; ?>
@@ -373,21 +382,78 @@ try {
         </main>
     </div>
 
-    <!-- Response Modal -->
-    <div id="responseModal" class="modal">
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalTitle">Response</h3>
-            <textarea id="responseMessage" placeholder="Enter your response message"></textarea>
-            <div class="modal-actions">
-                <button class="action-btn" onclick="closeModal()">Cancel</button>
-                <button id="submitResponse" class="action-btn" onclick="submitResponse()">Submit</button>
+            <h3>Cancel Request</h3>
+            <p>Are you sure you want to cancel your request to <span id="hospitalName"></span>?</p>
+            <div class="modal-buttons">
+                <button id="confirmCancel" class="btn-yes">Yes</button>
+                <button id="closeModal" class="btn-cancel">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
         let currentRequestId = null;
-        let currentAction = null;
+        let currentType = null;
+
+        function cancelRequest(requestId, type, hospitalName) {
+            currentRequestId = requestId;
+            currentType = type;
+            document.getElementById('hospitalName').textContent = hospitalName;
+            document.getElementById('confirmationModal').style.display = 'block';
+        }
+
+        document.getElementById('confirmCancel').onclick = function() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            
+            fetch('../../ajax/cancel_request.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    requestId: currentRequestId,
+                    type: currentType
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const requestCard = document.querySelector(`[data-request-id="${currentRequestId}"]`);
+                    if (requestCard) {
+                        const statusBadge = requestCard.querySelector('.status-badge');
+                        statusBadge.className = 'status-badge status-canceled';
+                        statusBadge.textContent = 'Canceled';
+                        
+                        const cancelBtn = requestCard.querySelector('.cancel-btn');
+                        if (cancelBtn) {
+                            cancelBtn.remove();
+                        }
+                    }
+                    showNotification('Request canceled successfully', 'success');
+                } else {
+                    showNotification(data.message || 'Failed to cancel request', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while canceling the request', 'error');
+            });
+        };
+
+        document.getElementById('closeModal').onclick = function() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        };
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmationModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
 
         function handleAction(requestId, action) {
             currentRequestId = requestId;
@@ -412,7 +478,7 @@ try {
             } else if (action === 'cancel') {
                 modalTitle.textContent = 'Cancel Request';
                 submitBtn.textContent = 'Cancel';
-                submitBtn.className = 'action-btn reject-btn';
+                submitBtn.className = 'action-btn cancel-btn';
             }
         }
 
