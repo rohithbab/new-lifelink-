@@ -22,7 +22,7 @@ try {
 try {
     $stmt = $conn->prepare("
         SELECT hda.*, d.name as donor_name, d.phone as donor_phone, 
-               d.blood_group, hda.request_date, hda.approval_date
+               d.blood_group, d.organs_to_donate, hda.request_date, hda.approval_date
         FROM hospital_donor_approvals hda
         JOIN donor d ON hda.donor_id = d.donor_id
         WHERE hda.hospital_id = ? AND hda.status = 'Approved'
@@ -137,15 +137,25 @@ try {
             box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
         }
 
-        /* Blood Badge Styling */
-        .blood-badge {
+        /* Blood Badge and Organ Badge Styling */
+        .blood-badge, .organ-badge {
             padding: 8px 15px;
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 600;
+            display: inline-block;
+        }
+
+        .blood-badge {
             background: linear-gradient(45deg, #dc3545, #fd7e14);
             color: white;
             box-shadow: 0 2px 10px rgba(220, 53, 69, 0.2);
+        }
+
+        .organ-badge {
+            background: linear-gradient(45deg, #20c997, #0dcaf0);
+            color: white;
+            box-shadow: 0 2px 10px rgba(32, 201, 151, 0.2);
         }
 
         /* Empty State Styling */
@@ -283,6 +293,7 @@ try {
                                     <tr>
                                         <th>Donor Name</th>
                                         <th>Blood Group</th>
+                                        <th>Organs to Donate</th>
                                         <th>Phone</th>
                                         <th>Request Date</th>
                                         <th>Approval Date</th>
@@ -293,7 +304,7 @@ try {
                                 <tbody>
                                     <?php if (empty($approved_donors)): ?>
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="8">
                                                 <div class="empty-state">
                                                     <i class="fas fa-inbox"></i>
                                                     <h3>No Approved Donors</h3>
@@ -308,6 +319,11 @@ try {
                                             <td>
                                                 <span class="blood-badge">
                                                     <?php echo htmlspecialchars($donor['blood_group']); ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="organ-badge">
+                                                    <?php echo htmlspecialchars($donor['organs_to_donate']); ?>
                                                 </span>
                                             </td>
                                             <td><?php echo htmlspecialchars($donor['donor_phone']); ?></td>

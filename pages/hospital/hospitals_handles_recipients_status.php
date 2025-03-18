@@ -53,7 +53,8 @@ try {
             hra.*,
             r.full_name,
             r.email,
-            r.phone_number
+            r.phone_number,
+            r.organ_required
         FROM hospital_recipient_approvals hra
         JOIN recipient_registration r ON hra.recipient_id = r.id
         WHERE hra.hospital_id = ? 
@@ -185,6 +186,18 @@ try {
             color: #dc3545;
         }
 
+        /* Organ Badge Styling */
+        .organ-badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #20c997, #0dcaf0);
+            color: white;
+            box-shadow: 0 2px 10px rgba(32, 201, 151, 0.2);
+            display: inline-block;
+        }
+
         /* Button Styling */
         .btn-reject {
             padding: 8px 16px;
@@ -285,7 +298,7 @@ try {
                                         <th>Recipient Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Approval Date</th>
+                                        <th>Organ Required</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -296,7 +309,11 @@ try {
                                             <td><?php echo htmlspecialchars($request['full_name']); ?></td>
                                             <td><?php echo htmlspecialchars($request['email']); ?></td>
                                             <td><?php echo htmlspecialchars($request['phone_number']); ?></td>
-                                            <td><?php echo date('M d, Y', strtotime($request['approval_date'])); ?></td>
+                                            <td>
+                                                <span class="organ-badge">
+                                                    <?php echo htmlspecialchars($request['organ_required']); ?>
+                                                </span>
+                                            </td>
                                             <td>
                                                 <span class="status-badge status-<?php echo strtolower($request['status']); ?>">
                                                     <?php echo htmlspecialchars($request['status']); ?>

@@ -3927,3 +3927,4287 @@ Array
 2025-03-01 05:21:54 - Number of results found:
 1
 ----------------------------------------
+2025-03-18 05:17:54 - Search request started
+----------------------------------------
+2025-03-18 05:17:54 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:54 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:54 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %k%
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:54 - Search request started
+----------------------------------------
+2025-03-18 05:17:54 - POST data received:
+Array
+(
+    [organType] => ki
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:54 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => ki
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:54 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %ki%
+)
+
+----------------------------------------
+2025-03-18 05:17:54 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:55 - Search request started
+----------------------------------------
+2025-03-18 05:17:55 - POST data received:
+Array
+(
+    [organType] => kid
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:55 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => kid
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:55 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %kid%
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:55 - Search request started
+----------------------------------------
+2025-03-18 05:17:55 - POST data received:
+Array
+(
+    [organType] => ki
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:55 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => ki
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:55 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %ki%
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:55 - Search request started
+----------------------------------------
+2025-03-18 05:17:55 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:55 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:55 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %k%
+)
+
+----------------------------------------
+2025-03-18 05:17:55 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:56 - Search request started
+----------------------------------------
+2025-03-18 05:17:56 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:17:56 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:56 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:17:56 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:56 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:17:56 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:17:57 - Search request started
+----------------------------------------
+2025-03-18 05:17:57 - POST data received:
+Array
+(
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:57 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:57 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lu%
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:57 - Search request started
+----------------------------------------
+2025-03-18 05:17:57 - POST data received:
+Array
+(
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:57 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:57 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lun%
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:57 - Search request started
+----------------------------------------
+2025-03-18 05:17:57 - POST data received:
+Array
+(
+    [organType] => lung
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:57 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lung
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:57 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lung%
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:57 - Search request started
+----------------------------------------
+2025-03-18 05:17:57 - POST data received:
+Array
+(
+    [organType] => lungs
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:57 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lungs
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:57 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lungs%
+)
+
+----------------------------------------
+2025-03-18 05:17:57 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:58 - Search request started
+----------------------------------------
+2025-03-18 05:17:58 - POST data received:
+Array
+(
+    [organType] => lung
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:58 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lung
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:58 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lung%
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:58 - Search request started
+----------------------------------------
+2025-03-18 05:17:58 - POST data received:
+Array
+(
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:58 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:58 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lun%
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:58 - Search request started
+----------------------------------------
+2025-03-18 05:17:58 - POST data received:
+Array
+(
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:58 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:58 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lu%
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:17:58 - Search request started
+----------------------------------------
+2025-03-18 05:17:58 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:17:58 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:17:58 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:17:58 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:00 - Search request started
+----------------------------------------
+2025-03-18 05:18:00 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:18:00 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:00 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:18:00 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:00 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:18:00 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:07 - Search request started
+----------------------------------------
+2025-03-18 05:18:07 - POST data received:
+Array
+(
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:18:07 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:07 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:18:07 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:07 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lu%
+)
+
+----------------------------------------
+2025-03-18 05:18:07 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:18:08 - Search request started
+----------------------------------------
+2025-03-18 05:18:08 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:18:08 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:08 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:18:08 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:08 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:18:08 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:09 - Search request started
+----------------------------------------
+2025-03-18 05:18:09 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:18:09 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:09 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:18:09 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:09 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %li%
+)
+
+----------------------------------------
+2025-03-18 05:18:09 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:11 - Search request started
+----------------------------------------
+2025-03-18 05:18:11 - POST data received:
+Array
+(
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:11 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:11 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %liv%
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:11 - Search request started
+----------------------------------------
+2025-03-18 05:18:11 - POST data received:
+Array
+(
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:11 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:11 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %live%
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:18:11 - Search request started
+----------------------------------------
+2025-03-18 05:18:11 - POST data received:
+Array
+(
+    [organType] => liver
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:18:11 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => liver
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:18:11 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %liver%
+)
+
+----------------------------------------
+2025-03-18 05:18:11 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:31 - Search request started
+----------------------------------------
+2025-03-18 05:35:31 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:31 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:31 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:31 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:31 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:32 - Search request started
+----------------------------------------
+2025-03-18 05:35:32 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:32 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %li%
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:32 - Search request started
+----------------------------------------
+2025-03-18 05:35:32 - POST data received:
+Array
+(
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:32 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %liv%
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:32 - Search request started
+----------------------------------------
+2025-03-18 05:35:32 - POST data received:
+Array
+(
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:32 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %live%
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:32 - Search request started
+----------------------------------------
+2025-03-18 05:35:32 - POST data received:
+Array
+(
+    [organType] => liver
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:32 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => liver
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:32 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %liver%
+)
+
+----------------------------------------
+2025-03-18 05:35:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:33 - Search request started
+----------------------------------------
+2025-03-18 05:35:33 - POST data received:
+Array
+(
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:35:33 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:33 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => live
+)
+
+----------------------------------------
+2025-03-18 05:35:33 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:33 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %live%
+)
+
+----------------------------------------
+2025-03-18 05:35:33 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:34 - Search request started
+----------------------------------------
+2025-03-18 05:35:34 - POST data received:
+Array
+(
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:34 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => liv
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:34 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %liv%
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:34 - Search request started
+----------------------------------------
+2025-03-18 05:35:34 - POST data received:
+Array
+(
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:34 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => li
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:34 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %li%
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:34 - Search request started
+----------------------------------------
+2025-03-18 05:35:34 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:34 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:34 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:35:34 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:43 - Search request started
+----------------------------------------
+2025-03-18 05:35:43 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:43 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:43 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:43 - Search request started
+----------------------------------------
+2025-03-18 05:35:43 - POST data received:
+Array
+(
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:43 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:43 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lu%
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:43 - Search request started
+----------------------------------------
+2025-03-18 05:35:43 - POST data received:
+Array
+(
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:43 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lun
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:43 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lun%
+)
+
+----------------------------------------
+2025-03-18 05:35:43 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:44 - Search request started
+----------------------------------------
+2025-03-18 05:35:44 - POST data received:
+Array
+(
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:44 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => lu
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:44 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %lu%
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:44 - Search request started
+----------------------------------------
+2025-03-18 05:35:44 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:44 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:44 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:35:44 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:35:45 - Search request started
+----------------------------------------
+2025-03-18 05:35:45 - POST data received:
+Array
+(
+    [organType] => h
+)
+
+----------------------------------------
+2025-03-18 05:35:45 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:45 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => h
+)
+
+----------------------------------------
+2025-03-18 05:35:45 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:45 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %h%
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:46 - Search request started
+----------------------------------------
+2025-03-18 05:35:46 - POST data received:
+Array
+(
+    [organType] => he
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:46 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => he
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:46 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %he%
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:46 - Search request started
+----------------------------------------
+2025-03-18 05:35:46 - POST data received:
+Array
+(
+    [organType] => hea
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:46 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => hea
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:46 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %hea%
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:46 - Search request started
+----------------------------------------
+2025-03-18 05:35:46 - POST data received:
+Array
+(
+    [organType] => hear
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:46 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => hear
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:46 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %hear%
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:46 - Search request started
+----------------------------------------
+2025-03-18 05:35:46 - POST data received:
+Array
+(
+    [organType] => heart
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:46 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => heart
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:46 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %heart%
+)
+
+----------------------------------------
+2025-03-18 05:35:46 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:47 - Search request started
+----------------------------------------
+2025-03-18 05:35:47 - POST data received:
+Array
+(
+    [organType] => hear
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:47 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => hear
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:47 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %hear%
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:47 - Search request started
+----------------------------------------
+2025-03-18 05:35:47 - POST data received:
+Array
+(
+    [organType] => hea
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:47 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => hea
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:47 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %hea%
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:47 - Search request started
+----------------------------------------
+2025-03-18 05:35:47 - POST data received:
+Array
+(
+    [organType] => he
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:47 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => he
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:47 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %he%
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:47 - Search request started
+----------------------------------------
+2025-03-18 05:35:47 - POST data received:
+Array
+(
+    [organType] => h
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:47 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => h
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:47 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %h%
+)
+
+----------------------------------------
+2025-03-18 05:35:47 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:49 - Search request started
+----------------------------------------
+2025-03-18 05:35:49 - POST data received:
+Array
+(
+    [organType] => p
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:49 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => p
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:49 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %p%
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:49 - Search request started
+----------------------------------------
+2025-03-18 05:35:49 - POST data received:
+Array
+(
+    [organType] => pa
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:49 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pa
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:49 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pa%
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:49 - Search request started
+----------------------------------------
+2025-03-18 05:35:49 - POST data received:
+Array
+(
+    [organType] => pan
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:49 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pan
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:49 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pan%
+)
+
+----------------------------------------
+2025-03-18 05:35:49 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:50 - Search request started
+----------------------------------------
+2025-03-18 05:35:50 - POST data received:
+Array
+(
+    [organType] => panc
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:50 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => panc
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:50 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %panc%
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:50 - Search request started
+----------------------------------------
+2025-03-18 05:35:50 - POST data received:
+Array
+(
+    [organType] => pancr
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:50 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancr
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:50 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancr%
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:50 - Search request started
+----------------------------------------
+2025-03-18 05:35:50 - POST data received:
+Array
+(
+    [organType] => pancre
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:50 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancre
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:50 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancre%
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:50 - Search request started
+----------------------------------------
+2025-03-18 05:35:50 - POST data received:
+Array
+(
+    [organType] => pancrea
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:50 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancrea
+)
+
+----------------------------------------
+2025-03-18 05:35:50 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:50 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancrea%
+)
+
+----------------------------------------
+2025-03-18 05:35:51 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:51 - Search request started
+----------------------------------------
+2025-03-18 05:35:51 - POST data received:
+Array
+(
+    [organType] => pancreas
+)
+
+----------------------------------------
+2025-03-18 05:35:51 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:51 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancreas
+)
+
+----------------------------------------
+2025-03-18 05:35:51 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:51 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancreas%
+)
+
+----------------------------------------
+2025-03-18 05:35:51 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:52 - Search request started
+----------------------------------------
+2025-03-18 05:35:52 - POST data received:
+Array
+(
+    [organType] => pancrea
+)
+
+----------------------------------------
+2025-03-18 05:35:52 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:52 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancrea
+)
+
+----------------------------------------
+2025-03-18 05:35:52 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:52 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancrea%
+)
+
+----------------------------------------
+2025-03-18 05:35:52 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => pancre
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancre
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancre%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => pancr
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pancr
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pancr%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => panc
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => panc
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %panc%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => pan
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pan
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pan%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => pa
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => pa
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %pa%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:35:53 - Search request started
+----------------------------------------
+2025-03-18 05:35:53 - POST data received:
+Array
+(
+    [organType] => p
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:35:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => p
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:35:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %p%
+)
+
+----------------------------------------
+2025-03-18 05:35:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:49:53 - Search request started
+----------------------------------------
+2025-03-18 05:49:53 - POST data received:
+Array
+(
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:49:53 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:49:53 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => k
+)
+
+----------------------------------------
+2025-03-18 05:49:53 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:49:53 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %k%
+)
+
+----------------------------------------
+2025-03-18 05:49:53 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:49:56 - Search request started
+----------------------------------------
+2025-03-18 05:49:56 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:49:56 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:49:56 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:49:56 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:49:56 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:49:56 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:50:18 - Search request started
+----------------------------------------
+2025-03-18 05:50:18 - POST data received:
+Array
+(
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:50:18 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:50:18 - Search parameters:
+Array
+(
+    [bloodType] => 
+    [organType] => l
+)
+
+----------------------------------------
+2025-03-18 05:50:18 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.organ_required) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:50:18 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %l%
+)
+
+----------------------------------------
+2025-03-18 05:50:18 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:51:32 - Search request started
+----------------------------------------
+2025-03-18 05:51:32 - POST data received:
+Array
+(
+    [bloodType] => A
+)
+
+----------------------------------------
+2025-03-18 05:51:32 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:32 - Search parameters:
+Array
+(
+    [bloodType] => A
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:32 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:32 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %a%
+)
+
+----------------------------------------
+2025-03-18 05:51:32 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:51:34 - Search request started
+----------------------------------------
+2025-03-18 05:51:34 - POST data received:
+Array
+(
+    [bloodType] => B
+)
+
+----------------------------------------
+2025-03-18 05:51:34 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:34 - Search parameters:
+Array
+(
+    [bloodType] => B
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:34 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:34 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %b%
+)
+
+----------------------------------------
+2025-03-18 05:51:34 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:51:36 - Search request started
+----------------------------------------
+2025-03-18 05:51:36 - POST data received:
+Array
+(
+    [bloodType] => A
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:36 - Search parameters:
+Array
+(
+    [bloodType] => A
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:36 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %a%
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:51:36 - Search request started
+----------------------------------------
+2025-03-18 05:51:36 - POST data received:
+Array
+(
+    [bloodType] => AB
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:36 - Search parameters:
+Array
+(
+    [bloodType] => AB
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:36 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %ab%
+)
+
+----------------------------------------
+2025-03-18 05:51:36 - Number of results found:
+0
+----------------------------------------
+2025-03-18 05:51:37 - Search request started
+----------------------------------------
+2025-03-18 05:51:37 - POST data received:
+Array
+(
+    [bloodType] => A
+)
+
+----------------------------------------
+2025-03-18 05:51:37 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:37 - Search parameters:
+Array
+(
+    [bloodType] => A
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:37 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:37 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %a%
+)
+
+----------------------------------------
+2025-03-18 05:51:37 - Number of results found:
+1
+----------------------------------------
+2025-03-18 05:51:40 - Search request started
+----------------------------------------
+2025-03-18 05:51:40 - POST data received:
+Array
+(
+    [bloodType] => O
+)
+
+----------------------------------------
+2025-03-18 05:51:40 - Hospital ID:
+26
+----------------------------------------
+2025-03-18 05:51:40 - Search parameters:
+Array
+(
+    [bloodType] => O
+    [organType] => 
+)
+
+----------------------------------------
+2025-03-18 05:51:40 - Final SQL Query:
+
+        SELECT 
+            r.id as recipient_id,
+            r.full_name as recipient_name,
+            r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
+            r.medical_condition,
+            r.urgency_level,
+            h.hospital_id,
+            h.name as hospital_name,
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
+        FROM recipient_registration r
+        INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
+        INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
+        WHERE hra.status = 'approved'
+        AND h.hospital_id != ?
+        AND NOT EXISTS (
+            SELECT 1 FROM donor_and_recipient_requests 
+            WHERE recipient_id = r.id
+        )
+     AND LOWER(r.blood_type) LIKE ? ORDER BY r.full_name ASC
+----------------------------------------
+2025-03-18 05:51:40 - Query Parameters:
+Array
+(
+    [0] => 26
+    [1] => 26
+    [2] => %o%
+)
+
+----------------------------------------
+2025-03-18 05:51:40 - Number of results found:
+0
+----------------------------------------
