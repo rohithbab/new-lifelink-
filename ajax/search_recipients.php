@@ -38,22 +38,27 @@ debug_log("Search parameters:", [
 try {
     // Build the query
     $query = "
-        SELECT DISTINCT
+        SELECT 
             r.id as recipient_id,
             r.full_name as recipient_name,
             r.blood_type,
+            r.organ_required,
+            r.email as recipient_email,
+            r.phone_number as recipient_phone,
             r.medical_condition,
             r.urgency_level,
-            r.phone_number as recipient_phone,
-            r.email as recipient_email,
-            r.organ_required,
             h.hospital_id,
             h.name as hospital_name,
-            COALESCE(rr.status, 'Not Requested') as request_status
+            h.email as hospital_email,
+            h.phone as hospital_phone,
+            hra.status as approval_status,
+            rr.status as request_status
         FROM recipient_registration r
         INNER JOIN hospital_recipient_approvals hra ON r.id = hra.recipient_id
         INNER JOIN hospitals h ON hra.hospital_id = h.hospital_id
-        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id AND rr.requesting_hospital_id = ?
+        LEFT JOIN recipient_requests rr ON r.id = rr.recipient_id 
+            AND rr.requesting_hospital_id = ? 
+            AND rr.status IN ('Pending', 'Approved', 'Rejected')
         WHERE hra.status = 'approved'
         AND h.hospital_id != ?
         AND NOT EXISTS (
@@ -71,21 +76,16 @@ try {
         $searchBlood = str_replace(['plus', '+'], '+', $searchBlood);
         $searchBlood = str_replace(['minus', '-'], '-', $searchBlood);
         
-        $query .= " AND r.blood_type LIKE ?";
+        $query .= " AND LOWER(r.blood_type) LIKE ?";
         $params[] = "%" . $searchBlood . "%";
     }
     
     if (!empty($organType)) {
-        $query .= " AND r.organ_required LIKE ?";
+        $query .= " AND LOWER(r.organ_required) LIKE ?";
         $params[] = "%" . strtolower($organType) . "%";
     }
     
-    $query .= " ORDER BY 
-        CASE WHEN hra.hospital_id = ? THEN 0 ELSE 1 END,
-        r.urgency_level DESC,
-        r.full_name ASC";
-    
-    $params[] = $hospital_id;
+    $query .= " ORDER BY r.full_name ASC";
     
     debug_log("Final SQL Query:", $query);
     debug_log("Query Parameters:", $params);
@@ -109,6 +109,8 @@ try {
             'urgency_level' => htmlspecialchars($recipient['urgency_level']),
             'hospital_id' => $recipient['hospital_id'],
             'hospital_name' => htmlspecialchars($recipient['hospital_name']),
+            'hospital_email' => htmlspecialchars($recipient['hospital_email']),
+            'hospital_phone' => htmlspecialchars($recipient['hospital_phone']),
             'request_status' => $recipient['request_status']
         ];
     }, $recipients);

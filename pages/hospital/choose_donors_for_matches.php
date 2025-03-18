@@ -241,71 +241,6 @@ try {
             color: white;
             box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
         }
-
-        /* Confirmation Dialog Styling */
-        .confirmation-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .confirmation-dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .confirmation-dialog h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .confirmation-dialog p {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
-
-        .confirmation-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .confirm-btn, .cancel-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .confirm-btn {
-            background: linear-gradient(45deg, #2ecc71, #27ae60);
-            color: white;
-        }
-
-        .cancel-btn {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -401,18 +336,6 @@ try {
         </main>
     </div>
 
-    <!-- Add confirmation dialog HTML -->
-    <div id="confirmationOverlay" class="confirmation-overlay">
-        <div class="confirmation-dialog">
-            <h2>Request Donor Access</h2>
-            <p>Are you sure you want to request access to this donor from <span id="hospitalName"></span>?</p>
-            <div class="confirmation-buttons">
-                <button id="confirmRequest" class="confirm-btn">Yes, Request Access</button>
-                <button id="cancelRequest" class="cancel-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         let activeFilter = null;
         const searchInput = document.getElementById('searchInput');
@@ -438,58 +361,49 @@ try {
             });
         });
 
-        async function handleDonorRequest(donorId, hospitalId, hospitalName) {
-            // Update the confirmation dialog
-            document.getElementById('hospitalName').textContent = hospitalName;
-            document.getElementById('confirmationOverlay').style.display = 'block';
-
-            // Store the IDs for the confirmation handler
-            document.getElementById('confirmRequest').onclick = function() {
-                document.getElementById('confirmationOverlay').style.display = 'none';
-                
-                // Send the request
-                fetch('../../ajax/donor_request.php', {
+        async function handleDonorRequest(donorId, hospitalId, action) {
+            try {
+                const response = await fetch('../../ajax/handle_donor_request.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         donorId: donorId,
-                        hospitalId: hospitalId,
-                        action: 'request'
+                        donorHospitalId: hospitalId,
+                        action: action
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update the button to show pending status
-                        const button = document.querySelector(`[data-donor-id="${donorId}"] .btn-request`);
-                        if (button) {
-                            button.outerHTML = '<button class="btn btn-secondary" disabled>Request Pending</button>';
-                        }
-                        showNotification('Request sent successfully!', 'success');
-                    } else {
-                        showNotification(data.message || 'Failed to send request', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('An error occurred while sending the request', 'error');
                 });
-            };
 
-            // Handle cancel button
-            document.getElementById('cancelRequest').onclick = function() {
-                document.getElementById('confirmationOverlay').style.display = 'none';
-            };
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Refresh the search results
+                if (searchInput.value.trim() !== '') {
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+
+                showNotification(data.message, 'success');
+
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message, 'error');
+            }
         }
 
-        // Close dialog when clicking outside
-        document.getElementById('confirmationOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-            }
-        });
+        function showNotification(message, type) {
+            const notificationDiv = document.createElement('div');
+            notificationDiv.className = `alert alert-${type} notification`;
+            notificationDiv.textContent = message;
+            document.body.appendChild(notificationDiv);
+
+            setTimeout(() => {
+                notificationDiv.remove();
+            }, 3000);
+        }
 
         function selectDonor(donorId, donorName) {
             if (confirm('Are you sure you want to select this donor?')) {
@@ -567,7 +481,6 @@ try {
                                 <th>Name</th>
                                 <th>Blood Group</th>
                                 <th>Organ Type</th>
-                                <th>Contact</th>
                                 <th>Hospital</th>
                                 <th>Action</th>
                             </tr>
@@ -580,21 +493,13 @@ try {
                             <td>${donor.donor_name}</td>
                             <td>${donor.blood_group}</td>
                             <td>${donor.organs_to_donate}</td>
-                            <td>
-                                Email: ${donor.donor_email}<br>
-                                Phone: ${donor.donor_phone}
-                            </td>
-                            <td>
-                                <span class="hospital-name ${donor.hospital_name === '<?php echo $hospital_name; ?>' ? 'your-hospital' : 'other-hospital'}">
-                                    ${donor.hospital_name === '<?php echo $hospital_name; ?>' ? 'Your Hospital' : donor.hospital_name}
-                                </span>
-                            </td>
+                            <td>${donor.hospital_name}</td>
                             <td>
                                 ${donor.request_status === 'Pending' 
                                     ? '<button class="btn btn-secondary" disabled>Request Pending</button>'
                                     : donor.request_status === 'Approved'
                                     ? '<button class="select-btn" onclick="selectDonor(\'' + donor.donor_id + '\', \'' + donor.donor_name + '\')">Select</button>'
-                                    : '<button class="btn-request" onclick="handleDonorRequest(\'' + donor.donor_id + '\', \'' + donor.hospital_id + '\', \'' + donor.hospital_name + '\')">Request Access</button>'
+                                    : '<button class="btn-request" onclick="handleDonorRequest(\'' + donor.donor_id + '\', \'' + donor.hospital_id + '\', \'request\')">Request Access</button>'
                                 }
                             </td>
                         </tr>`;
@@ -613,17 +518,6 @@ try {
                     </div>`;
             });
         });
-
-        function showNotification(message, type) {
-            const notificationDiv = document.createElement('div');
-            notificationDiv.className = `alert alert-${type} notification`;
-            notificationDiv.textContent = message;
-            document.body.appendChild(notificationDiv);
-
-            setTimeout(() => {
-                notificationDiv.remove();
-            }, 3000);
-        }
     </script>
 </body>
 </html>
