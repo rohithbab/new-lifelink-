@@ -34,7 +34,8 @@ try {
             JOIN hospitals h ON h.hospital_id = dr.requesting_hospital_id
             JOIN donor d ON d.donor_id = dr.donor_id
             JOIN hospital_donor_approvals hda ON hda.donor_id = d.donor_id AND hda.hospital_id = dr.donor_hospital_id
-            WHERE dr.donor_hospital_id = ?
+            WHERE dr.donor_hospital_id = ? 
+            AND dr.status != 'Canceled'
             ORDER BY dr.request_date DESC
         ");
         $stmt->execute([$hospital_id]);
@@ -60,6 +61,7 @@ try {
             JOIN donor d ON d.donor_id = dr.donor_id
             JOIN hospital_donor_approvals hda ON hda.donor_id = d.donor_id AND hda.hospital_id = dr.donor_hospital_id
             WHERE dr.requesting_hospital_id = ?
+            AND dr.status != 'Canceled'
             ORDER BY dr.request_date DESC
         ");
         $stmt->execute([$hospital_id]);
@@ -370,7 +372,7 @@ try {
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 <?php elseif ($request_type === 'outgoing' && $request['status'] === 'Pending'): ?>
-                                    <button class="action-btn cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, '<?php echo $request_type; ?>', '<?php echo htmlspecialchars($request['donor_hospital_name']); ?>')">
+                                    <button class="action-btn cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, 'donor', '<?php echo htmlspecialchars($request['donor_hospital_name']); ?>')">
                                         <i class="fas fa-times"></i> Cancel Request
                                     </button>
                                 <?php endif; ?>
@@ -382,78 +384,41 @@ try {
         </main>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal">
-        <div class="modal-content">
-            <h3>Cancel Request</h3>
-            <p>Are you sure you want to cancel your request to <span id="hospitalName"></span>?</p>
-            <div class="modal-buttons">
-                <button id="confirmCancel" class="btn-yes">Yes</button>
-                <button id="closeModal" class="btn-cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         let currentRequestId = null;
         let currentType = null;
 
         function cancelRequest(requestId, type, hospitalName) {
-            currentRequestId = requestId;
-            currentType = type;
-            document.getElementById('hospitalName').textContent = hospitalName;
-            document.getElementById('confirmationModal').style.display = 'block';
-        }
-
-        document.getElementById('confirmCancel').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-            
-            fetch('../../ajax/cancel_request.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    requestId: currentRequestId,
-                    type: currentType
+            if (confirm('Are you sure you want to cancel this request?')) {
+                fetch('../../ajax/cancel_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        requestId: requestId,
+                        type: type
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const requestCard = document.querySelector(`[data-request-id="${currentRequestId}"]`);
-                    if (requestCard) {
-                        const statusBadge = requestCard.querySelector('.status-badge');
-                        statusBadge.className = 'status-badge status-canceled';
-                        statusBadge.textContent = 'Canceled';
-                        
-                        const cancelBtn = requestCard.querySelector('.cancel-btn');
-                        if (cancelBtn) {
-                            cancelBtn.remove();
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the request card from the UI
+                        const requestCard = document.querySelector(`[data-request-id="${requestId}"]`);
+                        if (requestCard) {
+                            requestCard.remove();
                         }
+                        alert('Request canceled successfully');
+                    } else {
+                        alert(data.message || 'Failed to cancel request');
                     }
-                    showNotification('Request canceled successfully', 'success');
-                } else {
-                    showNotification(data.message || 'Failed to cancel request', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('An error occurred while canceling the request', 'error');
-            });
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-        };
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('confirmationModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while canceling the request');
+                });
             }
-        };
+        }
 
         function handleAction(requestId, action) {
             currentRequestId = requestId;

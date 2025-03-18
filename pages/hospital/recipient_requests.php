@@ -36,7 +36,7 @@ try {
             JOIN hospitals h ON h.hospital_id = rr.requesting_hospital_id
             JOIN recipient_registration r ON r.id = rr.recipient_id
             LEFT JOIN hospital_recipient_approvals ha ON ha.recipient_id = rr.recipient_id AND ha.hospital_id = rr.requesting_hospital_id AND ha.status = 'approved'
-            WHERE rr.recipient_hospital_id = ?
+            WHERE rr.recipient_hospital_id = ? AND rr.status != 'Canceled'
             ORDER BY rr.request_date DESC
         ");
         $stmt->execute([$hospital_id]);
@@ -63,7 +63,7 @@ try {
             JOIN hospitals h ON h.hospital_id = rr.recipient_hospital_id
             JOIN recipient_registration r ON r.id = rr.recipient_id
             LEFT JOIN hospital_recipient_approvals ha ON ha.recipient_id = rr.recipient_id AND ha.hospital_id = rr.requesting_hospital_id AND ha.status = 'approved'
-            WHERE rr.requesting_hospital_id = ?
+            WHERE rr.requesting_hospital_id = ? AND rr.status != 'Canceled'
             ORDER BY rr.request_date DESC
         ");
         $stmt->execute([$hospital_id]);
@@ -422,7 +422,7 @@ try {
                     </div>
                 <?php else: ?>
                     <?php foreach ($requests as $request): ?>
-                        <div class="request-card">
+                        <div class="request-card" data-request-id="<?php echo $request['request_id']; ?>">
                             <div class="request-header">
                                 <div class="hospital-info">
                                     <h3>
@@ -470,7 +470,7 @@ try {
                                 </div>
                             </div>
 
-                            <?php if ($request['status'] === 'Pending' && $request_type === 'incoming'): ?>
+                            <?php if ($request_type === 'incoming' && $request['status'] === 'Pending'): ?>
                                 <div class="request-actions">
                                     <button class="action-btn approve-btn" onclick="handleAction(<?php echo $request['request_id']; ?>, 'approve')">
                                         <i class="fas fa-check"></i> Approve
@@ -479,10 +479,10 @@ try {
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </div>
-                            <?php elseif ($request['status'] === 'Pending' && $request_type === 'outgoing'): ?>
+                            <?php elseif ($request_type === 'outgoing' && $request['status'] === 'Pending'): ?>
                                 <div class="request-actions">
-                                    <button class="cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, '<?php echo $request_type; ?>', '<?php echo htmlspecialchars($request['recipient_hospital_name']); ?>')">
-                                        <i class="fas fa-ban"></i> Cancel
+                                    <button class="action-btn cancel-btn" onclick="cancelRequest(<?php echo $request['request_id']; ?>, 'recipient', '<?php echo htmlspecialchars($request['hospital_name']); ?>')">
+                                        <i class="fas fa-times"></i> Cancel Request
                                     </button>
                                 </div>
                             <?php endif; ?>
@@ -493,147 +493,38 @@ try {
         </main>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal">
-        <div class="modal-content">
-            <h3>Cancel Request</h3>
-            <p>Are you sure you want to cancel your request to <span id="hospitalName"></span>?</p>
-            <div class="modal-buttons">
-                <button id="confirmCancel" class="btn-yes">Yes</button>
-                <button id="closeModal" class="btn-cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let currentRequestId = null;
-        let currentType = null;
-
-        function handleAction(requestId, action) {
-            currentRequestId = requestId;
-            currentAction = action;
-            
-            // Show modal
-            const modal = document.getElementById('responseModal');
-            modal.style.display = 'block';
-            
-            // Update modal title and button
-            const modalTitle = document.getElementById('modalTitle');
-            const submitBtn = document.getElementById('submitResponse');
-            
-            if (action === 'approve') {
-                modalTitle.textContent = 'Approve Request';
-                submitBtn.textContent = 'Approve';
-                submitBtn.className = 'action-btn approve-btn';
-            } else if (action === 'reject') {
-                modalTitle.textContent = 'Reject Request';
-                submitBtn.textContent = 'Reject';
-                submitBtn.className = 'action-btn reject-btn';
-            }
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('responseModal');
-            modal.style.display = 'none';
-            document.getElementById('responseMessage').value = '';
-            currentRequestId = null;
-            currentAction = null;
-        }
-
-        function submitResponse() {
-            const message = document.getElementById('responseMessage').value.trim();
-            
-            if (!message) {
-                alert('Please enter a response message');
-                return;
-            }
-
-            // Create form data
-            const formData = new FormData();
-            formData.append('request_id', currentRequestId);
-            formData.append('action', currentAction);
-            formData.append('message', message);
-
-            // Send request to backend
-            fetch('../../backend/php/update_recipient_request.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                // Show success message
-                alert(data.message);
-                // Reload page to show updated status
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
-            })
-            .finally(() => {
-                closeModal();
-            });
-        }
-
         function cancelRequest(requestId, type, hospitalName) {
-            currentRequestId = requestId;
-            currentType = type;
-            document.getElementById('hospitalName').textContent = hospitalName;
-            document.getElementById('confirmationModal').style.display = 'block';
-        }
-
-        document.getElementById('confirmCancel').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-            
-            fetch('../../ajax/cancel_request.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    requestId: currentRequestId,
-                    type: currentType
+            if (confirm('Are you sure you want to cancel this request?')) {
+                fetch('../../ajax/cancel_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        requestId: requestId,
+                        type: type
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const requestCard = document.querySelector(`[data-request-id="${currentRequestId}"]`);
-                    if (requestCard) {
-                        const statusBadge = requestCard.querySelector('.status-badge');
-                        statusBadge.className = 'status-badge status-canceled';
-                        statusBadge.textContent = 'Canceled';
-                        
-                        const cancelBtn = requestCard.querySelector('.cancel-btn');
-                        if (cancelBtn) {
-                            cancelBtn.remove();
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the request card from the UI
+                        const requestCard = document.querySelector(`[data-request-id="${requestId}"]`);
+                        if (requestCard) {
+                            requestCard.remove();
                         }
+                        alert('Request canceled successfully');
+                    } else {
+                        alert(data.message || 'Failed to cancel request');
                     }
-                    alert('Request canceled successfully');
-                } else {
-                    alert(data.message || 'Failed to cancel request');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while canceling the request');
-            });
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            document.getElementById('confirmationModal').style.display = 'none';
-        };
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('confirmationModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while canceling the request');
+                });
             }
-        };
+        }
     </script>
 </body>
 </html>
