@@ -399,105 +399,94 @@ try {
                     from_hospital: row.querySelector('td:nth-child(5)').textContent.trim()
                 };
 
-                // Store in session storage
+                // Store the selected donor info in session storage
                 sessionStorage.setItem('selectedDonor', JSON.stringify(donorInfo));
-
-                // Redirect to make matches page
-                window.location.href = 'make_matches.php';
+                
+                // Redirect to the recipient selection page
+                window.location.href = 'choose_recipients_for_matches.php';
             }
         }
 
         // Add input event to search input
         searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
             if (!activeFilter) {
                 document.getElementById('searchResults').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-info-circle"></i>
-                        <h2>Select a Filter</h2>
-                        <p>Please select either Blood Type or Organ Type to search</p>
-                    </div>
-                `;
+                        <h2>Please Select a Filter</h2>
+                        <p>Choose either Blood Type or Organ Type filter to search donors.</p>
+                    </div>`;
                 return;
             }
 
-            const searchValue = searchInput.value.trim();
-            if (searchValue === '') {
+            if (searchTerm === '') {
                 document.getElementById('searchResults').innerHTML = '';
                 return;
             }
 
-            const formData = new FormData();
-            if (activeFilter === 'blood') {
-                formData.append('bloodType', searchValue);
-            } else {
-                formData.append('organType', searchValue);
-            }
-
+            // Fetch donors based on search criteria
             fetch('../../ajax/search_donors.php', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    searchTerm: searchTerm,
+                    filterType: activeFilter,
+                    hospitalId: '<?php echo $hospital_id; ?>'
+                })
             })
             .then(response => response.json())
             .then(data => {
-                const resultsDiv = document.getElementById('searchResults');
-                if (!Array.isArray(data) || data.length === 0) {
-                    resultsDiv.innerHTML = `
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                if (data.length === 0) {
+                    document.getElementById('searchResults').innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-search"></i>
-                            <h2>No Results Found</h2>
-                            <p>Try adjusting your search criteria</p>
-                        </div>
-                    `;
+                            <h2>No Donors Found</h2>
+                            <p>No donors match your search criteria.</p>
+                        </div>`;
                     return;
                 }
 
-                resultsDiv.innerHTML = `
+                let tableHTML = `
                     <table class="donors-table">
                         <thead>
                             <tr>
-                                <th>Donor Name</th>
+                                <th>Name</th>
                                 <th>Blood Group</th>
                                 <th>Organ Type</th>
                                 <th>Hospital</th>
-                                <th>Hospital Contact</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            ${data.map(donor => `
-                                <tr>
-                                    <td>${donor.donor_name}</td>
-                                    <td>${donor.blood_group}</td>
-                                    <td>${donor.organ_type}</td>
-                                    <td>${donor.hospital_name}</td>
-                                    <td>
-                                        Email: ${donor.hospital_email}<br>
-                                        Phone: ${donor.hospital_phone}
-                                    </td>
-                                    <td>
-                                        ${donor.request_status ? `
-                                            <span class="status-badge status-${donor.request_status.toLowerCase()}">
-                                                ${donor.request_status}
-                                            </span>
-                                        ` : ''}
-                                    </td>
-                                    <td>
-                                        ${!donor.request_status ? `
-                                            <button class="btn btn-request" onclick="handleDonorRequest(${donor.donor_id}, ${donor.hospital_id}, 'request')">
-                                                Request
-                                            </button>
-                                        ` : donor.request_status === 'Pending' ? `
-                                            <button class="btn btn-cancel" onclick="handleDonorRequest(${donor.donor_id}, ${donor.hospital_id}, 'cancel')">
-                                                Cancel
-                                            </button>
-                                        ` : ''}
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
+                        <tbody>`;
+
+                data.forEach(donor => {
+                    tableHTML += `
+                        <tr data-donor-id="${donor.donor_id}">
+                            <td>${donor.donor_name}</td>
+                            <td>${donor.blood_group}</td>
+                            <td>${donor.organs_to_donate}</td>
+                            <td>${donor.hospital_name}</td>
+                            <td>
+                                ${donor.request_status === 'Pending' 
+                                    ? '<button class="btn btn-secondary" disabled>Request Pending</button>'
+                                    : donor.request_status === 'Approved'
+                                    ? '<button class="select-btn" onclick="selectDonor(\'' + donor.donor_id + '\', \'' + donor.donor_name + '\')">Select</button>'
+                                    : '<button class="btn-request" onclick="handleDonorRequest(\'' + donor.donor_id + '\', \'' + donor.hospital_id + '\', \'request\')">Request Access</button>'
+                                }
+                            </td>
+                        </tr>`;
+                });
+
+                tableHTML += `</tbody></table>`;
+                document.getElementById('searchResults').innerHTML = tableHTML;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -505,9 +494,8 @@ try {
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h2>Error</h2>
-                        <p>An error occurred while searching. Please try again.</p>
-                    </div>
-                `;
+                        <p>${error.message}</p>
+                    </div>`;
             });
         });
     </script>

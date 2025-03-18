@@ -12,8 +12,9 @@ if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in'])
 $hospital_id = $_SESSION['hospital_id'];
 
 // Get search parameters
-$bloodType = isset($_POST['bloodType']) ? trim($_POST['bloodType']) : '';
-$organType = isset($_POST['organType']) ? trim($_POST['organType']) : '';
+$data = json_decode(file_get_contents('php://input'), true);
+$searchTerm = isset($data['searchTerm']) ? trim($data['searchTerm']) : '';
+$filterType = isset($data['filterType']) ? trim($data['filterType']) : '';
 
 try {
     // Build the query
@@ -24,7 +25,7 @@ try {
             d.blood_group,
             d.email as donor_email,
             d.phone as donor_phone,
-            hda.organ_type,
+            d.organs_to_donate,
             h.hospital_id,
             h.name as hospital_name,
             h.email as hospital_email,
@@ -47,19 +48,19 @@ try {
     $params = [$hospital_id, $hospital_id];
     
     // Add search conditions based on filter type
-    if (!empty($bloodType)) {
-        // Handle common variations of blood types
-        $searchBlood = strtolower($bloodType);
-        $searchBlood = str_replace(['plus', '+'], '+', $searchBlood);
-        $searchBlood = str_replace(['minus', '-'], '-', $searchBlood);
-        
-        $query .= " AND LOWER(d.blood_group) LIKE ?";
-        $params[] = "%" . $searchBlood . "%";
-    }
-    
-    if (!empty($organType)) {
-        $query .= " AND LOWER(hda.organ_type) LIKE ?";
-        $params[] = "%" . strtolower($organType) . "%";
+    if (!empty($searchTerm)) {
+        if ($filterType === 'blood') {
+            // Handle common variations of blood types
+            $searchBlood = strtolower($searchTerm);
+            $searchBlood = str_replace(['plus', '+'], '+', $searchBlood);
+            $searchBlood = str_replace(['minus', '-'], '-', $searchBlood);
+            
+            $query .= " AND LOWER(d.blood_group) LIKE ?";
+            $params[] = "%" . $searchBlood . "%";
+        } elseif ($filterType === 'organ') {
+            $query .= " AND LOWER(d.organs_to_donate) LIKE ?";
+            $params[] = "%" . strtolower($searchTerm) . "%";
+        }
     }
     
     $query .= " ORDER BY d.name ASC";
@@ -78,7 +79,7 @@ try {
             'donor_id' => $donor['donor_id'],
             'donor_name' => htmlspecialchars($donor['donor_name']),
             'blood_group' => htmlspecialchars($donor['blood_group']),
-            'organ_type' => htmlspecialchars($donor['organ_type']),
+            'organs_to_donate' => htmlspecialchars($donor['organs_to_donate']),
             'donor_email' => htmlspecialchars($donor['donor_email']),
             'donor_phone' => htmlspecialchars($donor['donor_phone']),
             'hospital_id' => $donor['hospital_id'],
