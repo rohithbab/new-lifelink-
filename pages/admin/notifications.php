@@ -155,27 +155,118 @@ $notifications = getAdminNotifications($conn, 50);
             color: #E65100;
         }
 
+        .type-donor_request {
+            background-color: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .type-donor_registration {
+            background-color: #FCE4EC;
+            color: #C2185B;
+        }
+
+        .type-recipient_registration {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .type-default {
+            background-color: #ECEFF1;
+            color: #455A64;
+        }
+
         .empty-notifications {
             text-align: center;
             padding: 40px;
             color: #666;
         }
 
-        .mark-read-mini-btn {
-            background-color: #4CAF50;
-            color: white;
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .mark-read-mini-btn, .delete-btn {
             border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: 50%;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .mark-read-mini-btn:hover {
-            transform: translateY(-2px);
+        .mark-read-mini-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .mark-read-mini-btn:hover, .delete-btn:hover {
+            transform: translateY(-2px) scale(1.05);
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .mark-read-mini-btn:active, .delete-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .mark-read-mini-btn::before, .delete-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mark-read-mini-btn:hover::before, .delete-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .mark-read-mini-btn i, .delete-btn i {
+            font-size: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .mark-read-mini-btn, .delete-btn {
+                min-width: 48px;
+                min-height: 48px;
+            }
+
+            .mark-read-mini-btn i, .delete-btn i {
+                font-size: 20px;
+            }
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-start {
+            align-items: flex-start;
         }
     </style>
 </head>
@@ -207,22 +298,33 @@ $notifications = getAdminNotifications($conn, 50);
                          data-status="<?php echo !$notification['is_read'] ? 'unread' : 'read'; ?>"
                          data-id="<?php echo $notification['notification_id']; ?>">
                         <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <span class="notification-type type-<?php echo $notification['type']; ?>">
-                                    <?php echo ucfirst($notification['type']); ?>
+                            <div class="notification-content">
+                                <span class="notification-type type-<?php echo htmlspecialchars(strtolower(str_replace(' ', '_', $notification['type']))); ?>">
+                                    <?php echo ucwords(str_replace('_', ' ', $notification['type'])); ?>
                                 </span>
-                                <div class="notification-content">
-                                    <?php echo $notification['message']; ?>
+                                <div>
+                                    <?php echo htmlspecialchars($notification['message']); ?>
                                     <div class="notification-time">
-                                        <?php echo $notification['formatted_time']; ?>
+                                        <?php 
+                                        $timestamp = isset($notification['created_at']) ? $notification['created_at'] : 
+                                                   (isset($notification['request_date']) ? $notification['request_date'] : date('Y-m-d H:i:s'));
+                                        echo date('M d, Y h:i A', strtotime($timestamp)); 
+                                        ?>
                                     </div>
                                 </div>
                             </div>
-                            <?php if (!$notification['is_read']): ?>
-                                <button class="mark-read-mini-btn" onclick="markAsRead('<?php echo $notification['notification_id']; ?>')">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            <?php endif; ?>
+                            <div class="notification-actions">
+                                <?php if (!$notification['is_read']): ?>
+                                    <button class="mark-read-mini-btn">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                <?php endif; ?>
+                                <?php if ($notification['is_read'] && $notification['can_delete']): ?>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -232,10 +334,14 @@ $notifications = getAdminNotifications($conn, 50);
 
     <script>
         function filterNotifications(filter) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase() === filter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
-            event.target.classList.add('active');
 
             const cards = document.querySelectorAll('.notification-card');
             cards.forEach(card => {
@@ -248,27 +354,128 @@ $notifications = getAdminNotifications($conn, 50);
         }
 
         function markAsRead(notificationId) {
+            if (!notificationId) return;
+
+            const formData = new FormData();
+            formData.append('notification_id', notificationId);
+
             fetch('../../backend/php/get_notifications.php?action=mark_read', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'notification_id=' + notificationId
+                body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Failed to mark notification as read');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     const card = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
                     if (card) {
                         card.classList.remove('unread');
                         card.dataset.status = 'read';
-                        const button = card.querySelector('.mark-read-mini-btn');
-                        if (button) button.remove();
+                        
+                        // Remove the read button
+                        const readBtn = card.querySelector('.mark-read-mini-btn');
+                        if (readBtn) readBtn.remove();
+                        
+                        // Add the delete button if notification can be deleted
+                        const actions = card.querySelector('.notification-actions');
+                        if (data.can_delete) {
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.className = 'delete-btn';
+                            deleteBtn.onclick = () => deleteNotification(notificationId);
+                            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                            actions.appendChild(deleteBtn);
+                        }
                     }
+                } else {
+                    throw new Error(data.error || 'Failed to mark notification as read');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Failed to mark notification as read. Please try again.');
+            });
         }
+
+        function deleteNotification(notificationId) {
+            if (!notificationId || !confirm('Are you sure you want to delete this notification?')) return;
+
+            const formData = new FormData();
+            formData.append('notification_id', notificationId);
+
+            fetch('../../backend/php/get_notifications.php?action=delete', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Failed to delete notification');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const card = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
+                    if (card) {
+                        card.remove();
+                        
+                        // Check if there are any notifications left
+                        const remainingCards = document.querySelectorAll('.notification-card');
+                        if (remainingCards.length === 0) {
+                            const list = document.getElementById('notifications-list');
+                            list.innerHTML = `
+                                <div class="empty-notifications">
+                                    <i class="fas fa-bell" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                                    <p>No notifications yet</p>
+                                </div>
+                            `;
+                        }
+                    }
+                } else {
+                    throw new Error(data.error || 'Failed to delete notification');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Failed to delete notification. Please try again.');
+            });
+        }
+
+        // Add click event listeners to all buttons when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click listeners to mark-read buttons
+            document.querySelectorAll('.mark-read-mini-btn').forEach(btn => {
+                const notificationCard = btn.closest('.notification-card');
+                if (notificationCard) {
+                    const notificationId = notificationCard.dataset.id;
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        markAsRead(notificationId);
+                    });
+                }
+            });
+
+            // Add click listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                const notificationCard = btn.closest('.notification-card');
+                if (notificationCard) {
+                    const notificationId = notificationCard.dataset.id;
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        deleteNotification(notificationId);
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
