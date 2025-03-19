@@ -3,7 +3,7 @@ session_start();
 require_once '../../backend/php/connection.php';
 require_once '../../backend/php/queries.php';
 
-// Check if admin is logged in
+// Check if admin is logged in just comment
 if (!isset($_SESSION['admin_id'])) {
     header('Location: ../admin_login.php');
     exit();
