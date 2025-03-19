@@ -294,9 +294,9 @@ $notifications = getAdminNotifications($conn, 50);
                 </div>
             <?php else: ?>
                 <?php foreach ($notifications as $notification): ?>
-                    <div class="notification-card <?php echo !$notification['is_read'] ? 'unread' : ''; ?>" 
-                         data-status="<?php echo !$notification['is_read'] ? 'unread' : 'read'; ?>"
-                         data-id="<?php echo $notification['notification_id']; ?>">
+                    <div class="notification-card <?php echo $notification['is_read'] ? '' : 'unread'; ?>" 
+                         data-status="<?php echo $notification['is_read'] ? 'read' : 'unread'; ?>"
+                         data-id="<?php echo htmlspecialchars($notification['notification_id']); ?>">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="notification-content">
                                 <span class="notification-type type-<?php echo htmlspecialchars(strtolower(str_replace(' ', '_', $notification['type']))); ?>">
@@ -306,8 +306,7 @@ $notifications = getAdminNotifications($conn, 50);
                                     <?php echo htmlspecialchars($notification['message']); ?>
                                     <div class="notification-time">
                                         <?php 
-                                        $timestamp = isset($notification['created_at']) ? $notification['created_at'] : 
-                                                   (isset($notification['request_date']) ? $notification['request_date'] : date('Y-m-d H:i:s'));
+                                        $timestamp = isset($notification['created_at']) ? $notification['created_at'] : date('Y-m-d H:i:s');
                                         echo date('M d, Y h:i A', strtotime($timestamp)); 
                                         ?>
                                     </div>
@@ -315,12 +314,12 @@ $notifications = getAdminNotifications($conn, 50);
                             </div>
                             <div class="notification-actions">
                                 <?php if (!$notification['is_read']): ?>
-                                    <button class="mark-read-mini-btn">
+                                    <button class="mark-read-mini-btn" onclick="markAsRead('<?php echo htmlspecialchars($notification['notification_id']); ?>')">
                                         <i class="fas fa-check"></i>
                                     </button>
                                 <?php endif; ?>
-                                <?php if ($notification['is_read'] && $notification['can_delete']): ?>
-                                    <button class="delete-btn">
+                                <?php if ($notification['is_read']): ?>
+                                    <button class="delete-btn" onclick="deleteNotification('<?php echo htmlspecialchars($notification['notification_id']); ?>')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 <?php endif; ?>
@@ -332,6 +331,7 @@ $notifications = getAdminNotifications($conn, 50);
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function filterNotifications(filter) {
             const buttons = document.querySelectorAll('.filter-btn');
@@ -354,128 +354,72 @@ $notifications = getAdminNotifications($conn, 50);
         }
 
         function markAsRead(notificationId) {
-            if (!notificationId) return;
-
-            const formData = new FormData();
-            formData.append('notification_id', notificationId);
-
-            fetch('../../backend/php/get_notifications.php?action=mark_read', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.error || 'Failed to mark notification as read');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const card = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
-                    if (card) {
-                        card.classList.remove('unread');
-                        card.dataset.status = 'read';
+            $.ajax({
+                url: '../../backend/php/get_notifications.php?action=mark_read',
+                type: 'POST',
+                data: { notification_id: notificationId },
+                success: function(response) {
+                    if (response.success) {
+                        // Update UI
+                        const card = $(`.notification-card[data-id="${notificationId}"]`);
+                        card.removeClass('unread');
+                        card.attr('data-status', 'read');
                         
-                        // Remove the read button
-                        const readBtn = card.querySelector('.mark-read-mini-btn');
-                        if (readBtn) readBtn.remove();
+                        // Remove mark as read button
+                        card.find('.mark-read-mini-btn').remove();
                         
-                        // Add the delete button if notification can be deleted
-                        const actions = card.querySelector('.notification-actions');
-                        if (data.can_delete) {
-                            const deleteBtn = document.createElement('button');
-                            deleteBtn.className = 'delete-btn';
-                            deleteBtn.onclick = () => deleteNotification(notificationId);
-                            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                            actions.appendChild(deleteBtn);
-                        }
+                        // Add delete button
+                        const deleteBtn = `
+                            <button class="delete-btn" onclick="deleteNotification('${notificationId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        card.find('.notification-actions').append(deleteBtn);
                     }
-                } else {
-                    throw new Error(data.error || 'Failed to mark notification as read');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error marking notification as read:', error);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert(error.message || 'Failed to mark notification as read. Please try again.');
             });
         }
 
         function deleteNotification(notificationId) {
-            if (!notificationId || !confirm('Are you sure you want to delete this notification?')) return;
-
-            const formData = new FormData();
-            formData.append('notification_id', notificationId);
-
-            fetch('../../backend/php/get_notifications.php?action=delete', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.error || 'Failed to delete notification');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const card = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
-                    if (card) {
-                        card.remove();
-                        
-                        // Check if there are any notifications left
-                        const remainingCards = document.querySelectorAll('.notification-card');
-                        if (remainingCards.length === 0) {
-                            const list = document.getElementById('notifications-list');
-                            list.innerHTML = `
-                                <div class="empty-notifications">
-                                    <i class="fas fa-bell" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
-                                    <p>No notifications yet</p>
-                                </div>
-                            `;
+            if (confirm('Are you sure you want to delete this notification?')) {
+                $.ajax({
+                    url: '../../backend/php/get_notifications.php?action=delete',
+                    type: 'POST',
+                    data: { notification_id: notificationId },
+                    success: function(response) {
+                        if (response.success) {
+                            // Remove the notification card from UI
+                            $(`.notification-card[data-id="${notificationId}"]`).fadeOut(300, function() {
+                                $(this).remove();
+                                // Check if there are no more notifications
+                                if ($('.notification-card').length === 0) {
+                                    $('#notifications-list').html(`
+                                        <div class="empty-notifications">
+                                            <i class="fas fa-bell" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                                            <p>No notifications yet</p>
+                                        </div>
+                                    `);
+                                }
+                            });
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting notification:', error);
                     }
-                } else {
-                    throw new Error(data.error || 'Failed to delete notification');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert(error.message || 'Failed to delete notification. Please try again.');
-            });
+                });
+            }
         }
 
-        // Add click event listeners to all buttons when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click listeners to mark-read buttons
-            document.querySelectorAll('.mark-read-mini-btn').forEach(btn => {
-                const notificationCard = btn.closest('.notification-card');
-                if (notificationCard) {
-                    const notificationId = notificationCard.dataset.id;
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        markAsRead(notificationId);
-                    });
-                }
+        // Refresh notifications every 30 seconds
+        setInterval(function() {
+            $.get('../../backend/php/get_notifications.php', function(data) {
+                // Update notifications list
+                location.reload();
             });
-
-            // Add click listeners to delete buttons
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                const notificationCard = btn.closest('.notification-card');
-                if (notificationCard) {
-                    const notificationId = notificationCard.dataset.id;
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        deleteNotification(notificationId);
-                    });
-                }
-            });
-        });
+        }, 30000);
     </script>
 </body>
 </html>

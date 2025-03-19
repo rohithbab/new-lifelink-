@@ -79,8 +79,8 @@ function getAdminNotifications($conn) {
                 action,
                 entity_id,
                 message,
-                COALESCE(is_read, 0) as is_read,
-                COALESCE(can_delete, 0) as can_delete,
+                is_read,
+                can_delete,
                 COALESCE(created_at, CURRENT_TIMESTAMP) as created_at,
                 link_url
             FROM notifications 
@@ -88,7 +88,17 @@ function getAdminNotifications($conn) {
             LIMIT 50
         ");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Process notifications to ensure all fields are set
+        foreach ($notifications as &$notification) {
+            $notification['is_read'] = (bool)$notification['is_read'];
+            $notification['can_delete'] = (bool)$notification['can_delete'];
+            $notification['created_at'] = $notification['created_at'] ?? date('Y-m-d H:i:s');
+            $notification['link_url'] = $notification['link_url'] ?? '';
+        }
+
+        return $notifications;
     } catch (Exception $e) {
         error_log("Error getting admin notifications: " . $e->getMessage());
         throw $e;
@@ -116,7 +126,7 @@ function getHospitalNotifications($conn, $hospital_id) {
                 WHEN dr.status != 'pending' THEN 1 
                 ELSE 0 
             END as can_delete,
-            dr.request_date as created_at,
+            COALESCE(dr.request_date, CURRENT_TIMESTAMP) as created_at,
             CONCAT('../donor/view_donor.php?id=', dr.donor_id) as link_url
         FROM donor_requests dr
         JOIN hospitals h ON (h.hospital_id = dr.requesting_hospital_id OR h.hospital_id = dr.donor_hospital_id)
@@ -135,8 +145,8 @@ function getHospitalNotifications($conn, $hospital_id) {
             action,
             entity_id,
             message,
-            COALESCE(is_read, 0) as is_read,
-            COALESCE(can_delete, 0) as can_delete,
+            is_read,
+            can_delete,
             COALESCE(created_at, CURRENT_TIMESTAMP) as created_at,
             link_url
         FROM hospital_notifications
@@ -152,6 +162,14 @@ function getHospitalNotifications($conn, $hospital_id) {
         return strtotime($b['created_at']) - strtotime($a['created_at']);
     });
 
+    // Process notifications to ensure all fields are set
+    foreach ($notifications as &$notification) {
+        $notification['is_read'] = (bool)$notification['is_read'];
+        $notification['can_delete'] = (bool)$notification['can_delete'];
+        $notification['created_at'] = $notification['created_at'] ?? date('Y-m-d H:i:s');
+        $notification['link_url'] = $notification['link_url'] ?? '';
+    }
+
     return array_slice($notifications, 0, 50); // Return only the latest 50
 }
 
@@ -162,7 +180,7 @@ function markNotificationAsRead($conn, $notification_id) {
 
         // First check if notification exists
         $stmt = $conn->prepare("
-            SELECT notification_id, is_read 
+            SELECT notification_id, is_read, can_delete, COALESCE(created_at, CURRENT_TIMESTAMP) as created_at
             FROM notifications 
             WHERE notification_id = ?
         ");
@@ -176,13 +194,20 @@ function markNotificationAsRead($conn, $notification_id) {
 
         if ($notification['is_read']) {
             $conn->commit();
-            return ['success' => true, 'message' => 'Notification already marked as read'];
+            return [
+                'success' => true,
+                'message' => 'Notification already marked as read',
+                'can_delete' => (bool)$notification['can_delete'],
+                'created_at' => $notification['created_at']
+            ];
         }
 
         // Update the notification
         $stmt = $conn->prepare("
             UPDATE notifications 
-            SET is_read = 1 
+            SET is_read = 1,
+                can_delete = 1,
+                created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
             WHERE notification_id = ?
         ");
         $result = $stmt->execute([$notification_id]);
@@ -192,20 +217,12 @@ function markNotificationAsRead($conn, $notification_id) {
             return ['error' => 'Failed to update notification'];
         }
 
-        // Check if notification can be deleted after being read
-        $stmt = $conn->prepare("
-            SELECT can_delete 
-            FROM notifications 
-            WHERE notification_id = ?
-        ");
-        $stmt->execute([$notification_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
         $conn->commit();
         return [
             'success' => true,
             'message' => 'Notification marked as read',
-            'can_delete' => (bool)$result['can_delete']
+            'can_delete' => true,
+            'created_at' => $notification['created_at']
         ];
     } catch (Exception $e) {
         $conn->rollBack();
@@ -219,19 +236,18 @@ function deleteNotification($conn, $notification_id) {
     try {
         $conn->beginTransaction();
 
-        // First check if notification exists, is read, and can be deleted
+        // First check if notification exists and is read
         $stmt = $conn->prepare("
             SELECT notification_id 
             FROM notifications 
             WHERE notification_id = ? 
-            AND is_read = 1 
-            AND can_delete = 1
+            AND is_read = 1
         ");
         $stmt->execute([$notification_id]);
         
         if (!$stmt->fetch()) {
             $conn->rollBack();
-            return ['error' => 'Notification not found, cannot be deleted, or access denied'];
+            return ['error' => 'Notification not found or not marked as read'];
         }
 
         // Delete the notification
