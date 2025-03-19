@@ -20,41 +20,41 @@ function getDashboardStats($conn, $tables = ['hospitals', 'donor', 'recipient_re
         
         if (in_array('hospitals', $tables)) {
             // Get total hospitals (approved only)
-            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE status = 'approved'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE LOWER(status) = 'approved'");
             $stats['total_hospitals'] = $stmt->fetchColumn();
             
             // Get pending hospitals count
-            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE status = 'Pending'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE LOWER(status) = 'pending'");
             $stats['pending_hospitals'] = $stmt->fetchColumn();
             
             // Get approved hospitals
-            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE status = 'approved'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM hospitals WHERE LOWER(status) = 'approved'");
             $stats['approved_hospitals'] = $stmt->fetchColumn();
         }
         
         if (in_array('donor', $tables)) {
             // Get total donors (approved only)
-            $stmt = $conn->query("SELECT COUNT(*) FROM donor WHERE status = 'approved'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM donor WHERE LOWER(status) = 'approved'");
             $stats['total_donors'] = $stmt->fetchColumn();
         }
         
         if (in_array('recipient_registration', $tables)) {
             // Get total recipients (accepted only)
-            $stmt = $conn->query("SELECT COUNT(*) FROM recipient_registration WHERE request_status = 'accepted'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM recipient_registration WHERE LOWER(request_status) = 'accepted'");
             $stats['total_recipients'] = $stmt->fetchColumn();
             
             // Get urgent recipients count (only from accepted recipients)
-            $stmt = $conn->query("SELECT COUNT(*) FROM recipient_registration WHERE urgency_level = 'High' AND request_status = 'accepted'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM recipient_registration WHERE urgency_level = 'High' AND LOWER(request_status) = 'accepted'");
             $stats['urgent_recipients'] = $stmt->fetchColumn();
         }
         
         if (in_array('organ_matches', $tables)) {
             // Get successful matches
-            $stmt = $conn->query("SELECT COUNT(*) FROM organ_matches WHERE status = 'Confirmed'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM organ_matches WHERE LOWER(status) = 'confirmed'");
             $stats['successful_matches'] = $stmt->fetchColumn();
             
             // Get pending matches
-            $stmt = $conn->query("SELECT COUNT(*) FROM organ_matches WHERE status = 'Pending'");
+            $stmt = $conn->query("SELECT COUNT(*) FROM organ_matches WHERE LOWER(status) = 'pending'");
             $stats['pending_matches'] = $stmt->fetchColumn();
         }
         
@@ -68,7 +68,7 @@ function getDashboardStats($conn, $tables = ['hospitals', 'donor', 'recipient_re
 // Get pending hospitals
 function getPendingHospitals($conn) {
     try {
-        $stmt = $conn->prepare("SELECT hospital_id, name as hospital_name, email, phone, odml_id FROM hospitals WHERE status = 'Pending'");
+        $stmt = $conn->prepare("SELECT hospital_id, name as hospital_name, email, phone, odml_id FROM hospitals WHERE LOWER(status) = 'pending'");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -93,7 +93,7 @@ function getPendingDonors($conn) {
             FROM 
                 donor 
             WHERE 
-                status = 'pending'
+                LOWER(status) = 'pending'
             ORDER BY 
                 rejection_date DESC
         ");
@@ -124,7 +124,7 @@ function getPendingRecipients($conn) {
             FROM 
                 recipient_registration 
             WHERE 
-                request_status = 'pending'
+                LOWER(request_status) = 'pending'
             ORDER BY 
                 id DESC
         ");
@@ -192,12 +192,12 @@ function getUrgentRecipients($conn) {
                 LEFT JOIN (
                     SELECT recipient_id, COUNT(*) as match_count 
                     FROM organ_matches 
-                    WHERE status = 'Pending'
+                    WHERE LOWER(status) = 'pending'
                     GROUP BY recipient_id
                 ) om ON r.id = om.recipient_id
             WHERE 
                 r.urgency_level = 'High'
-                AND r.request_status = 'active'
+                AND LOWER(r.request_status) = 'active'
             ORDER BY 
                 r.registration_date DESC
         ");
@@ -216,7 +216,7 @@ function findPotentialMatches($conn, $donor_id) {
         JOIN donor d ON d.blood_type = r.blood_type
         WHERE d.donor_id = :donor_id
         AND d.organ_type = r.organ_required
-        AND r.request_status = 'waiting'
+        AND LOWER(r.request_status) = 'waiting'
         ORDER BY r.urgency_level DESC, r.registration_date ASC
     ");
     $stmt->execute(['donor_id' => $donor_id]);
@@ -401,7 +401,7 @@ function getSuccessfulMatches($conn) {
         SELECT COUNT(*) as total,
         AVG(TIMESTAMPDIFF(DAY, match_date, completion_date)) as avg_days
         FROM organ_matches
-        WHERE status = 'completed'
+        WHERE LOWER(status) = 'completed'
     ");
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -521,6 +521,205 @@ function createNotification($conn, $type, $action, $entity_id, $message = '') {
         error_log("Error creating notification: " . $e->getMessage());
         return false;
     }
+}
+
+// Analytics Functions for Dashboard
+function getAnalyticsDonorStats($conn) {
+    $stats = [
+        'approved' => 0,
+        'rejected' => 0,
+        'pending' => 0
+    ];
+    
+    try {
+        // Get status counts with case-insensitive comparison
+        $stmt = $conn->prepare("
+            SELECT 
+                CASE 
+                    WHEN LOWER(status) = 'approved' THEN 'approved'
+                    WHEN LOWER(status) = 'rejected' THEN 'rejected'
+                    WHEN LOWER(status) = 'pending' THEN 'pending'
+                    ELSE LOWER(status)
+                END as normalized_status,
+                COUNT(*) as count 
+            FROM donor 
+            GROUP BY normalized_status
+        ");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['normalized_status'];
+            if (isset($stats[$status])) {
+                $stats[$status] = $row['count'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting donor stats: " . $e->getMessage());
+    }
+    
+    return $stats;
+}
+
+function getAnalyticsRecipientStats($conn) {
+    $stats = [
+        'approved' => 0,
+        'rejected' => 0,
+        'pending' => 0
+    ];
+    
+    try {
+        // Get status counts with case-insensitive comparison
+        $stmt = $conn->prepare("
+            SELECT 
+                CASE 
+                    WHEN LOWER(request_status) = 'accepted' THEN 'approved'
+                    WHEN LOWER(request_status) = 'rejected' THEN 'rejected'
+                    WHEN LOWER(request_status) = 'pending' THEN 'pending'
+                    ELSE LOWER(request_status)
+                END as normalized_status,
+                COUNT(*) as count 
+            FROM recipient_registration 
+            GROUP BY normalized_status
+        ");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['normalized_status'];
+            if (isset($stats[$status])) {
+                $stats[$status] = $row['count'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting recipient stats: " . $e->getMessage());
+    }
+    
+    return $stats;
+}
+
+function getAnalyticsHospitalStats($conn) {
+    $stats = [
+        'approved' => 0,
+        'rejected' => 0,
+        'pending' => 0
+    ];
+    
+    try {
+        // Get status counts with case-insensitive comparison
+        $stmt = $conn->prepare("
+            SELECT 
+                CASE 
+                    WHEN LOWER(status) = 'approved' THEN 'approved'
+                    WHEN LOWER(status) = 'rejected' THEN 'rejected'
+                    WHEN LOWER(status) = 'pending' THEN 'pending'
+                    ELSE LOWER(status)
+                END as normalized_status,
+                COUNT(*) as count 
+            FROM hospitals 
+            GROUP BY normalized_status
+        ");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['normalized_status'];
+            if (isset($stats[$status])) {
+                $stats[$status] = $row['count'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting hospital stats: " . $e->getMessage());
+    }
+    
+    return $stats;
+}
+
+function getAnalyticsOrganMatchStats($conn) {
+    $stats = [
+        'approved' => 0,
+        'rejected' => 0,
+        'pending' => 0
+    ];
+    
+    try {
+        // Get status counts with case-insensitive comparison
+        $stmt = $conn->prepare("
+            SELECT 
+                CASE 
+                    WHEN LOWER(status) = 'approved' THEN 'approved'
+                    WHEN LOWER(status) = 'rejected' THEN 'rejected'
+                    WHEN LOWER(status) = 'pending' THEN 'pending'
+                    ELSE LOWER(status)
+                END as normalized_status,
+                COUNT(*) as count 
+            FROM organ_matches 
+            GROUP BY normalized_status
+        ");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['normalized_status'];
+            if (isset($stats[$status])) {
+                $stats[$status] = $row['count'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting organ match stats: " . $e->getMessage());
+    }
+    
+    return $stats;
+}
+
+function getAnalyticsTotalUsersStats($conn) {
+    $stats = [
+        'donors' => 0,
+        'recipients' => 0,
+        'hospitals' => 0
+    ];
+    
+    try {
+        // Get total donors
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM donor");
+        $stmt->execute();
+        $stats['donors'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get total recipients
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM recipient_registration");
+        $stmt->execute();
+        $stats['recipients'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get total hospitals
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM hospitals");
+        $stmt->execute();
+        $stats['hospitals'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    } catch (PDOException $e) {
+        error_log("Error getting total users stats: " . $e->getMessage());
+    }
+    
+    return $stats;
+}
+
+function getAnalyticsRejectionStats($conn) {
+    $stats = [
+        'donor_rejections' => 0,
+        'recipient_rejections' => 0,
+        'hospital_rejections' => 0
+    ];
+    
+    try {
+        // Get donor rejections
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM donor WHERE LOWER(status) = 'rejected'");
+        $stmt->execute();
+        $stats['donor_rejections'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get recipient rejections
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM recipient_registration WHERE LOWER(request_status) = 'rejected'");
+        $stmt->execute();
+        $stats['recipient_rejections'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get hospital rejections
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM hospitals WHERE LOWER(status) = 'rejected'");
+        $stmt->execute();
+        $stats['hospital_rejections'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    } catch (PDOException $e) {
+        error_log("Error getting rejection stats: " . $e->getMessage());
+    }
+    
+    return $stats;
 }
 
 ?>

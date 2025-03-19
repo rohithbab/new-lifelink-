@@ -15062,3 +15062,164 @@ Data: []
 2025-03-03 06:55:21: Hospital data inserted successfully. ID: 34
 2025-03-03 06:55:21: Notification created successfully
 2025-03-03 06:55:21: Transaction committed
+2025-03-19 04:52:45: Registration process started
+2025-03-19 04:52:45: POST data: Array
+(
+    [hospital_name] => Apollo Hospitals
+    [hospital_email] => apollohospitals@123gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9989769179
+    [street] => Thandalam
+    [city] => Chennai
+    [state] => Tamil Nadu
+    [postal_code] => 600002
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => Shaik Mohammed Wajid
+    [designation] => Dean
+    [contact_phone] => 9989769179
+    [contact_email] => user123@gmail.com
+    [license_number] => Lic001
+    [username] => Rohith
+    [password] => Apollo@123
+    [confirm_password] => Apollo@123
+    [terms] => on
+)
+
+2025-03-19 04:52:45: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpEC0F.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-03-19 04:52:45: Database connection successful
+2025-03-19 04:52:45: Sanitized inputs: name=Apollo Hospitals, email=apollohospitals@123gmail.com, phone=9989769179
+2025-03-19 04:52:45: Address: Thandalam, Chennai, Tamil Nadu, 600002, India
+2025-03-19 04:52:45: Region: Tamil Nadu
+2025-03-19 04:52:45: Transaction started
+2025-03-19 04:52:45: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-03-19 04:52:45: SQL executed successfully
+2025-03-19 04:52:45: Hospital data inserted successfully. ID: 1
+2025-03-19 04:52:45: Notification created successfully
+2025-03-19 04:52:45: Transaction committed
+2025-03-19 04:57:48: Registration process started
+2025-03-19 04:57:48: POST data: Array
+(
+    [hospital_name] => Mani Kanta Hospitals
+    [hospital_email] => manihospitals123@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9150272441
+    [street] => Gandhi Nagar
+    [city] => Chennai
+    [state] => Tamil Nadu
+    [postal_code] => 602105
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => general
+            [1] => organ_transplant
+            [2] => cardiology
+        )
+
+    [contact_name] => M Rohith Babu
+    [designation] => Dean
+    [contact_phone] => 9150272441
+    [contact_email] => user123@gmail.com
+    [license_number] => Lic001
+    [username] => Rohith
+    [password] => Mani@123
+    [confirm_password] => Mani@123
+    [terms] => on
+)
+
+2025-03-19 04:57:48: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php8CD0.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-03-19 04:57:48: Database connection successful
+2025-03-19 04:57:48: Sanitized inputs: name=Mani Kanta Hospitals, email=manihospitals123@gmail.com, phone=9150272441
+2025-03-19 04:57:48: Address: Gandhi Nagar, Chennai, Tamil Nadu, 602105, India
+2025-03-19 04:57:48: Region: Tamil Nadu
+2025-03-19 04:57:48: Error: This license number is already registered
+2025-03-19 04:59:04: Registration process started
+2025-03-19 04:59:04: POST data: Array
+(
+    [hospital_name] => Mani Kanta Hospitals
+    [hospital_email] => manihospitals123@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9150272441
+    [street] => Gandhi Nagar
+    [city] => Chennai
+    [state] => Tamil Nadu
+    [postal_code] => 602105
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => organ_transplant
+        )
+
+    [contact_name] => M Rohith Babu
+    [designation] => Dean
+    [contact_phone] => 9150272441
+    [contact_email] => manihospitals123@gmail.com
+    [license_number] => Lic002
+    [username] => Rohith
+    [password] => Mani@123
+    [confirm_password] => Mani@123
+    [terms] => on
+)
+
+2025-03-19 04:59:04: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpB42B.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-03-19 04:59:04: Database connection successful
+2025-03-19 04:59:04: Sanitized inputs: name=Mani Kanta Hospitals, email=manihospitals123@gmail.com, phone=9150272441
+2025-03-19 04:59:04: Address: Gandhi Nagar, Chennai, Tamil Nadu, 602105, India
+2025-03-19 04:59:04: Region: Tamil Nadu
+2025-03-19 04:59:04: Transaction started
+2025-03-19 04:59:04: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-03-19 04:59:04: SQL executed successfully
+2025-03-19 04:59:04: Hospital data inserted successfully. ID: 2
+2025-03-19 04:59:04: Notification created successfully
+2025-03-19 04:59:04: Transaction committed
