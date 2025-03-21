@@ -15223,3 +15223,59 @@ Data: []
 2025-03-19 04:59:04: Hospital data inserted successfully. ID: 2
 2025-03-19 04:59:04: Notification created successfully
 2025-03-19 04:59:04: Transaction committed
+2025-03-21 05:15:18: Registration process started
+2025-03-21 05:15:18: POST data: Array
+(
+    [hospital_name] => wajid hospitals
+    [hospital_email] => wajidhospitals@gmail.com
+    [countryCode] => 91
+    [hospital_phone] => 9150272441
+    [street] => Thandalam
+    [city] => Chennai
+    [state] => Tamil Nadu
+    [postal_code] => 600002
+    [country] => India
+    [specializations] => Array
+        (
+            [0] => general
+        )
+
+    [contact_name] => MD Shaik Mohammed Wajid
+    [designation] => Dean
+    [contact_phone] => 9150272441
+    [contact_email] => wajidhospitals@gmail.com
+    [license_number] => Lic003
+    [username] => wajid
+    [password] => #Wajid@123
+    [confirm_password] => #Wajid@123
+    [terms] => on
+)
+
+2025-03-21 05:15:18: FILES data: Array
+(
+    [license_document] => Array
+        (
+            [name] => hospital license.png
+            [full_path] => hospital license.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php5098.tmp
+            [error] => 0
+            [size] => 100405
+        )
+
+)
+
+2025-03-21 05:15:18: Database connection successful
+2025-03-21 05:15:18: Sanitized inputs: name=wajid hospitals, email=wajidhospitals@gmail.com, phone=9150272441
+2025-03-21 05:15:18: Address: Thandalam, Chennai, Tamil Nadu, 600002, India
+2025-03-21 05:15:18: Region: Tamil Nadu
+2025-03-21 05:15:18: Transaction started
+2025-03-21 05:15:18: SQL prepared: INSERT INTO hospitals (
+            name, email, phone, address, region,
+            license_number, license_file, password,
+            status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+2025-03-21 05:15:18: SQL executed successfully
+2025-03-21 05:15:18: Hospital data inserted successfully. ID: 3
+2025-03-21 05:15:18: Notification created successfully
+2025-03-21 05:15:18: Transaction committed

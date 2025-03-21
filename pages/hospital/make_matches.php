@@ -381,41 +381,28 @@ $hospital_name = $_SESSION['hospital_name'];
                     <div class="match-column">
                         <button class="match-button donor" onclick="navigateToChoose('donor')">
                             <i class="fas fa-user"></i>
-                            Choose Donor
+                            Choose Donors
                         </button>
                         <div id="donorInfo" class="selected-info">
-                            <h3>Selected Donor</h3>
-                            <div id="donorDetails">No donor selected</div>
+                            <div id="donorDetails"></div>
                         </div>
                     </div>
                     <div class="match-column">
                         <button class="match-button recipient" onclick="navigateToChoose('recipient')">
-                            <i class="fas fa-procedures"></i>
-                            Choose Recipient
+                            <i class="fas fa-user"></i>
+                            Choose Recipients
                         </button>
                         <div id="recipientInfo" class="selected-info">
-                            <h3>Selected Recipient</h3>
-                            <div id="recipientDetails">No recipient selected</div>
+                            <div id="recipientDetails"></div>
                         </div>
                     </div>
                 </div>
 
-                <button id="makeMatchBtn" class="make-match-btn" disabled onclick="makeMatch()">
+                <button id="makeMatchBtn" class="make-match-btn" onclick="makeMatch()" disabled>
                     Make Match
                 </button>
             </div>
         </main>
-    </div>
-
-    <div class="modal" id="removeConfirmationModal">
-        <div class="modal-content">
-            <h2>Confirm Removal</h2>
-            <p>Are you sure you want to remove the selected <span id="remove-type"></span>?</p>
-            <div class="modal-buttons">
-                <button class="modal-btn confirm" onclick="confirmRemove()">Yes, Remove</button>
-                <button class="modal-btn cancel" onclick="cancelRemove()">Cancel</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -424,189 +411,144 @@ $hospital_name = $_SESSION['hospital_name'];
             const urlParams = new URLSearchParams(window.location.search);
             const currentDonor = urlParams.get('donor');
             const currentRecipient = urlParams.get('recipient');
-            
-            // Build URL based on type
-            let url;
-            if (type === 'donor') {
-                url = 'choose_donors_for_matches.php';
-                if (currentRecipient) {
-                    url += '?recipient=' + encodeURIComponent(currentRecipient);
-                }
-            } else {
-                url = 'choose_recipients_for_matches.php';
-                if (currentDonor) {
-                    url += '?donor=' + encodeURIComponent(currentDonor);
-                }
-            }
-            
-            window.location.href = url;
-        }
 
-        // Check URL parameters and session storage for selections
-        window.onload = function() {
-            // Get stored donor info
-            const storedDonor = sessionStorage.getItem('selectedDonor');
-            if (storedDonor) {
-                const donorInfo = JSON.parse(storedDonor);
-                document.getElementById('donorInfo').classList.add('show');
-                document.getElementById('donorDetails').innerHTML = `
-                    <div class="info-card">
-                        <button class="remove-btn" onclick="showRemoveConfirmation('Donor')">
-                            <i class="fas fa-times"></i> Remove
-                        </button>
-                        <p><strong>Name:</strong> ${donorInfo.name}</p>
-                        <p><strong>Blood Group:</strong> ${donorInfo.bloodGroup}</p>
-                        <p><strong>Organ Type:</strong> ${donorInfo.organType}</p>
-                    </div>
-                `;
-            } else {
-                document.getElementById('donorDetails').innerHTML = `
-                    <div class="no-selection">No donor selected</div>
-                `;
+            // Store current selections
+            if (currentDonor) {
+                sessionStorage.setItem('selectedDonor', currentDonor);
+            }
+            if (currentRecipient) {
+                sessionStorage.setItem('selectedRecipient', currentRecipient);
             }
 
-            // Get stored recipient info
-            const storedRecipient = sessionStorage.getItem('selectedRecipient');
-            if (storedRecipient) {
-                const recipientInfo = JSON.parse(storedRecipient);
-                document.getElementById('recipientInfo').classList.add('show');
-                document.getElementById('recipientDetails').innerHTML = `
-                    <div class="info-card">
-                        <button class="remove-btn" onclick="showRemoveConfirmation('Recipient')">
-                            <i class="fas fa-times"></i> Remove
-                        </button>
-                        <p><strong>Name:</strong> ${recipientInfo.name}</p>
-                        <p><strong>Blood Group:</strong> ${recipientInfo.bloodGroup}</p>
-                        <p><strong>Required Organ:</strong> ${recipientInfo.requiredOrgan}</p>
-                    </div>
-                `;
-            } else {
-                document.getElementById('recipientDetails').innerHTML = `
-                    <div class="no-selection">No recipient selected</div>
-                `;
-            }
-
-            updateMatchButton();
+            // Navigate to appropriate page
+            window.location.href = type === 'donor' ? 'choose_donors_for_matches.php' : 'choose_recipients_for_matches.php';
         }
 
         function updateMatchButton() {
+            const donorData = sessionStorage.getItem('selectedDonor');
+            const recipientData = sessionStorage.getItem('selectedRecipient');
             const makeMatchBtn = document.getElementById('makeMatchBtn');
-            const hasDonor = sessionStorage.getItem('selectedDonor');
-            const hasRecipient = sessionStorage.getItem('selectedRecipient');
-            
-            if (hasDonor && hasRecipient) {
-                makeMatchBtn.classList.add('active');
+
+            if (donorData && recipientData) {
                 makeMatchBtn.disabled = false;
+                makeMatchBtn.classList.add('active');
             } else {
-                makeMatchBtn.classList.remove('active');
                 makeMatchBtn.disabled = true;
+                makeMatchBtn.classList.remove('active');
             }
         }
 
-        function showRemoveConfirmation(type) {
-            const modal = document.getElementById('removeConfirmationModal');
-            modal.classList.add('show');
-            document.getElementById('remove-type').innerText = type;
-        }
+        function displaySelectedDonor() {
+            const donorInfo = document.getElementById('donorInfo');
+            const donorDetails = document.getElementById('donorDetails');
+            const donorData = sessionStorage.getItem('selectedDonor');
 
-        function confirmRemove() {
-            const modal = document.getElementById('removeConfirmationModal');
-            modal.classList.remove('show');
-            const removeType = document.getElementById('remove-type').innerText;
-            if (removeType === 'Donor') {
-                removeDonorSelection();
+            if (donorData) {
+                const donor = JSON.parse(donorData);
+                donorInfo.classList.add('show');
+                donorDetails.innerHTML = `
+                    <div class="info-card">
+                        <p><strong>Name:</strong> ${donor.name}</p>
+                        <p><strong>Blood Type:</strong> ${donor.bloodType}</p>
+                        <p><strong>Organs:</strong> ${donor.organs}</p>
+                        <p><strong>Hospital:</strong> ${donor.hospital}</p>
+                        <button class="remove-btn" onclick="removeDonorSelection()">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                `;
             } else {
-                removeRecipientSelection();
+                donorInfo.classList.remove('show');
+                donorDetails.innerHTML = `
+                    <div class="no-selection">No donor selected</div>
+                `;
             }
+            updateMatchButton();
         }
 
-        function cancelRemove() {
-            const modal = document.getElementById('removeConfirmationModal');
-            modal.classList.remove('show');
+        function displaySelectedRecipient() {
+            const recipientInfo = document.getElementById('recipientInfo');
+            const recipientDetails = document.getElementById('recipientDetails');
+            const recipientData = sessionStorage.getItem('selectedRecipient');
+
+            if (recipientData) {
+                const recipient = JSON.parse(recipientData);
+                recipientInfo.classList.add('show');
+                recipientDetails.innerHTML = `
+                    <div class="info-card">
+                        <p><strong>Name:</strong> ${recipient.name}</p>
+                        <p><strong>Blood Type:</strong> ${recipient.bloodType}</p>
+                        <p><strong>Organ:</strong> ${recipient.organ}</p>
+                        <p><strong>Urgency:</strong> ${recipient.urgency}</p>
+                        <p><strong>Hospital:</strong> ${recipient.hospital}</p>
+                        <button class="remove-btn" onclick="removeRecipientSelection()">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                `;
+            } else {
+                recipientInfo.classList.remove('show');
+                recipientDetails.innerHTML = `
+                    <div class="no-selection">No recipient selected</div>
+                `;
+            }
+            updateMatchButton();
         }
 
         function removeDonorSelection() {
             sessionStorage.removeItem('selectedDonor');
-            document.getElementById('donorInfo').classList.remove('show');
-            document.getElementById('donorDetails').innerHTML = `
-                <div class="no-selection">No donor selected</div>
-            `;
-            updateMatchButton();
+            displaySelectedDonor();
         }
 
         function removeRecipientSelection() {
             sessionStorage.removeItem('selectedRecipient');
-            document.getElementById('recipientInfo').classList.remove('show');
-            document.getElementById('recipientDetails').innerHTML = `
-                <div class="no-selection">No recipient selected</div>
-            `;
-            updateMatchButton();
+            displaySelectedRecipient();
         }
 
         function makeMatch() {
-            const donorInfo = JSON.parse(sessionStorage.getItem('selectedDonor'));
-            const recipientInfo = JSON.parse(sessionStorage.getItem('selectedRecipient'));
+            const donorData = JSON.parse(sessionStorage.getItem('selectedDonor'));
+            const recipientData = JSON.parse(sessionStorage.getItem('selectedRecipient'));
 
-            if (!donorInfo || !recipientInfo) {
-                alert('Please select both a donor and recipient first.');
+            if (!donorData || !recipientData) {
+                alert('Please select both a donor and a recipient to make a match.');
                 return;
             }
 
-            // Create match data
-            const matchData = {
-                donor_id: donorInfo.id,
-                recipient_id: recipientInfo.id,
-                match_made_by: <?php echo $hospital_id; ?>,
-                donor_hospital_id: donorInfo.from_hospital === '<?php echo $hospital_name; ?>' ? <?php echo $hospital_id; ?> : null,
-                recipient_hospital_id: recipientInfo.from_hospital === '<?php echo $hospital_name; ?>' ? <?php echo $hospital_id; ?> : null,
-                organ_type: donorInfo.organType
-            };
-
-            // Send to backend
-            fetch('../../backend/php/organ_matches.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(matchData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.match_id) {
-                    // Clear selections
-                    sessionStorage.removeItem('selectedDonor');
-                    sessionStorage.removeItem('selectedRecipient');
-                    
-                    // Show success message
-                    showSuccessModal(donorInfo.name, recipientInfo.name);
-                    
-                    // Redirect to my matches after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'my_matches.php';
-                    }, 2000);
-                } else {
-                    alert('Failed to create match. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to create match. Please try again.');
-            });
+            if (confirm('Are you sure you want to create this match?')) {
+                // Make API call to create match
+                fetch('../../backend/php/create_match.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        donorId: donorData.id,
+                        recipientId: recipientData.id
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Match created successfully!');
+                        // Clear selections
+                        sessionStorage.removeItem('selectedDonor');
+                        sessionStorage.removeItem('selectedRecipient');
+                        // Refresh displays
+                        displaySelectedDonor();
+                        displaySelectedRecipient();
+                    } else {
+                        throw new Error(data.error || 'Failed to create match');
+                    }
+                })
+                .catch(error => {
+                    alert('Error creating match: ' + error.message);
+                });
+            }
         }
 
-        function showSuccessModal(donorName, recipientName) {
-            const modalHtml = `
-                <div id="successModal" class="modal show">
-                    <div class="modal-content">
-                        <h2>Match Created Successfully!</h2>
-                        <p>Donor: ${donorName}</p>
-                        <p>Recipient: ${recipientName}</p>
-                        <p>Redirecting to My Matches...</p>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
+        // Initialize displays when page loads
+        displaySelectedDonor();
+        displaySelectedRecipient();
     </script>
 </body>
 </html>
