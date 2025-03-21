@@ -412,18 +412,16 @@ try {
                 const donorInfo = {
                     id: donorId,
                     name: donorName,
-                    bloodGroup: row.querySelector('td:nth-child(2)').textContent.trim(),
-                    organType: row.querySelector('td:nth-child(3)').textContent.trim(),
-                    email: row.querySelector('td:nth-child(4)').textContent.split('Email: ')[1].split('\n')[0].trim(),
-                    phone: row.querySelector('td:nth-child(4)').textContent.split('Phone: ')[1].trim(),
-                    from_hospital: row.querySelector('td:nth-child(5)').textContent.trim()
+                    bloodType: row.querySelector('td:nth-child(2)').textContent.trim(),
+                    organs: row.querySelector('td:nth-child(3)').textContent.trim(),
+                    hospital: row.querySelector('td:nth-child(5)').textContent.trim()
                 };
 
                 // Store the selected donor info in session storage
                 sessionStorage.setItem('selectedDonor', JSON.stringify(donorInfo));
                 
-                // Redirect to the recipient selection page
-                window.location.href = 'choose_recipients_for_matches.php';
+                // Redirect to make matches page instead of recipient selection
+                window.location.href = 'make_matches.php';
             }
         }
 
