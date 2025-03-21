@@ -515,20 +515,24 @@ $hospital_name = $_SESSION['hospital_name'];
             }
 
             if (confirm('Are you sure you want to create this match?')) {
-                // Make API call to create match
-                fetch('../../backend/php/create_match.php', {
+                // Make API call to create match using the correct endpoint
+                fetch('../../backend/php/organ_matches.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        donorId: donorData.id,
-                        recipientId: recipientData.id
+                        donor_id: donorData.id,
+                        recipient_id: recipientData.id,
+                        match_made_by: <?php echo $hospital_id; ?>,
+                        donor_hospital_id: donorData.hospital === '<?php echo $hospital_name; ?>' ? <?php echo $hospital_id; ?> : null,
+                        recipient_hospital_id: recipientData.hospital === '<?php echo $hospital_name; ?>' ? <?php echo $hospital_id; ?> : null,
+                        organ_type: donorData.organs
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    if (data.match_id) {
                         alert('Match created successfully!');
                         // Clear selections
                         sessionStorage.removeItem('selectedDonor');
@@ -536,6 +540,8 @@ $hospital_name = $_SESSION['hospital_name'];
                         // Refresh displays
                         displaySelectedDonor();
                         displaySelectedRecipient();
+                        // Redirect to matches page
+                        window.location.href = 'my_matches.php';
                     } else {
                         throw new Error(data.error || 'Failed to create match');
                     }
