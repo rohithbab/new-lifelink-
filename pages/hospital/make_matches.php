@@ -19,12 +19,14 @@ $hospital_name = $_SESSION['hospital_name'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make Matches - LifeLink</title>
     <link rel="stylesheet" href="../../assets/css/hospital-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .match-container {
             padding: 2rem;
             max-width: 1000px;
+            width: 95%;
             margin: 2rem auto;
             background: white;
             border-radius: 15px;
@@ -33,6 +35,7 @@ $hospital_name = $_SESSION['hospital_name'];
 
         .match-section {
             display: flex;
+            flex-wrap: wrap;
             gap: 2rem;
             justify-content: center;
             margin-top: 2rem;
@@ -40,6 +43,7 @@ $hospital_name = $_SESSION['hospital_name'];
 
         .match-column {
             flex: 1;
+            min-width: 280px;
             max-width: 400px;
             display: flex;
             flex-direction: column;
@@ -362,6 +366,22 @@ $hospital_name = $_SESSION['hospital_name'];
 
         .modal-buttons .secondary-btn:hover {
             background: #e9ecef;
+        }
+
+        @media screen and (max-width: 768px) {
+            .match-container {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+            
+            .match-section {
+                gap: 1rem;
+            }
+
+            .match-column {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
