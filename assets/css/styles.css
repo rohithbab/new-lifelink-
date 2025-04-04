@@ -135,6 +135,7 @@ p {
 
 .logo-life {
     background: var(--gradient-mix);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -163,6 +164,96 @@ p {
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem;
+    }
+
+    .nav-links a.btn {
+        margin: 0.5rem 0;
+    }
+
+    /* Hero Section Responsive */
+    .hero {
+        padding-top: 5rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    /* About Section Responsive */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .about-card {
+        text-align: center;
+    }
+
+    .about-card img {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    :root {
+        --container-padding: 1rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .section {
+        padding: 3rem 0;
+    }
 }
 
 /* Cards */
@@ -202,34 +293,6 @@ p {
     border-color: var(--primary-blue);
     outline: none;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    .mobile-menu-btn {
-        display: block;
-    }
-
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--white);
-        flex-direction: column;
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
 }
 
 /* Grid System */
