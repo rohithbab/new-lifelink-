@@ -88,20 +88,22 @@
     <section class="section hero" style="
         background: linear-gradient(rgba(33, 150, 243, 0.9), rgba(76, 175, 80, 0.9)),
         url('assets/images/common/hero-bg.jpg') center/cover;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         align-items: center;
         color: var(--white);
         margin-top: -5rem;
+        padding: 8rem 0 4rem;
+        position: relative;
     ">
-        <div class="container text-center">
+        <div class="container text-center" style="width: 100%;">
             <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">
                 Connecting Lives Through<br>Organ Donation
             </h1>
             <p style="font-size: 1.25rem; margin-bottom: 2rem;">
                 Join our mission to save lives by bridging the gap between donors and recipients
             </p>
-            <div class="hero-buttons" style="display: flex; gap: 1rem; justify-content: center;">
+            <div class="hero-buttons" style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
                 <a href="pages/donor_registration.php" 
                    class="btn btn-primary donor-btn" 
                    style="
@@ -145,12 +147,12 @@
                         document.querySelector('.donor-btn').style.background='var(--primary-blue)';
                    ">Register as Recipient</a>
             </div>
-            <div style="margin-top: 1.5rem; color: var(--white);">
-                <p style="font-size: 1.1rem;">Already registered? 
+            <div style="color: var(--white); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
+                <p style="font-size: 1.1rem; margin: 0;">Already registered?</p>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; justify-content: center;">
                     <a href="pages/donor_login.php" style="
                         color: var(--white);
                         text-decoration: none;
-                        margin: 0 0.5rem;
                         padding: 0.3rem 1rem;
                         border-radius: 20px;
                         background: linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(33, 150, 243, 0.3));
@@ -159,6 +161,7 @@
                         border: 1px solid rgba(255, 255, 255, 0.3);
                         display: inline-block;
                         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        white-space: nowrap;
                     " onmouseover="
                         this.style.background='linear-gradient(45deg, rgba(76, 175, 80, 0.6), rgba(33, 150, 243, 0.6))';
                         this.style.transform='translateY(-2px)';
@@ -167,7 +170,8 @@
                         this.style.background='linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(33, 150, 243, 0.3))';
                         this.style.transform='translateY(0)';
                         this.style.boxShadow='0 2px 10px rgba(0, 0, 0, 0.1)';
-                    ">Donor</a> or 
+                    ">Donor</a>
+                    <span style="color: var(--white);">or</span>
                     <a href="pages/recipient_login.php" style="
                         color: var(--white);
                         text-decoration: none;
@@ -179,6 +183,7 @@
                         border: 1px solid rgba(255, 255, 255, 0.3);
                         display: inline-block;
                         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        white-space: nowrap;
                     " onmouseover="
                         this.style.background='linear-gradient(45deg, rgba(33, 150, 243, 0.6), rgba(76, 175, 80, 0.6))';
                         this.style.transform='translateY(-2px)';
@@ -188,114 +193,99 @@
                         this.style.transform='translateY(0)';
                         this.style.boxShadow='0 2px 10px rgba(0, 0, 0, 0.1)';
                     ">Recipient</a>
-                </p>
+                </div>
             </div>
         </div>
     </section>
     <!-- About Section -->
-<section id="about" class="section" style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(76, 175, 80, 0.1));">
-    <div class="container">
-        <h2 class="text-center" style="
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            background: linear-gradient(45deg, var(--primary-blue), var(--primary-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
-        ">About LifeLink</h2>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-            <div class="about-content">
-                <div style="
-                    background: white;
-                    padding: 2rem;
-                    border-radius: 15px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                    margin-bottom: 2rem;
-                ">
-                    <h3 style="
-                        color: var(--primary-blue);
-                        font-size: 1.5rem;
-                        margin-bottom: 1rem;
-                    ">Our Mission</h3>
-                    <p style="line-height: 1.8;">To revolutionize organ donation by creating a seamless connection between donors and recipients, leveraging technology to save lives and bring hope to those in need.</p>
+    <section id="about" class="section about-section">
+        <div class="container">
+            <h2 class="text-center" style="
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+                background: linear-gradient(45deg, var(--primary-blue), var(--primary-green));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: bold;
+            ">About LifeLink</h2>
+            
+            <div class="about-grid">
+                <div class="about-content">
+                    <div class="about-card">
+                        <h3 style="
+                            color: var(--primary-blue);
+                            font-size: 1.5rem;
+                            margin-bottom: 1rem;
+                        ">Our Mission</h3>
+                        <p style="line-height: 1.8;">To revolutionize organ donation by creating a seamless connection between donors and recipients, leveraging technology to save lives and bring hope to those in need.</p>
+                    </div>
+
+                    <div class="about-card" style="margin-top: 2rem;">
+                        <h3 style="
+                            color: var(--primary-green);
+                            font-size: 1.5rem;
+                            margin-bottom: 1rem;
+                        ">Our Vision</h3>
+                        <p style="line-height: 1.8;">To build a world where no life is lost due to organ unavailability, fostering a global community of compassionate donors and creating hope for recipients worldwide.</p>
+                    </div>
                 </div>
 
-                <div style="
-                    background: white;
-                    padding: 2rem;
-                    border-radius: 15px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                ">
-                    <h3 style="
-                        color: var(--primary-green);
-                        font-size: 1.5rem;
-                        margin-bottom: 1rem;
-                    ">Our Vision</h3>
-                    <p style="line-height: 1.8;">To build a world where no life is lost due to organ unavailability, fostering a global community of compassionate donors and creating hope for recipients worldwide.</p>
-                </div>
-            </div>
-
-            <div class="about-features" style="
-                background: white;
-                padding: 2.5rem;
-                border-radius: 15px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            ">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                    <div style="text-align: center;">
-                        <i class="fas fa-heartbeat" style="
-                            font-size: 2.5rem;
-                            color: var(--primary-blue);
-                            margin-bottom: 1rem;
-                            background: rgba(33, 150, 243, 0.1);
-                            padding: 1rem;
-                            border-radius: 50%;
-                        "></i>
-                        <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Life-Saving Impact</h4>
-                        <p>Connecting donors with recipients effectively</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="fas fa-shield-alt" style="
-                            font-size: 2.5rem;
-                            color: var(--primary-green);
-                            margin-bottom: 1rem;
-                            background: rgba(76, 175, 80, 0.1);
-                            padding: 1rem;
-                            border-radius: 50%;
-                        "></i>
-                        <h4 style="color: var(--primary-green); margin-bottom: 0.5rem;">Secure Platform</h4>
-                        <p>Advanced security for your data protection</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="fas fa-hospital-user" style="
-                            font-size: 2.5rem;
-                            color: var(--primary-blue);
-                            margin-bottom: 1rem;
-                            background: rgba(33, 150, 243, 0.1);
-                            padding: 1rem;
-                            border-radius: 50%;
-                        "></i>
-                        <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Expert Support</h4>
-                        <p>24/7 professional medical assistance</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="fas fa-clock" style="
-                            font-size: 2.5rem;
-                            color: var(--primary-green);
-                            margin-bottom: 1rem;
-                            background: rgba(76, 175, 80, 0.1);
-                            padding: 1rem;
-                            border-radius: 50%;
-                        "></i>
-                        <h4 style="color: var(--primary-green); margin-bottom: 0.5rem;">Quick Matching</h4>
-                        <p>Efficient donor-recipient matching system</p>
+                <div class="about-card">
+                    <div class="about-features-grid">
+                        <div style="text-align: center;">
+                            <i class="fas fa-heartbeat" style="
+                                font-size: 2.5rem;
+                                color: var(--primary-blue);
+                                margin-bottom: 1rem;
+                                background: rgba(33, 150, 243, 0.1);
+                                padding: 1rem;
+                                border-radius: 50%;
+                            "></i>
+                            <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Life-Saving Impact</h4>
+                            <p>Connecting donors with recipients effectively</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-shield-alt" style="
+                                font-size: 2.5rem;
+                                color: var(--primary-green);
+                                margin-bottom: 1rem;
+                                background: rgba(76, 175, 80, 0.1);
+                                padding: 1rem;
+                                border-radius: 50%;
+                            "></i>
+                            <h4 style="color: var(--primary-green); margin-bottom: 0.5rem;">Secure Platform</h4>
+                            <p>Advanced security for your data protection</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-hospital-user" style="
+                                font-size: 2.5rem;
+                                color: var(--primary-blue);
+                                margin-bottom: 1rem;
+                                background: rgba(33, 150, 243, 0.1);
+                                padding: 1rem;
+                                border-radius: 50%;
+                            "></i>
+                            <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Expert Support</h4>
+                            <p>24/7 professional medical assistance</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-clock" style="
+                                font-size: 2.5rem;
+                                color: var(--primary-green);
+                                margin-bottom: 1rem;
+                                background: rgba(76, 175, 80, 0.1);
+                                padding: 1rem;
+                                border-radius: 50%;
+                            "></i>
+                            <h4 style="color: var(--primary-green); margin-bottom: 0.5rem;">Quick Matching</h4>
+                            <p>Efficient donor-recipient matching system</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <!-- Features Section -->
     <section id="features" class="section">
         <div class="container">
