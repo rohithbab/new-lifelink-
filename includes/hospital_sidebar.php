@@ -8,9 +8,6 @@ if (!isset($_SESSION['hospital_logged_in']) || !$_SESSION['hospital_logged_in'])
 // Get current page name for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
-<button class="mobile-menu-toggle">
-    <i class="fas fa-bars"></i>
-</button>
 <aside class="sidebar">
     <div class="sidebar-header">
         <h2 class="logo-text">LifeLink</h2>
@@ -173,20 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const parentMenu = item.closest('.has-submenu');
         if (parentMenu) {
             parentMenu.classList.add('active');
-        }
-    });
-
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    
-    menuToggle.addEventListener('click', function() {
-        sidebar.classList.toggle('active');
-    });
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('active')) {
-            sidebar.classList.remove('active');
         }
     });
 });

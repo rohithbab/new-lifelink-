@@ -19,8 +19,6 @@
     display: flex;
     min-height: 100vh;
     background: #f5f5f5;
-    position: relative;
-    width: 100%;
 }
 
 /* Header Styles */
@@ -29,21 +27,18 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding: 1rem;
+    padding: 1rem 2rem;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .header-left h2 {
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-size: 1.5rem;
     font-weight: 600;
     color: #333;
     margin: 0;
     background: linear-gradient(to right, #28a745, #4a90e2);
-    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -52,7 +47,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex-wrap: wrap;
 }
 
 .back-button {
@@ -111,14 +105,15 @@
     font-size: 0.9rem;
 }
 
-/* Responsive Sidebar */
+/* Sidebar Styles */
 .sidebar {
-    width: 250px;
-    min-height: 100vh;
-    background: var(--white);
-    padding: 1rem;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     z-index: 1000;
 }
 
@@ -129,7 +124,7 @@
 }
 
 .logo-text {
-    color: var(--primary-green);
+    color: white;
     font-size: 38px;
     font-weight: normal;
     margin: 0;
@@ -163,7 +158,7 @@
     display: flex;
     align-items: center;
     padding: 12px 20px;
-    color: var(--dark-gray);
+    color: white;
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -186,8 +181,8 @@
 /* Main Content Area */
 .main-content {
     flex: 1;
-    padding: 2rem;
-    transition: all 0.3s ease;
+    margin-left: 280px;
+    padding: 20px;
 }
 
 /* Dashboard Content */
@@ -254,7 +249,6 @@
     font-size: 1.25rem;
     font-weight: 600;
     background: linear-gradient(to right, #28a745, #4a90e2);
-    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
@@ -427,72 +421,4 @@
     color: #6c757d;
     padding: 2rem;
     font-style: italic;
-}
-
-/* Mobile Menu Toggle */
-.mobile-menu-toggle {
-    display: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: var(--dark-gray);
-}
-
-/* Responsive Media Queries */
-@media screen and (max-width: 1024px) {
-    .main-content {
-        padding: 1rem;
-    }
-    
-    .dashboard-header {
-        padding: 0.75rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        left: -250px;
-        top: 0;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
-    .main-content {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .mobile-menu-toggle {
-        display: block;
-        position: fixed;
-        top: 1rem;
-        left: 1rem;
-        z-index: 1001;
-    }
-
-    .dashboard-container {
-        flex-direction: column;
-    }
-
-    .dashboard-header {
-        margin-top: 3rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .header-left, .header-right {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .dashboard-header {
-        text-align: center;
-        padding: 0.5rem;
-    }
-
-    .main-content {
-        padding: 0.5rem;
-    }
 }
